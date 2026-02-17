@@ -8,55 +8,87 @@ import AppLayout from '../layouts/AppLayout.astro';
     <div class="mm-header">
       <div class="mm-header-top">
         <h1>Mensajes</h1>
-        <button class="mm-new-btn" id="new-chat-btn" title="Nueva conversación">
+        <div class="mm-header-actions">
+          <button class="mm-icon-btn" id="search-toggle-btn" title="Buscar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button class="mm-icon-btn" id="new-chat-btn" title="Nueva conversación">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <line x1="12" y1="8" x2="12" y2="16"></line>
+              <line x1="8" y1="12" x2="16" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <!-- Search Bar (hidden by default) -->
+      <div class="mm-search-bar" id="search-bar" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Buscar conversaciones..." id="search-input" />
+        <button class="mm-search-close" id="search-close-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            <line x1="12" y1="8" x2="12" y2="16"></line>
-            <line x1="8" y1="12" x2="16" y2="12"></line>
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-      <p class="mm-subtitle">Chatea con tus amigos en tiempo real</p>
     </div>
     
     <!-- Tabs -->
     <div class="mm-tabs">
-      <button class="mm-tab active" data-tab="online">
-        <span class="tab-dot"></span>
-        En línea
-        <span class="tab-count" id="online-count">0</span>
-      </button>
-      <button class="mm-tab" data-tab="all">
+      <button class="mm-tab active" data-tab="all">
         Todos
-        <span class="tab-count" id="all-count">0</span>
       </button>
-      <button class="mm-tab" data-tab="recent">
-        Recientes
+      <button class="mm-tab" data-tab="unread">
+        No leídos
+        <span class="tab-badge" id="unread-count" hidden>0</span>
+      </button>
+      <button class="mm-tab" data-tab="online">
+        En línea
       </button>
     </div>
     
-    <!-- Search -->
-    <div class="mm-search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <input type="text" placeholder="Buscar amigos..." id="search-input" />
-    </div>
-    
-    <!-- Friends List -->
-    <div class="mm-list" id="friends-list">
+    <!-- Conversations List -->
+    <div class="mm-conversations" id="conversations-list">
+      <!-- Loading skeleton -->
       <div class="mm-skeleton">
-        {[1, 2, 3, 4, 5].map(() => (
+        {[1, 2, 3, 4, 5, 6].map(() => (
           <div class="mm-skel-item">
             <div class="mm-skel-avatar"></div>
-            <div class="mm-skel-info">
-              <div class="mm-skel-name"></div>
-              <div class="mm-skel-status"></div>
+            <div class="mm-skel-content">
+              <div class="mm-skel-row">
+                <div class="mm-skel-name"></div>
+                <div class="mm-skel-time"></div>
+              </div>
+              <div class="mm-skel-msg"></div>
             </div>
           </div>
         ))}
       </div>
+    </div>
+    
+    <!-- Empty State -->
+    <div class="mm-empty-state" id="empty-state" hidden>
+      <div class="mm-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <h3>Sin mensajes</h3>
+      <p>No tienes conversaciones aún</p>
+      <button class="mm-start-btn" id="start-chat-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Iniciar conversación
+      </button>
     </div>
   </div>
   
@@ -73,10 +105,7 @@ import AppLayout from '../layouts/AppLayout.astro';
         <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
         <div class="chat-user-info">
           <span class="chat-name" id="chat-name">Usuario</span>
-          <span class="chat-status" id="chat-status">
-            <span class="status-dot"></span>
-            En línea
-          </span>
+          <span class="chat-status" id="chat-status">En línea</span>
         </div>
         <a href="#" class="chat-profile-btn" id="chat-profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -139,160 +168,90 @@ import AppLayout from '../layouts/AppLayout.astro';
 
 <style>
   .messages-mobile-page {
-    padding: 1rem;
-    padding-bottom: 100px;
-    max-width: 600px;
-    margin: 0 auto;
     min-height: calc(100vh - 64px);
+    padding-bottom: 80px;
   }
 
   /* Header */
   .mm-header {
-    margin-bottom: 1.5rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .mm-header-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.25rem;
   }
 
   .mm-header h1 {
-    font-size: 1.75rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin: 0;
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
+    color: white;
   }
 
-  .mm-new-btn {
+  .mm-header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .mm-icon-btn {
     width: 40px;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 50%;
-    color: #22c55e;
+    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
     transition: all 0.2s;
   }
 
-  .mm-new-btn:hover {
-    background: rgba(34, 197, 94, 0.2);
-    transform: scale(1.05);
+  .mm-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
   }
 
-  .mm-new-btn svg {
+  .mm-icon-btn svg {
     width: 20px;
     height: 20px;
   }
 
-  .mm-subtitle {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 0;
-  }
-
-  /* Tabs */
-  .mm-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
-  }
-
-  .mm-tab {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 2rem;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .mm-tab:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.8);
-  }
-
-  .mm-tab.active {
-    background: rgba(34, 197, 94, 0.12);
-    border-color: rgba(34, 197, 94, 0.25);
-    color: #22c55e;
-  }
-
-  .tab-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: 0.6;
-  }
-
-  .mm-tab.active .tab-dot {
-    background: #22c55e;
-    opacity: 1;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.7; }
-  }
-
-  .tab-count {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.125rem 0.5rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .mm-tab.active .tab-count {
-    background: rgba(34, 197, 94, 0.2);
-  }
-
-  /* Search */
-  .mm-search {
+  /* Search Bar */
+  .mm-search-bar {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.875rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 1rem;
-    margin-bottom: 1rem;
-    transition: all 0.2s;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    animation: slideDown 0.2s ease-out;
   }
 
-  .mm-search:focus-within {
-    border-color: rgba(34, 197, 94, 0.3);
-    background: rgba(34, 197, 94, 0.05);
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .mm-search svg {
+  .mm-search-bar svg {
     width: 18px;
     height: 18px;
     color: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
   }
 
-  .mm-search input {
+  .mm-search-bar input {
     flex: 1;
     background: none;
     border: none;
@@ -301,169 +260,267 @@ import AppLayout from '../layouts/AppLayout.astro';
     outline: none;
   }
 
-  .mm-search input::placeholder {
+  .mm-search-bar input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  /* Friends List */
-  .mm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-  }
-
-  .mm-item {
+  .mm-search-close {
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
-    gap: 0.875rem;
-    padding: 0.875rem;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid transparent;
-    border-radius: 1rem;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+  }
+
+  .mm-search-close svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Tabs */
+  .mm-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .mm-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
   }
 
-  .mm-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.05);
+  .mm-tab:hover {
+    color: rgba(255, 255, 255, 0.7);
   }
 
-  .mm-item:active {
-    transform: scale(0.98);
+  .mm-tab.active {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
   }
 
-  .mm-item-avatar {
+  .tab-badge {
+    background: #22c55e;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Conversations List */
+  .mm-conversations {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mm-conv-item {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .mm-conv-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .mm-conv-item:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .mm-conv-avatar-wrap {
     position: relative;
     flex-shrink: 0;
   }
 
-  .mm-item-avatar img {
+  .mm-conv-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(34, 197, 94, 0.15);
-    transition: border-color 0.2s;
   }
 
-  .mm-item:hover .mm-item-avatar img {
-    border-color: rgba(34, 197, 94, 0.3);
-  }
-
-  .mm-item-status-dot {
+  .mm-conv-status-dot {
     position: absolute;
     bottom: 2px;
     right: 2px;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    border: 3px solid #0b0f0e;
+    border: 3px solid #0a0a0a;
   }
 
-  .mm-item-status-dot.online {
+  .mm-conv-status-dot.online {
     background: #22c55e;
     box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
   }
 
-  .mm-item-status-dot.away {
+  .mm-conv-status-dot.away {
     background: #f59e0b;
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
   }
 
-  .mm-item-status-dot.offline {
+  .mm-conv-status-dot.offline {
     background: rgba(255, 255, 255, 0.3);
   }
 
-  .mm-item-info {
+  .mm-conv-content {
     flex: 1;
     min-width: 0;
   }
 
-  .mm-item-name {
+  .mm-conv-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .mm-conv-name {
     font-size: 1rem;
     font-weight: 600;
     color: white;
-    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mm-conv-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+
+  .mm-conv-preview {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .mm-item-name .verified-badge {
-    width: 14px;
-    height: 14px;
-    color: #22c55e;
-  }
-
-  .mm-item-status {
-    font-size: 0.8rem;
+  .mm-conv-last-msg {
+    font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.5);
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
   }
 
-  .mm-item-status.online-text {
-    color: #22c55e;
-  }
-
-  .mm-item-msg-btn {
+  .mm-conv-unread {
+    background: #22c55e;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.15);
-    border-radius: 50%;
+    padding: 0 6px;
+    flex-shrink: 0;
+  }
+
+  .mm-conv-check {
+    width: 16px;
+    height: 16px;
     color: #22c55e;
-    transition: all 0.2s;
+    flex-shrink: 0;
   }
 
-  .mm-item:hover .mm-item-msg-btn {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(34, 197, 94, 0.25);
-  }
-
-  .mm-item-msg-btn svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .mm-empty {
+  /* Empty State */
+  .mm-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
     text-align: center;
-    padding: 3rem 1rem;
-    color: rgba(255, 255, 255, 0.4);
   }
 
   .mm-empty-icon {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: rgba(34, 197, 94, 0.3);
   }
 
-  .mm-empty p {
-    margin: 0 0 0.25rem 0;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
+  .mm-empty-icon svg {
+    width: 64px;
+    height: 64px;
   }
 
-  .mm-empty span {
-    font-size: 0.875rem;
+  .mm-empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .mm-empty-state p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .mm-start-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    border-radius: 2rem;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mm-start-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  }
+
+  .mm-start-btn svg {
+    width: 18px;
+    height: 18px;
   }
 
   /* Skeleton */
   .mm-skeleton {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
   }
 
   .mm-skel-item {
     display: flex;
     align-items: center;
     gap: 0.875rem;
-    padding: 0.875rem;
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 
   .mm-skel-avatar {
@@ -474,23 +531,36 @@ import AppLayout from '../layouts/AppLayout.astro';
     animation: shimmer 1.5s infinite;
   }
 
-  .mm-skel-info {
+  .mm-skel-content {
     flex: 1;
+  }
+
+  .mm-skel-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
   }
 
   .mm-skel-name {
     height: 14px;
-    width: 140px;
+    width: 120px;
     border-radius: 7px;
     background: rgba(255, 255, 255, 0.05);
-    animation: shimmer 1.5s infinite 0.1s;
-    margin-bottom: 0.5rem;
+    animation: shimmer 1.5s infinite;
   }
 
-  .mm-skel-status {
+  .mm-skel-time {
     height: 10px;
-    width: 90px;
+    width: 40px;
     border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    animation: shimmer 1.5s infinite 0.1s;
+  }
+
+  .mm-skel-msg {
+    height: 12px;
+    width: 180px;
+    border-radius: 6px;
     background: rgba(255, 255, 255, 0.05);
     animation: shimmer 1.5s infinite 0.2s;
   }
@@ -500,7 +570,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     50% { opacity: 0.6; }
   }
 
-  /* Chat Modal */
+  /* Chat Modal - Same style as OnlineUsers */
   .chat-modal {
     position: fixed;
     inset: 0;
@@ -569,19 +639,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   .chat-status {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
     font-size: 0.75rem;
     color: #22c55e;
-  }
-
-  .chat-status .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22c55e;
-    animation: pulse 2s ease-in-out infinite;
   }
 
   .chat-profile-btn {
@@ -653,7 +712,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-radius: 1rem;
   }
 
-  /* Message with avatar - Similar to OnlineUsers chat */
+  /* Message with avatar */
   .message {
     display: flex;
     gap: 0.5rem;
@@ -662,14 +721,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   @keyframes msgIn {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .message.sent {
@@ -681,7 +734,6 @@ import AppLayout from '../layouts/AppLayout.astro';
     align-self: flex-start;
   }
 
-  /* Message avatar */
   .message-avatar {
     width: 28px;
     height: 28px;
@@ -702,7 +754,6 @@ import AppLayout from '../layouts/AppLayout.astro';
     min-width: 0;
   }
 
-  /* Sender name */
   .message-sender {
     font-size: 0.7rem;
     color: #22c55e;
@@ -720,7 +771,6 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-radius: 1rem;
     max-width: 100%;
     word-wrap: break-word;
-    position: relative;
   }
 
   .message.sent .message-bubble {
@@ -841,14 +891,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   @keyframes slideUp {
-    from {
-      transform: translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
   }
 
   .new-chat-header {
@@ -877,12 +921,6 @@ import AppLayout from '../layouts/AppLayout.astro';
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-  }
-
-  .close-modal-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
   }
 
   .new-chat-search {
@@ -930,7 +968,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     padding: 0.75rem;
     border-radius: 0.75rem;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: background 0.15s;
   }
 
   .new-chat-item:hover {
@@ -1021,12 +1059,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     other_user: Friend;
     last_message: string;
     last_message_at: string;
+    unread_count: number;
   }
 
   let friends: Friend[] = [];
-  let filteredFriends: Friend[] = [];
   let conversations: Conversation[] = [];
-  let currentTab = 'online';
+  let filteredConversations: Conversation[] = [];
+  let currentTab = 'all';
   let currentChat: { id: string; name: string; avatar: string; status: string } | null = null;
   let conversationId: string | null = null;
   let userId: string | null = null;
@@ -1034,7 +1073,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   let realtimeChannel: any = null;
 
   // Elements
-  const friendsList = document.getElementById('friends-list')!;
+  const conversationsList = document.getElementById('conversations-list')!;
+  const emptyState = document.getElementById('empty-state')!;
   const chatModal = document.getElementById('chat-modal')!;
   const chatMessages = document.getElementById('chat-messages')!;
   const chatForm = document.getElementById('chat-form') as HTMLFormElement;
@@ -1045,15 +1085,18 @@ import AppLayout from '../layouts/AppLayout.astro';
   const chatStatus = document.getElementById('chat-status')!;
   const chatProfile = document.getElementById('chat-profile') as HTMLAnchorElement;
   const chatBack = document.getElementById('chat-back')!;
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
-  const onlineCount = document.getElementById('online-count')!;
-  const allCount = document.getElementById('all-count')!;
   const tabs = document.querySelectorAll('.mm-tab');
+  const searchToggleBtn = document.getElementById('search-toggle-btn')!;
+  const searchBar = document.getElementById('search-bar')!;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchCloseBtn = document.getElementById('search-close-btn')!;
   const newChatBtn = document.getElementById('new-chat-btn')!;
+  const startChatBtn = document.getElementById('start-chat-btn')!;
   const newChatModal = document.getElementById('new-chat-modal')!;
   const closeNewChat = document.getElementById('close-new-chat')!;
   const newChatSearch = document.getElementById('new-chat-search') as HTMLInputElement;
   const newChatList = document.getElementById('new-chat-list')!;
+  const unreadCount = document.getElementById('unread-count')!;
 
   // Initialize
   init();
@@ -1065,28 +1108,24 @@ import AppLayout from '../layouts/AppLayout.astro';
       return;
     }
     userId = user.id;
-    await Promise.all([loadFriends(), loadConversations()]);
+    await loadFriends();
+    await loadConversations();
     setupEventListeners();
   }
 
   async function loadFriends() {
-    // Get friend IDs
     const { data: friendships } = await (supabase as any)
       .from('friendships')
       .select('requester_id, addressee_id')
       .eq('status', 'accepted')
       .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`);
 
-    if (!friendships || friendships.length === 0) {
-      renderEmpty('No tienes amigos aún', 'Agrega amigos para poder chatear');
-      return;
-    }
+    if (!friendships || friendships.length === 0) return;
 
     const friendIds = friendships.map((f: any) =>
       f.requester_id === userId ? f.addressee_id : f.requester_id
     );
 
-    // Get friend profiles
     const { data: profiles } = await (supabase as any)
       .from('profiles')
       .select('id, username, display_name, avatar_url')
@@ -1094,7 +1133,6 @@ import AppLayout from '../layouts/AppLayout.astro';
 
     if (!profiles) return;
 
-    // Get presence
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
     const { data: presence } = await (supabase as any)
       .from('user_presence')
@@ -1115,18 +1153,6 @@ import AppLayout from '../layouts/AppLayout.astro';
         last_seen: pres?.last_seen || '',
       };
     });
-
-    // Sort by online status
-    friends.sort((a, b) => {
-      if (a.status === 'online' && b.status !== 'online') return -1;
-      if (a.status !== 'online' && b.status === 'online') return 1;
-      if (a.status === 'away' && b.status === 'offline') return -1;
-      if (a.status === 'offline' && b.status === 'away') return 1;
-      return 0;
-    });
-
-    updateCounts();
-    filterAndRender();
   }
 
   async function loadConversations() {
@@ -1136,9 +1162,13 @@ import AppLayout from '../layouts/AppLayout.astro';
         .select('conversation_id')
         .eq('user_id', userId);
 
-      if (!participations || participations.length === 0) return;
+      if (!participations || participations.length === 0) {
+        showEmpty();
+        return;
+      }
 
       const convIds = participations.map((p: any) => p.conversation_id);
+      conversations = [];
 
       for (const convId of convIds) {
         const { data: otherParts } = await (supabase as any)
@@ -1161,12 +1191,15 @@ import AppLayout from '../layouts/AppLayout.astro';
 
         const { data: lastMsg } = await (supabase as any)
           .from('messages')
-          .select('content, created_at')
+          .select('content, created_at, sender_id')
           .eq('conversation_id', convId)
           .order('created_at', { ascending: false })
           .limit(1)
           .single();
 
+        // Get friend status
+        const friend = friends.find(f => f.user_id === otherUserId);
+        
         conversations.push({
           id: convId,
           other_user: {
@@ -1174,11 +1207,12 @@ import AppLayout from '../layouts/AppLayout.astro';
             username: profile.username,
             display_name: profile.display_name,
             avatar_url: profile.avatar_url,
-            status: 'offline',
-            last_seen: '',
+            status: friend?.status || 'offline',
+            last_seen: friend?.last_seen || '',
           },
           last_message: lastMsg?.content || 'Sin mensajes',
           last_message_at: lastMsg?.created_at || '',
+          unread_count: 0,
         });
       }
 
@@ -1188,79 +1222,84 @@ import AppLayout from '../layouts/AppLayout.astro';
         if (!b.last_message_at) return -1;
         return new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime();
       });
+
+      filterAndRender();
     } catch (e) {
       console.error('Error loading conversations:', e);
+      showEmpty();
     }
   }
 
-  function updateCounts() {
-    const online = friends.filter(f => f.status === 'online' || f.status === 'away').length;
-    onlineCount.textContent = online.toString();
-    allCount.textContent = friends.length.toString();
+  function showEmpty() {
+    conversationsList.innerHTML = '';
+    emptyState.hidden = false;
   }
 
   function filterAndRender() {
     const search = searchInput.value.toLowerCase();
     
-    if (currentTab === 'recent') {
-      // Show recent conversations
-      filteredFriends = conversations.map(c => ({
-        ...c.other_user,
-        last_message: c.last_message,
-        last_message_at: c.last_message_at,
-      })) as any[];
-    } else {
-      filteredFriends = friends.filter(f => {
-        const matchesSearch = (f.display_name || f.username).toLowerCase().includes(search);
-        const matchesTab = currentTab === 'online' 
-          ? (f.status === 'online' || f.status === 'away')
-          : true;
-        return matchesSearch && matchesTab;
-      });
-    }
+    filteredConversations = conversations.filter(conv => {
+      const name = conv.other_user.display_name || conv.other_user.username;
+      const matchesSearch = name.toLowerCase().includes(search);
+      
+      if (currentTab === 'unread') {
+        return matchesSearch && conv.unread_count > 0;
+      } else if (currentTab === 'online') {
+        return matchesSearch && (conv.other_user.status === 'online' || conv.other_user.status === 'away');
+      }
+      return matchesSearch;
+    });
 
-    renderFriends();
+    renderConversations();
   }
 
-  function renderFriends() {
-    if (filteredFriends.length === 0) {
-      const message = currentTab === 'online' 
-        ? 'No hay amigos en línea' 
-        : currentTab === 'recent'
-        ? 'No tienes conversaciones recientes'
-        : 'No tienes amigos aún';
-      renderEmpty(message, '');
+  function renderConversations() {
+    if (filteredConversations.length === 0) {
+      if (conversations.length === 0) {
+        showEmpty();
+      } else {
+        conversationsList.innerHTML = `
+          <div class="mm-empty-state">
+            <p style="color: rgba(255,255,255,0.5);">No hay conversaciones en esta categoría</p>
+          </div>
+        `;
+        emptyState.hidden = true;
+      }
       return;
     }
 
-    friendsList.innerHTML = filteredFriends.map(f => {
-      const statusClass = f.status === 'online' ? 'online' : f.status === 'away' ? 'away' : 'offline';
-      const statusText = f.status === 'online' ? 'Activo ahora' : f.status === 'away' ? 'Ausente' : 'Desconectado';
-      const lastMsg = (f as any).last_message;
+    emptyState.hidden = true;
+    
+    conversationsList.innerHTML = filteredConversations.map(conv => {
+      const statusClass = conv.other_user.status === 'online' ? 'online' : conv.other_user.status === 'away' ? 'away' : 'offline';
+      const time = formatTime(conv.last_message_at);
+      const lastMsg = conv.last_message.substring(0, 50) + (conv.last_message.length > 50 ? '...' : '');
+      const isOwnLast = false; // Could track this if needed
       
       return `
-        <div class="mm-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
-          <div class="mm-item-avatar">
-            <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
-            <span class="mm-item-status-dot ${statusClass}"></span>
+        <div class="mm-conv-item" data-conv-id="${conv.id}" data-user-id="${conv.other_user.user_id}" data-name="${conv.other_user.display_name || conv.other_user.username}" data-avatar="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" data-status="${conv.other_user.status}">
+          <div class="mm-conv-avatar-wrap">
+            <img src="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" alt="" class="mm-conv-avatar" onerror="this.src='/images/default-avatar.svg'" />
+            <span class="mm-conv-status-dot ${statusClass}"></span>
           </div>
-          <div class="mm-item-info">
-            <div class="mm-item-name">${f.display_name || f.username}</div>
-            <div class="mm-item-status ${f.status === 'online' ? 'online-text' : ''}">${lastMsg || statusText}</div>
-          </div>
-          <div class="mm-item-msg-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
+          <div class="mm-conv-content">
+            <div class="mm-conv-row">
+              <span class="mm-conv-name">${conv.other_user.display_name || conv.other_user.username}</span>
+              <span class="mm-conv-time">${time}</span>
+            </div>
+            <div class="mm-conv-preview">
+              <span class="mm-conv-last-msg">${lastMsg}</span>
+              ${conv.unread_count > 0 ? `<span class="mm-conv-unread">${conv.unread_count}</span>` : ''}
+            </div>
           </div>
         </div>
       `;
     }).join('');
 
     // Add click listeners
-    friendsList.querySelectorAll('.mm-item').forEach(item => {
+    conversationsList.querySelectorAll('.mm-conv-item').forEach(item => {
       item.addEventListener('click', () => {
-        const id = item.getAttribute('data-id')!;
+        const id = item.getAttribute('data-user-id')!;
         const name = item.getAttribute('data-name')!;
         const avatar = item.getAttribute('data-avatar')!;
         const status = item.getAttribute('data-status')!;
@@ -1269,18 +1308,18 @@ import AppLayout from '../layouts/AppLayout.astro';
     });
   }
 
-  function renderEmpty(message: string, hint: string) {
-    friendsList.innerHTML = `
-      <div class="mm-empty">
-        <div class="mm-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </div>
-        <p>${message}</p>
-        ${hint ? `<span>${hint}</span>` : ''}
-      </div>
-    `;
+  function formatTime(dateStr: string): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins <= 1 ? 'Ahora' : `${mins}m`;
+    const hours = Math.floor(diff / 3600000);
+    if (hours < 24) return `${hours}h`;
+    const days = Math.floor(diff / 86400000);
+    if (days < 7) return `${days}d`;
+    return date.toLocaleDateString('es', { day: 'numeric', month: 'short' });
   }
 
   function setupEventListeners() {
@@ -1289,12 +1328,23 @@ import AppLayout from '../layouts/AppLayout.astro';
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        currentTab = tab.getAttribute('data-tab') || 'online';
+        currentTab = tab.getAttribute('data-tab') || 'all';
         filterAndRender();
       });
     });
 
-    // Search
+    // Search toggle
+    searchToggleBtn.addEventListener('click', () => {
+      searchBar.hidden = !searchBar.hidden;
+      if (!searchBar.hidden) searchInput.focus();
+    });
+
+    searchCloseBtn.addEventListener('click', () => {
+      searchBar.hidden = true;
+      searchInput.value = '';
+      filterAndRender();
+    });
+
     searchInput.addEventListener('input', filterAndRender);
 
     // Chat back
@@ -1306,10 +1356,12 @@ import AppLayout from '../layouts/AppLayout.astro';
       sendBtn.disabled = chatInput.value.trim().length === 0;
     });
 
-    // New chat modal
-    newChatBtn.addEventListener('click', () => {
-      newChatModal.hidden = false;
-      loadFriendsForNewChat();
+    // New chat modals
+    [newChatBtn, startChatBtn].forEach(btn => {
+      btn.addEventListener('click', () => {
+        newChatModal.hidden = false;
+        loadFriendsForNewChat();
+      });
     });
 
     closeNewChat.addEventListener('click', () => {
@@ -1335,9 +1387,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   async function loadFriendsForNewChat() {
     if (friends.length === 0) {
       newChatList.innerHTML = `
-        <div class="mm-empty">
-          <p>No tienes amigos aún</p>
-          <span>Agrega amigos para poder chatear</span>
+        <div class="mm-empty-state">
+          <p style="color: rgba(255,255,255,0.5);">No tienes amigos aún</p>
         </div>
       `;
       return;
@@ -1345,7 +1396,7 @@ import AppLayout from '../layouts/AppLayout.astro';
 
     newChatList.innerHTML = friends.map(f => `
       <div class="new-chat-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
-        <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
+        <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="" onerror="this.src='/images/default-avatar.svg'" />
         <div class="new-chat-item-info">
           <div class="new-chat-item-name">${f.display_name || f.username}</div>
           <div class="new-chat-item-username">@${f.username}</div>
@@ -1371,9 +1422,9 @@ import AppLayout from '../layouts/AppLayout.astro';
     chatAvatar.src = avatar;
     chatProfile.href = `/profile/${id}`;
     
-    // Update status
     const statusText = status === 'online' ? 'En línea' : status === 'away' ? 'Ausente' : 'Desconectado';
-    chatStatus.innerHTML = `<span class="status-dot" style="background: ${status === 'online' ? '#22c55e' : status === 'away' ? '#f59e0b' : 'rgba(255,255,255,0.3)'}"></span>${statusText}`;
+    chatStatus.textContent = statusText;
+    chatStatus.style.color = status === 'online' ? '#22c55e' : status === 'away' ? '#f59e0b' : 'rgba(255,255,255,0.5)';
     
     chatModal.hidden = false;
     messages = [];
@@ -1516,7 +1567,7 @@ import AppLayout from '../layouts/AppLayout.astro';
       
       return `${dateSep}
         <div class="message ${isMine ? 'sent' : 'received'}">
-          ${!isMine ? `<img src="${senderAvatar}" alt="${senderName}" class="message-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
+          ${!isMine ? `<img src="${senderAvatar}" alt="" class="message-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
           <div class="message-content">
             ${!isMine ? `<span class="message-sender">${senderName}</span>` : ''}
             <div class="message-bubble">
