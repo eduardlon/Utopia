@@ -74,6 +74,15 @@ const isAuthenticated = !!user;
         </svg>
         <span>Mapa</span>
       </a>
+      <a href="/messages-mobile" class="bottom-nav-item messages-btn" data-active="false">
+        <div class="messages-icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="messages-badge" id="mobile-message-count" hidden>0</span>
+        </div>
+        <span>Chat</span>
+      </a>
       <a href="/radio" class="bottom-nav-item create-btn" data-active="false">
         <div class="create-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -286,6 +295,40 @@ const isAuthenticated = !!user;
   .create-icon svg {
     width: 22px;
     height: 22px;
+  }
+
+  /* Messages button */
+  .messages-btn {
+    position: relative;
+  }
+
+  .messages-icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .messages-badge {
+    position: absolute;
+    top: -4px;
+    right: -8px;
+    min-width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-radius: 8px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid #0a0a0a;
+  }
+
+  .messages-badge[hidden] {
+    display: none;
   }
 
   /* Scrollbar styling */

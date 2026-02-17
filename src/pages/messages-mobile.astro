@@ -1,0 +1,883 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+---
+
+<AppLayout title="Mensajes">
+  <div class="messages-mobile-page">
+    <div class="mm-header">
+      <h1>Mensajes</h1>
+      <p class="mm-subtitle">Chatea con tus amigos en línea</p>
+    </div>
+    
+    <div class="mm-tabs">
+      <button class="mm-tab active" data-tab="online">
+        <span class="tab-dot"></span>
+        En línea
+        <span class="tab-count" id="online-count">0</span>
+      </button>
+      <button class="mm-tab" data-tab="all">
+        Todos
+      </button>
+    </div>
+    
+    <div class="mm-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" placeholder="Buscar amigos..." id="search-input" />
+    </div>
+    
+    <div class="mm-list" id="friends-list">
+      <!-- Loading skeleton -->
+      <div class="mm-skeleton">
+        {[1, 2, 3, 4, 5].map(i => (
+          <div class="mm-skel-item">
+            <div class="mm-skel-avatar"></div>
+            <div class="mm-skel-info">
+              <div class="mm-skel-name"></div>
+              <div class="mm-skel-status"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  
+  <!-- Chat Modal -->
+  <div class="chat-modal" id="chat-modal" hidden>
+    <div class="chat-modal-content">
+      <div class="chat-header">
+        <button class="chat-back" id="chat-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
+        <div class="chat-user-info">
+          <span class="chat-name" id="chat-name">Usuario</span>
+          <span class="chat-status" id="chat-status">En línea</span>
+        </div>
+        <a href="#" class="chat-profile" id="chat-profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="1"></circle>
+            <circle cx="19" cy="12" r="1"></circle>
+            <circle cx="5" cy="12" r="1"></circle>
+          </svg>
+        </a>
+      </div>
+      
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-empty">
+          <p>No hay mensajes aún</p>
+          <p class="chat-empty-hint">¡Envía el primer mensaje!</p>
+        </div>
+      </div>
+      
+      <form class="chat-input" id="chat-form">
+        <input type="text" placeholder="Escribe un mensaje..." id="chat-input" />
+        <button type="submit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</AppLayout>
+
+<style>
+  .messages-mobile-page {
+    padding: 1rem;
+    padding-bottom: 100px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .mm-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .mm-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .mm-subtitle {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+  }
+
+  .mm-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .mm-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mm-tab.active {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+  }
+
+  .tab-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .tab-count {
+    background: rgba(34, 197, 94, 0.2);
+    padding: 0.125rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+  }
+
+  .mm-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .mm-search svg {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+  }
+
+  .mm-search input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .mm-search input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .mm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .mm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mm-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .mm-item-avatar {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .mm-item-avatar img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34, 197, 94, 0.2);
+  }
+
+  .mm-item-status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #0b0f0e;
+  }
+
+  .mm-item-status-dot.online {
+    background: #22c55e;
+  }
+
+  .mm-item-status-dot.away {
+    background: #f59e0b;
+  }
+
+  .mm-item-status-dot.offline {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .mm-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mm-item-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.125rem;
+  }
+
+  .mm-item-status {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .mm-item-msg-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 50%;
+    color: #22c55e;
+    transition: all 0.2s;
+  }
+
+  .mm-item-msg-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    transform: scale(1.05);
+  }
+
+  .mm-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .mm-empty p {
+    margin: 0;
+  }
+
+  /* Skeleton */
+  .mm-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mm-skel-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .mm-skel-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    animation: shimmer 1.5s infinite;
+  }
+
+  .mm-skel-info {
+    flex: 1;
+  }
+
+  .mm-skel-name {
+    height: 14px;
+    width: 120px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.05);
+    animation: shimmer 1.5s infinite 0.1s;
+    margin-bottom: 0.5rem;
+  }
+
+  .mm-skel-status {
+    height: 10px;
+    width: 80px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    animation: shimmer 1.5s infinite 0.2s;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* Chat Modal */
+  .chat-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-modal[hidden] {
+    display: none;
+  }
+
+  .chat-modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: linear-gradient(180deg, #0a0a0a 0%, #121212 100%);
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .chat-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+  }
+
+  .chat-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .chat-user-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .chat-name {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .chat-status {
+    font-size: 0.8rem;
+    color: #22c55e;
+  }
+
+  .chat-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chat-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .chat-empty p {
+    margin: 0;
+  }
+
+  .chat-empty-hint {
+    font-size: 0.875rem;
+    margin-top: 0.5rem !important;
+  }
+
+  .chat-message {
+    display: flex;
+    max-width: 80%;
+  }
+
+  .chat-message.sent {
+    margin-left: auto;
+  }
+
+  .chat-message.received {
+    margin-right: auto;
+  }
+
+  .chat-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+  }
+
+  .chat-message.sent .chat-bubble {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  .chat-message.received .chat-bubble {
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  .chat-bubble p {
+    margin: 0;
+    color: white;
+    font-size: 0.95rem;
+    word-wrap: break-word;
+  }
+
+  .chat-time {
+    display: block;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.25rem;
+    text-align: right;
+  }
+
+  .chat-message.received .chat-time {
+    text-align: left;
+  }
+
+  .chat-input {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .chat-input input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .chat-input input:focus {
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .chat-input button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .chat-input button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .chat-input button:not(:disabled):hover {
+    transform: scale(1.05);
+  }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase/client';
+
+  interface Friend {
+    user_id: string;
+    username: string;
+    display_name: string | null;
+    avatar_url: string | null;
+    status: string;
+    last_seen: string;
+  }
+
+  interface Message {
+    id: string;
+    sender_id: string;
+    content: string;
+    created_at: string;
+  }
+
+  let friends: Friend[] = [];
+  let filteredFriends: Friend[] = [];
+  let currentTab = 'online';
+  let currentChat: { id: string; name: string; avatar: string } | null = null;
+  let conversationId: string | null = null;
+  let userId: string | null = null;
+  let messages: Message[] = [];
+
+  const friendsList = document.getElementById('friends-list')!;
+  const chatModal = document.getElementById('chat-modal')!;
+  const chatMessages = document.getElementById('chat-messages')!;
+  const chatForm = document.getElementById('chat-form') as HTMLFormElement;
+  const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+  const chatName = document.getElementById('chat-name')!;
+  const chatAvatar = document.getElementById('chat-avatar') as HTMLImageElement;
+  const chatProfile = document.getElementById('chat-profile') as HTMLAnchorElement;
+  const chatBack = document.getElementById('chat-back')!;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const onlineCount = document.getElementById('online-count')!;
+  const tabs = document.querySelectorAll('.mm-tab');
+
+  // Initialize
+  loadFriends();
+  setupEventListeners();
+
+  async function loadFriends() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    userId = user.id;
+
+    // Get friend IDs
+    const { data: friendships } = await (supabase as any)
+      .from('friendships')
+      .select('requester_id, addressee_id')
+      .eq('status', 'accepted')
+      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`);
+
+    if (!friendships || friendships.length === 0) {
+      renderEmpty();
+      return;
+    }
+
+    const friendIds = friendships.map((f: any) =>
+      f.requester_id === user.id ? f.addressee_id : f.requester_id
+    );
+
+    // Get friend profiles
+    const { data: profiles } = await (supabase as any)
+      .from('profiles')
+      .select('id, username, display_name, avatar_url')
+      .in('id', friendIds);
+
+    if (!profiles) return;
+
+    // Get presence
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: presence } = await (supabase as any)
+      .from('user_presence')
+      .select('user_id, status, last_seen')
+      .gte('last_seen', fiveMinutesAgo)
+      .in('user_id', friendIds);
+
+    const presenceMap = new Map((presence || []).map((p: any) => [p.user_id, p]));
+
+    friends = profiles.map((p: any) => {
+      const pres = presenceMap.get(p.id);
+      return {
+        user_id: p.id,
+        username: p.username,
+        display_name: p.display_name,
+        avatar_url: p.avatar_url,
+        status: pres?.status || 'offline',
+        last_seen: pres?.last_seen || '',
+      };
+    });
+
+    // Sort by online status
+    friends.sort((a, b) => {
+      if (a.status === 'online' && b.status !== 'online') return -1;
+      if (a.status !== 'online' && b.status === 'online') return 1;
+      if (a.status === 'away' && b.status === 'offline') return -1;
+      if (a.status === 'offline' && b.status === 'away') return 1;
+      return 0;
+    });
+
+    updateOnlineCount();
+    filterAndRender();
+  }
+
+  function updateOnlineCount() {
+    const online = friends.filter(f => f.status === 'online' || f.status === 'away').length;
+    onlineCount.textContent = online.toString();
+  }
+
+  function filterAndRender() {
+    const search = searchInput.value.toLowerCase();
+    
+    filteredFriends = friends.filter(f => {
+      const matchesSearch = (f.display_name || f.username).toLowerCase().includes(search);
+      const matchesTab = currentTab === 'online' 
+        ? (f.status === 'online' || f.status === 'away')
+        : true;
+      return matchesSearch && matchesTab;
+    });
+
+    renderFriends();
+  }
+
+  function renderFriends() {
+    if (filteredFriends.length === 0) {
+      friendsList.innerHTML = `
+        <div class="mm-empty">
+          <p>${currentTab === 'online' ? 'No hay amigos en línea' : 'No tienes amigos aún'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    friendsList.innerHTML = filteredFriends.map(f => `
+      <div class="mm-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}">
+        <div class="mm-item-avatar">
+          <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
+          <span class="mm-item-status-dot ${f.status}"></span>
+        </div>
+        <div class="mm-item-info">
+          <div class="mm-item-name">${f.display_name || f.username}</div>
+          <div class="mm-item-status">${f.status === 'online' ? 'Activo ahora' : f.status === 'away' ? 'Ausente' : 'Desconectado'}</div>
+        </div>
+        <div class="mm-item-msg-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+      </div>
+    `).join('');
+
+    // Add click listeners
+    friendsList.querySelectorAll('.mm-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.getAttribute('data-id')!;
+        const name = item.getAttribute('data-name')!;
+        const avatar = item.getAttribute('data-avatar')!;
+        openChat(id, name, avatar);
+      });
+    });
+  }
+
+  function renderEmpty() {
+    friendsList.innerHTML = `
+      <div class="mm-empty">
+        <p>Agrega amigos para poder chatear</p>
+      </div>
+    `;
+  }
+
+  function setupEventListeners() {
+    // Tabs
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentTab = tab.getAttribute('data-tab') || 'online';
+        filterAndRender();
+      });
+    });
+
+    // Search
+    searchInput.addEventListener('input', filterAndRender);
+
+    // Chat back
+    chatBack.addEventListener('click', closeChat);
+
+    // Chat form
+    chatForm.addEventListener('submit', sendMessage);
+  }
+
+  async function openChat(id: string, name: string, avatar: string) {
+    currentChat = { id, name, avatar };
+    chatName.textContent = name;
+    chatAvatar.src = avatar;
+    chatProfile.href = `/profile/${id}`;
+    chatModal.hidden = false;
+    messages = [];
+    renderMessages();
+
+    await loadConversation(id);
+  }
+
+  function closeChat() {
+    chatModal.hidden = true;
+    currentChat = null;
+    conversationId = null;
+    messages = [];
+  }
+
+  async function loadConversation(recipientId: string) {
+    if (!userId) return;
+
+    try {
+      const { data: existingConvos } = await (supabase as any)
+        .from('conversation_participants')
+        .select('conversation_id')
+        .eq('user_id', userId);
+
+      let convId: string | null = null;
+
+      if (existingConvos && existingConvos.length > 0) {
+        const convoIds = existingConvos.map((c: any) => c.conversation_id);
+        const { data: sharedConvos } = await (supabase as any)
+          .from('conversation_participants')
+          .select('conversation_id, conversations!inner(type)')
+          .eq('user_id', recipientId)
+          .in('conversation_id', convoIds)
+          .eq('conversations.type', 'direct');
+
+        if (sharedConvos && sharedConvos.length > 0) {
+          convId = sharedConvos[0].conversation_id;
+        }
+      }
+
+      if (!convId) {
+        const { data: newConvo } = await (supabase as any)
+          .from('conversations')
+          .insert({ type: 'direct' })
+          .select('id')
+          .single();
+
+        if (newConvo) {
+          convId = newConvo.id;
+          await (supabase as any)
+            .from('conversation_participants')
+            .insert([
+              { conversation_id: convId, user_id: userId },
+              { conversation_id: convId, user_id: recipientId },
+            ]);
+        }
+      }
+
+      conversationId = convId;
+
+      if (convId) {
+        await loadMessages(convId);
+        subscribeToMessages(convId);
+      }
+    } catch (e) {
+      console.error('Error loading conversation:', e);
+    }
+  }
+
+  async function loadMessages(convId: string) {
+    const { data } = await (supabase as any)
+      .from('messages')
+      .select('*')
+      .eq('conversation_id', convId)
+      .order('created_at', { ascending: true })
+      .limit(50);
+
+    if (data) {
+      messages = data;
+      renderMessages();
+    }
+  }
+
+  function subscribeToMessages(convId: string) {
+    supabase
+      .channel(`messages:${convId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+        filter: `conversation_id=eq.${convId}`,
+      }, (payload) => {
+        messages.push(payload.new as Message);
+        renderMessages();
+      })
+      .subscribe();
+  }
+
+  function renderMessages() {
+    if (messages.length === 0) {
+      chatMessages.innerHTML = `
+        <div class="chat-empty">
+          <p>No hay mensajes aún</p>
+          <p class="chat-empty-hint">¡Envía el primer mensaje!</p>
+        </div>
+      `;
+      return;
+    }
+
+    chatMessages.innerHTML = messages.map(msg => `
+      <div class="chat-message ${msg.sender_id === userId ? 'sent' : 'received'}">
+        <div class="chat-bubble">
+          <p>${msg.content}</p>
+          <span class="chat-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      </div>
+    `).join('');
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  async function sendMessage(e: Event) {
+    e.preventDefault();
+    if (!chatInput.value.trim() || !conversationId || !userId) return;
+
+    const content = chatInput.value.trim();
+    chatInput.value = '';
+
+    await (supabase as any)
+      .from('messages')
+      .insert({
+        conversation_id: conversationId,
+        sender_id: userId,
+        content,
+      });
+  }
+</script>
