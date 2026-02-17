@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,23 +9,17 @@ export default defineConfig({
     react(),
   ],
   output: 'server',
-  adapter: node({
-    mode: 'standalone',
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
   }),
-  server: {
-    host: true, // Permite acceso desde la red local (0.0.0.0)
-    port: 4321,
-  },
   vite: {
     ssr: {
       noExternal: ['@supabase/supabase-js'],
     },
     optimizeDeps: {
       include: ['react', 'react-dom', 'react/jsx-runtime'],
-      force: true,
-    },
-    server: {
-      host: true, // También expone Vite HMR a la red
     },
   },
 });

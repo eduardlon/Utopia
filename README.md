@@ -1,43 +1,109 @@
-# Astro Starter Kit: Minimal
+# Utopía - Red Social
 
-```sh
-npm create astro@latest -- --template minimal
+Una red social moderna construida con Astro, React, y Supabase.
+
+## 🚀 Características
+
+- **Autenticación OAuth** - Google y Facebook
+- **Feed de publicaciones** - Comparte textos, imágenes y videos
+- **Perfiles de usuario** - Personaliza tu perfil
+- **Sistema de amistades** - Conecta con otros usuarios
+- **Mensajería en tiempo real** - Chat privado
+- **Radio en vivo** - Transmite música y voz en tiempo real con WebRTC
+- **Mapa interactivo** - Visualiza alertas cercanas
+- **Reels** - Videos cortos
+
+## 🛠️ Tecnologías
+
+- **Frontend**: Astro + React + Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime)
+- **Tiempo real**: WebRTC para transmisión de voz
+- **Deploy**: Vercel
+
+## 📦 Instalación
+
+1. Clona el repositorio:
+```bash
+git clone https://github.com/eduardlon/Utopia.git
+cd Utopia
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+2. Instala las dependencias:
+```bash
+npm install
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+3. Configura las variables de entorno:
+```bash
+cp .env.example .env
+```
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+4. Edita `.env` con tus credenciales de Supabase:
+```
+PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
+PUBLIC_SUPABASE_ANON_KEY=tu-anon-key
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+5. Inicia el servidor de desarrollo:
+```bash
+npm run dev
+```
 
-## 🧞 Commands
+## 🚀 Despliegue en Vercel
 
-All commands are run from the root of the project, from a terminal:
+### Opción 1: Desde la CLI de Vercel
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+1. Instala Vercel CLI:
+```bash
+npm i -g vercel
+```
 
-## 👀 Want to learn more?
+2. Despliega:
+```bash
+vercel
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Opción 2: Desde el Dashboard de Vercel
+
+1. Ve a [vercel.com](https://vercel.com) e inicia sesión
+2. Haz clic en "New Project"
+3. Importa el repositorio `eduardlon/Utopia`
+4. Configura las variables de entorno:
+   - `PUBLIC_SUPABASE_URL`
+   - `PUBLIC_SUPABASE_ANON_KEY`
+5. Haz clic en "Deploy"
+
+## ⚙️ Configuración de Supabase
+
+### Tablas necesarias
+
+El proyecto requiere las siguientes tablas en Supabase:
+- `profiles` - Perfiles de usuario
+- `posts` - Publicaciones
+- `comments` - Comentarios
+- `likes` - Me gusta
+- `friends` - Relaciones de amistad
+- `messages` - Mensajes privados
+- `radio_channels` - Canales de radio
+- `radio_tracks` - Pistas de radio
+- `radio_messages` - Mensajes de radio
+- `alerts` - Alertas del mapa
+
+Las migraciones están en la carpeta `supabase/migrations/`
+
+### Configuración OAuth
+
+1. Ve a Authentication > Providers en Supabase
+2. Habilita Google y/o Facebook
+3. Configura las credenciales OAuth de cada proveedor
+4. En Authentication > URL Configuration:
+   - Site URL: `https://tu-proyecto.vercel.app`
+   - Redirect URLs: `https://tu-proyecto.vercel.app/*`
+
+## 📝 Licencia
+
+MIT
+
+## 👤 Autor
+
+@eduardlon
