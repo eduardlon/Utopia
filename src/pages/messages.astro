@@ -166,6 +166,14 @@ import AppLayout from "../layouts/AppLayout.astro";
 <script>
   import { supabase } from "../lib/supabase/client";
 
+  // Redirect mobile users to the mobile version
+  if (typeof window !== 'undefined') {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      window.location.href = '/messages-mobile';
+    }
+  }
+
   interface Conversation {
     id: string;
     other_user: {

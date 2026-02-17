@@ -3,20 +3,20 @@ import AppLayout from '../layouts/AppLayout.astro';
 ---
 
 <AppLayout title="Mensajes">
-  <div class="messages-app">
+  <div class="mm-app">
     <!-- Conversations List View -->
-    <div class="conversations-view" id="conversations-view">
+    <div class="mm-conversations-view" id="mm-conversations-view">
       <!-- Header -->
-      <div class="conv-header">
+      <div class="mm-header">
         <h1>Mensajes</h1>
-        <div class="conv-header-actions">
-          <button class="conv-icon-btn" id="search-btn" title="Buscar">
+        <div class="mm-header-actions">
+          <button class="mm-icon-btn" id="mm-search-btn" title="Buscar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </button>
-          <button class="conv-icon-btn" id="new-chat-btn" title="Nueva conversación">
+          <button class="mm-icon-btn" id="mm-new-chat-btn" title="Nueva conversación">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -26,14 +26,14 @@ import AppLayout from '../layouts/AppLayout.astro';
       </div>
 
       <!-- Search Bar (hidden by default) -->
-      <div class="search-container" id="search-container" hidden>
-        <div class="search-box">
+      <div class="mm-search-container" id="mm-search-container" hidden>
+        <div class="mm-search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Buscar conversaciones..." id="search-input" />
-          <button class="search-clear" id="search-clear">
+          <input type="text" placeholder="Buscar conversaciones..." id="mm-search-input" />
+          <button class="mm-search-clear" id="mm-search-clear">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -43,28 +43,28 @@ import AppLayout from '../layouts/AppLayout.astro';
       </div>
 
       <!-- Tabs -->
-      <div class="conv-tabs">
-        <button class="conv-tab active" data-tab="all">Todos</button>
-        <button class="conv-tab" data-tab="unread">
+      <div class="mm-tabs">
+        <button class="mm-tab active" data-tab="all">Todos</button>
+        <button class="mm-tab" data-tab="unread">
           No leídos
-          <span class="tab-badge" id="unread-badge" hidden>0</span>
+          <span class="mm-tab-badge" id="mm-unread-badge" hidden>0</span>
         </button>
-        <button class="conv-tab" data-tab="online">En línea</button>
+        <button class="mm-tab" data-tab="online">En línea</button>
       </div>
 
       <!-- Conversations List -->
-      <div class="conv-list" id="conv-list">
+      <div class="mm-list" id="mm-list">
         <!-- Loading Skeleton -->
-        <div class="conv-skeleton" id="conv-skeleton">
+        <div class="mm-skeleton" id="mm-skeleton">
           {[1, 2, 3, 4, 5, 6, 7, 8].map(() => (
-            <div class="skeleton-item">
-              <div class="skeleton-avatar"></div>
-              <div class="skeleton-content">
-                <div class="skeleton-row">
-                  <div class="skeleton-name"></div>
-                  <div class="skeleton-time"></div>
+            <div class="mm-skeleton-item">
+              <div class="mm-skeleton-avatar"></div>
+              <div class="mm-skeleton-content">
+                <div class="mm-skeleton-row">
+                  <div class="mm-skeleton-name"></div>
+                  <div class="mm-skeleton-time"></div>
                 </div>
-                <div class="skeleton-message"></div>
+                <div class="mm-skeleton-message"></div>
               </div>
             </div>
           ))}
@@ -72,15 +72,15 @@ import AppLayout from '../layouts/AppLayout.astro';
       </div>
 
       <!-- Empty State -->
-      <div class="empty-state" id="empty-state" hidden>
-        <div class="empty-icon">
+      <div class="mm-empty-state" id="mm-empty-state" hidden>
+        <div class="mm-empty-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
         </div>
         <h3>Sin mensajes</h3>
         <p>No tienes conversaciones aún</p>
-        <button class="start-btn" id="start-btn">
+        <button class="mm-start-btn" id="mm-start-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -91,23 +91,23 @@ import AppLayout from '../layouts/AppLayout.astro';
     </div>
 
     <!-- Chat View (hidden by default) -->
-    <div class="chat-view" id="chat-view" hidden>
+    <div class="mm-chat-view" id="mm-chat-view" hidden>
       <!-- Chat Header -->
-      <div class="chat-header">
-        <button class="back-btn" id="back-btn">
+      <div class="mm-chat-header">
+        <button class="mm-back-btn" id="mm-back-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <div class="chat-avatar-wrap">
-          <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
-          <span class="chat-status-dot" id="chat-status-dot"></span>
+        <div class="mm-chat-avatar-wrap">
+          <img src="/images/default-avatar.svg" alt="" class="mm-chat-avatar" id="mm-chat-avatar" />
+          <span class="mm-chat-status-dot" id="mm-chat-status-dot"></span>
         </div>
-        <div class="chat-user-info">
-          <span class="chat-name" id="chat-name">Usuario</span>
-          <span class="chat-status" id="chat-status">En línea</span>
+        <div class="mm-chat-user-info">
+          <span class="mm-chat-name" id="mm-chat-name">Usuario</span>
+          <span class="mm-chat-status" id="mm-chat-status">En línea</span>
         </div>
-        <a href="#" class="chat-menu-btn" id="chat-profile">
+        <a href="#" class="mm-chat-menu-btn" id="mm-chat-profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="1"></circle>
             <circle cx="19" cy="12" r="1"></circle>
@@ -117,9 +117,9 @@ import AppLayout from '../layouts/AppLayout.astro';
       </div>
 
       <!-- Messages Container -->
-      <div class="messages-container" id="messages-container">
-        <div class="messages-empty" id="messages-empty">
-          <div class="messages-empty-icon">
+      <div class="mm-messages-container" id="mm-messages-container">
+        <div class="mm-messages-empty" id="mm-messages-empty">
+          <div class="mm-messages-empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
@@ -130,9 +130,9 @@ import AppLayout from '../layouts/AppLayout.astro';
       </div>
 
       <!-- Message Input -->
-      <form class="message-input-area" id="message-form">
-        <input type="text" placeholder="Escribe un mensaje..." id="message-input" autocomplete="off" />
-        <button type="submit" id="send-btn" disabled>
+      <form class="mm-input-area" id="mm-message-form">
+        <input type="text" placeholder="Escribe un mensaje..." id="mm-message-input" autocomplete="off" />
+        <button type="submit" id="mm-send-btn" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="22" y1="2" x2="11" y2="13"></line>
             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -142,22 +142,22 @@ import AppLayout from '../layouts/AppLayout.astro';
     </div>
 
     <!-- New Chat Modal -->
-    <div class="modal-overlay" id="new-chat-modal" hidden>
-      <div class="modal-content glass">
-        <div class="modal-header">
+    <div class="mm-modal-overlay" id="mm-new-chat-modal" hidden>
+      <div class="mm-modal-content glass">
+        <div class="mm-modal-header">
           <h3>Nueva conversación</h3>
-          <button class="modal-close" id="modal-close">✕</button>
+          <button class="mm-modal-close" id="mm-modal-close">✕</button>
         </div>
-        <div class="modal-search">
+        <div class="mm-modal-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <input type="text" placeholder="Buscar amigo..." id="modal-search-input" />
+          <input type="text" placeholder="Buscar amigo..." id="mm-modal-search-input" />
         </div>
-        <div class="modal-list" id="modal-list">
-          <div class="modal-loading">
-            <div class="spinner"></div>
+        <div class="mm-modal-list" id="mm-modal-list">
+          <div class="mm-modal-loading">
+            <div class="mm-spinner"></div>
             <span>Cargando...</span>
           </div>
         </div>
@@ -168,21 +168,21 @@ import AppLayout from '../layouts/AppLayout.astro';
 
 <style>
   /* Main Container */
-  .messages-app {
+  .mm-app {
     min-height: calc(100vh - 64px);
     background: #0a0a0a;
     padding-bottom: 70px;
   }
 
   /* Conversations View */
-  .conversations-view {
+  .mm-conversations-view {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 64px);
   }
 
   /* Header */
-  .conv-header {
+  .mm-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -196,19 +196,19 @@ import AppLayout from '../layouts/AppLayout.astro';
     z-index: 10;
   }
 
-  .conv-header h1 {
+  .mm-header h1 {
     font-size: 1.5rem;
     font-weight: 700;
     color: white;
     margin: 0;
   }
 
-  .conv-header-actions {
+  .mm-header-actions {
     display: flex;
     gap: 0.5rem;
   }
 
-  .conv-icon-btn {
+  .mm-icon-btn {
     width: 40px;
     height: 40px;
     display: flex;
@@ -222,30 +222,30 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .conv-icon-btn:hover {
+  .mm-icon-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: white;
   }
 
-  .conv-icon-btn svg {
+  .mm-icon-btn svg {
     width: 20px;
     height: 20px;
   }
 
   /* Search Container */
-  .search-container {
+  .mm-search-container {
     padding: 0.75rem 1rem;
     background: rgba(0, 0, 0, 0.4);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    animation: slideDown 0.2s ease;
+    animation: mmSlideDown 0.2s ease;
   }
 
-  @keyframes slideDown {
+  @keyframes mmSlideDown {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .search-box {
+  .mm-search-box {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -255,14 +255,14 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-radius: 1.5rem;
   }
 
-  .search-box svg {
+  .mm-search-box svg {
     width: 18px;
     height: 18px;
     color: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
   }
 
-  .search-box input {
+  .mm-search-box input {
     flex: 1;
     background: none;
     border: none;
@@ -271,11 +271,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     outline: none;
   }
 
-  .search-box input::placeholder {
+  .mm-search-box input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .search-clear {
+  .mm-search-clear {
     width: 24px;
     height: 24px;
     display: flex;
@@ -288,13 +288,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     cursor: pointer;
   }
 
-  .search-clear svg {
+  .mm-search-clear svg {
     width: 14px;
     height: 14px;
   }
 
   /* Tabs */
-  .conv-tabs {
+  .mm-tabs {
     display: flex;
     gap: 0.25rem;
     padding: 0.5rem 1rem;
@@ -302,7 +302,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .conv-tab {
+  .mm-tab {
     display: flex;
     align-items: center;
     gap: 0.375rem;
@@ -317,16 +317,16 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .conv-tab:hover {
+  .mm-tab:hover {
     color: rgba(255, 255, 255, 0.7);
   }
 
-  .conv-tab.active {
+  .mm-tab.active {
     background: rgba(34, 197, 94, 0.15);
     color: #22c55e;
   }
 
-  .tab-badge {
+  .mm-tab-badge {
     background: #22c55e;
     color: white;
     font-size: 0.7rem;
@@ -338,12 +338,12 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Conversations List */
-  .conv-list {
+  .mm-list {
     flex: 1;
     overflow-y: auto;
   }
 
-  .conv-item {
+  .mm-item {
     display: flex;
     align-items: center;
     gap: 0.875rem;
@@ -353,20 +353,20 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 
-  .conv-item:hover {
+  .mm-item:hover {
     background: rgba(255, 255, 255, 0.03);
   }
 
-  .conv-item:active {
+  .mm-item:active {
     background: rgba(255, 255, 255, 0.05);
   }
 
-  .conv-avatar-wrap {
+  .mm-avatar-wrap {
     position: relative;
     flex-shrink: 0;
   }
 
-  .conv-avatar {
+  .mm-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -374,7 +374,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid rgba(34, 197, 94, 0.15);
   }
 
-  .conv-status-dot {
+  .mm-status-dot {
     position: absolute;
     bottom: 2px;
     right: 2px;
@@ -384,32 +384,32 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 3px solid #0a0a0a;
   }
 
-  .conv-status-dot.online {
+  .mm-status-dot.online {
     background: #22c55e;
     box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
   }
 
-  .conv-status-dot.away {
+  .mm-status-dot.away {
     background: #f59e0b;
   }
 
-  .conv-status-dot.offline {
+  .mm-status-dot.offline {
     background: rgba(255, 255, 255, 0.3);
   }
 
-  .conv-content {
+  .mm-content {
     flex: 1;
     min-width: 0;
   }
 
-  .conv-row {
+  .mm-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.25rem;
   }
 
-  .conv-name {
+  .mm-name {
     font-size: 1rem;
     font-weight: 600;
     color: white;
@@ -418,20 +418,20 @@ import AppLayout from '../layouts/AppLayout.astro';
     text-overflow: ellipsis;
   }
 
-  .conv-time {
+  .mm-time {
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
     margin-left: 0.5rem;
   }
 
-  .conv-preview {
+  .mm-preview {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .conv-last-msg {
+  .mm-last-msg {
     font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.5);
     white-space: nowrap;
@@ -440,7 +440,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     flex: 1;
   }
 
-  .conv-unread {
+  .mm-unread {
     background: #22c55e;
     color: white;
     font-size: 0.7rem;
@@ -455,7 +455,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     flex-shrink: 0;
   }
 
-  .conv-check {
+  .mm-check {
     width: 16px;
     height: 16px;
     color: #22c55e;
@@ -463,7 +463,7 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Empty State */
-  .empty-state {
+  .mm-empty-state {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -473,30 +473,30 @@ import AppLayout from '../layouts/AppLayout.astro';
     text-align: center;
   }
 
-  .empty-icon {
+  .mm-empty-icon {
     margin-bottom: 1.5rem;
     color: rgba(34, 197, 94, 0.3);
   }
 
-  .empty-icon svg {
+  .mm-empty-icon svg {
     width: 64px;
     height: 64px;
   }
 
-  .empty-state h3 {
+  .mm-empty-state h3 {
     font-size: 1.25rem;
     font-weight: 600;
     color: white;
     margin: 0 0 0.5rem 0;
   }
 
-  .empty-state p {
+  .mm-empty-state p {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.5);
     margin: 0 0 1.5rem 0;
   }
 
-  .start-btn {
+  .mm-start-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -511,23 +511,23 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .start-btn:hover {
+  .mm-start-btn:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
   }
 
-  .start-btn svg {
+  .mm-start-btn svg {
     width: 18px;
     height: 18px;
   }
 
   /* Skeleton */
-  .conv-skeleton {
+  .mm-skeleton {
     display: flex;
     flex-direction: column;
   }
 
-  .skeleton-item {
+  .mm-skeleton-item {
     display: flex;
     align-items: center;
     gap: 0.875rem;
@@ -535,68 +535,68 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 
-  .skeleton-avatar {
+  .mm-skeleton-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.05);
-    animation: shimmer 1.5s infinite;
+    animation: mmShimmer 1.5s infinite;
   }
 
-  .skeleton-content {
+  .mm-skeleton-content {
     flex: 1;
   }
 
-  .skeleton-row {
+  .mm-skeleton-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
   }
 
-  .skeleton-name {
+  .mm-skeleton-name {
     height: 14px;
     width: 120px;
     border-radius: 7px;
     background: rgba(255, 255, 255, 0.05);
-    animation: shimmer 1.5s infinite;
+    animation: mmShimmer 1.5s infinite;
   }
 
-  .skeleton-time {
+  .mm-skeleton-time {
     height: 10px;
     width: 40px;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.05);
-    animation: shimmer 1.5s infinite 0.1s;
+    animation: mmShimmer 1.5s infinite 0.1s;
   }
 
-  .skeleton-message {
+  .mm-skeleton-message {
     height: 12px;
     width: 180px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.05);
-    animation: shimmer 1.5s infinite 0.2s;
+    animation: mmShimmer 1.5s infinite 0.2s;
   }
 
-  @keyframes shimmer {
+  @keyframes mmShimmer {
     0%, 100% { opacity: 0.3; }
     50% { opacity: 0.6; }
   }
 
   /* Chat View */
-  .chat-view {
+  .mm-chat-view {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 64px);
     background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
-    animation: slideIn 0.25s ease;
+    animation: mmSlideIn 0.25s ease;
   }
 
-  @keyframes slideIn {
+  @keyframes mmSlideIn {
     from { transform: translateX(100%); }
     to { transform: translateX(0); }
   }
 
-  .chat-header {
+  .mm-chat-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -607,7 +607,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .back-btn {
+  .mm-back-btn {
     width: 36px;
     height: 36px;
     display: flex;
@@ -621,22 +621,22 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .back-btn:hover {
+  .mm-back-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: white;
   }
 
-  .back-btn svg {
+  .mm-back-btn svg {
     width: 20px;
     height: 20px;
   }
 
-  .chat-avatar-wrap {
+  .mm-chat-avatar-wrap {
     position: relative;
     flex-shrink: 0;
   }
 
-  .chat-avatar {
+  .mm-chat-avatar {
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -644,7 +644,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid rgba(34, 197, 94, 0.25);
   }
 
-  .chat-status-dot {
+  .mm-chat-status-dot {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -654,12 +654,12 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid #0a0a0a;
   }
 
-  .chat-user-info {
+  .mm-chat-user-info {
     flex: 1;
     min-width: 0;
   }
 
-  .chat-name {
+  .mm-chat-name {
     display: block;
     font-size: 1rem;
     font-weight: 600;
@@ -667,12 +667,12 @@ import AppLayout from '../layouts/AppLayout.astro';
     margin-bottom: 0.125rem;
   }
 
-  .chat-status {
+  .mm-chat-status {
     font-size: 0.75rem;
     color: #22c55e;
   }
 
-  .chat-menu-btn {
+  .mm-chat-menu-btn {
     width: 36px;
     height: 36px;
     display: flex;
@@ -683,13 +683,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: rgba(255, 255, 255, 0.7);
   }
 
-  .chat-menu-btn svg {
+  .mm-chat-menu-btn svg {
     width: 18px;
     height: 18px;
   }
 
   /* Messages Container */
-  .messages-container {
+  .mm-messages-container {
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
@@ -698,7 +698,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     gap: 0.375rem;
   }
 
-  .messages-empty {
+  .mm-messages-empty {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -708,33 +708,33 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .messages-empty-icon {
+  .mm-messages-empty-icon {
     margin-bottom: 1rem;
     color: rgba(34, 197, 94, 0.3);
   }
 
-  .messages-empty-icon svg {
+  .mm-messages-empty-icon svg {
     width: 48px;
     height: 48px;
   }
 
-  .messages-empty p {
+  .mm-messages-empty p {
     margin: 0 0 0.25rem 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.6);
   }
 
-  .messages-empty span {
+  .mm-messages-empty span {
     font-size: 0.875rem;
   }
 
   /* Date Separator */
-  .date-sep {
+  .mm-date-sep {
     text-align: center;
     margin: 0.75rem 0;
   }
 
-  .date-sep span {
+  .mm-date-sep span {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.35);
     background: rgba(255, 255, 255, 0.05);
@@ -743,28 +743,28 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Message */
-  .msg {
+  .mm-msg {
     display: flex;
     gap: 0.5rem;
     max-width: 85%;
-    animation: msgIn 0.2s ease;
+    animation: mmMsgIn 0.2s ease;
   }
 
-  @keyframes msgIn {
+  @keyframes mmMsgIn {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .msg.sent {
+  .mm-msg.sent {
     align-self: flex-end;
     flex-direction: row-reverse;
   }
 
-  .msg.received {
+  .mm-msg.received {
     align-self: flex-start;
   }
 
-  .msg-avatar {
+  .mm-msg-avatar {
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -774,17 +774,17 @@ import AppLayout from '../layouts/AppLayout.astro';
     align-self: flex-end;
   }
 
-  .msg.sent .msg-avatar {
+  .mm-msg.sent .mm-msg-avatar {
     display: none;
   }
 
-  .msg-body {
+  .mm-msg-body {
     display: flex;
     flex-direction: column;
     min-width: 0;
   }
 
-  .msg-sender {
+  .mm-msg-sender {
     font-size: 0.7rem;
     color: #22c55e;
     font-weight: 500;
@@ -792,36 +792,36 @@ import AppLayout from '../layouts/AppLayout.astro';
     padding-left: 0.25rem;
   }
 
-  .msg.sent .msg-sender {
+  .mm-msg.sent .mm-msg-sender {
     display: none;
   }
 
-  .msg-bubble {
+  .mm-msg-bubble {
     padding: 0.75rem 1rem;
     border-radius: 1.25rem;
     max-width: 100%;
     word-wrap: break-word;
   }
 
-  .msg.sent .msg-bubble {
+  .mm-msg.sent .mm-msg-bubble {
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
     border-bottom-right-radius: 0.25rem;
   }
 
-  .msg.received .msg-bubble {
+  .mm-msg.received .mm-msg-bubble {
     background: rgba(255, 255, 255, 0.08);
     color: white;
     border-bottom-left-radius: 0.25rem;
   }
 
-  .msg-bubble p {
+  .mm-msg-bubble p {
     margin: 0;
     font-size: 0.95rem;
     line-height: 1.45;
   }
 
-  .msg-footer {
+  .mm-msg-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -829,27 +829,27 @@ import AppLayout from '../layouts/AppLayout.astro';
     margin-top: 0.25rem;
   }
 
-  .msg.received .msg-footer {
+  .mm-msg.received .mm-msg-footer {
     justify-content: flex-start;
   }
 
-  .msg-time {
+  .mm-msg-time {
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.5);
   }
 
-  .msg-check {
+  .mm-msg-check {
     width: 14px;
     height: 14px;
     color: rgba(255, 255, 255, 0.6);
   }
 
-  .msg-check.read {
+  .mm-msg-check.read {
     color: #22c55e;
   }
 
   /* Message Input */
-  .message-input-area {
+  .mm-input-area {
     display: flex;
     gap: 0.75rem;
     padding: 0.875rem 1rem;
@@ -859,7 +859,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .message-input-area input {
+  .mm-input-area input {
     flex: 1;
     padding: 0.875rem 1rem;
     background: rgba(255, 255, 255, 0.05);
@@ -871,15 +871,15 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: border-color 0.2s;
   }
 
-  .message-input-area input::placeholder {
+  .mm-input-area input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .message-input-area input:focus {
+  .mm-input-area input:focus {
     border-color: rgba(34, 197, 94, 0.3);
   }
 
-  .message-input-area button {
+  .mm-input-area button {
     width: 48px;
     height: 48px;
     display: flex;
@@ -894,22 +894,22 @@ import AppLayout from '../layouts/AppLayout.astro';
     flex-shrink: 0;
   }
 
-  .message-input-area button:disabled {
+  .mm-input-area button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .message-input-area button:not(:disabled):hover {
+  .mm-input-area button:not(:disabled):hover {
     transform: scale(1.05);
   }
 
-  .message-input-area button svg {
+  .mm-input-area button svg {
     width: 20px;
     height: 20px;
   }
 
   /* Modal */
-  .modal-overlay {
+  .mm-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.8);
@@ -920,7 +920,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     z-index: 1000;
   }
 
-  .modal-content {
+  .mm-modal-content {
     width: 100%;
     max-width: 500px;
     max-height: 85vh;
@@ -930,29 +930,29 @@ import AppLayout from '../layouts/AppLayout.astro';
     padding: 1.25rem;
     background: rgba(19, 25, 23, 0.98);
     border: 1px solid rgba(34, 197, 94, 0.15);
-    animation: modalUp 0.3s ease;
+    animation: mmModalUp 0.3s ease;
   }
 
-  @keyframes modalUp {
+  @keyframes mmModalUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
 
-  .modal-header {
+  .mm-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
   }
 
-  .modal-header h3 {
+  .mm-modal-header h3 {
     font-size: 1.125rem;
     font-weight: 600;
     color: white;
     margin: 0;
   }
 
-  .modal-close {
+  .mm-modal-close {
     width: 32px;
     height: 32px;
     display: flex;
@@ -966,7 +966,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     cursor: pointer;
   }
 
-  .modal-search {
+  .mm-modal-search {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -977,13 +977,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     margin-bottom: 1rem;
   }
 
-  .modal-search svg {
+  .mm-modal-search svg {
     width: 18px;
     height: 18px;
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .modal-search input {
+  .mm-modal-search input {
     flex: 1;
     background: none;
     border: none;
@@ -992,11 +992,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     outline: none;
   }
 
-  .modal-search input::placeholder {
+  .mm-modal-search input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .modal-list {
+  .mm-modal-list {
     flex: 1;
     overflow-y: auto;
     display: flex;
@@ -1004,7 +1004,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     gap: 0.25rem;
   }
 
-  .modal-item {
+  .mm-modal-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -1014,11 +1014,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: background 0.15s;
   }
 
-  .modal-item:hover {
+  .mm-modal-item:hover {
     background: rgba(34, 197, 94, 0.1);
   }
 
-  .modal-item img {
+  .mm-modal-item img {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -1026,22 +1026,22 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid rgba(34, 197, 94, 0.15);
   }
 
-  .modal-item-info {
+  .mm-modal-item-info {
     flex: 1;
   }
 
-  .modal-item-name {
+  .mm-modal-item-name {
     font-size: 0.95rem;
     font-weight: 500;
     color: white;
   }
 
-  .modal-item-username {
+  .mm-modal-item-username {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.5);
   }
 
-  .modal-loading {
+  .mm-modal-loading {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1050,36 +1050,61 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: rgba(255, 255, 255, 0.5);
   }
 
-  .spinner {
+  .mm-spinner {
     width: 16px;
     height: 16px;
     border: 2px solid rgba(34, 197, 94, 0.2);
     border-top-color: #22c55e;
     border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+    animation: mmSpin 0.7s linear infinite;
   }
 
-  @keyframes spin {
+  @keyframes mmSpin {
     to { transform: rotate(360deg); }
   }
 
   /* Scrollbar */
-  .conv-list::-webkit-scrollbar,
-  .messages-container::-webkit-scrollbar,
-  .modal-list::-webkit-scrollbar {
+  .mm-list::-webkit-scrollbar,
+  .mm-messages-container::-webkit-scrollbar,
+  .mm-modal-list::-webkit-scrollbar {
     width: 4px;
   }
 
-  .conv-list::-webkit-scrollbar-thumb,
-  .messages-container::-webkit-scrollbar-thumb,
-  .modal-list::-webkit-scrollbar-thumb {
+  .mm-list::-webkit-scrollbar-thumb,
+  .mm-messages-container::-webkit-scrollbar-thumb,
+  .mm-modal-list::-webkit-scrollbar-thumb {
     background: rgba(34, 197, 94, 0.2);
     border-radius: 2px;
+  }
+
+  /* Desktop redirect message */
+  .mm-desktop-redirect {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  @media (min-width: 768px) {
+    .mm-desktop-redirect {
+      display: block;
+    }
+    .mm-app > *:not(.mm-desktop-redirect) {
+      display: none;
+    }
   }
 </style>
 
 <script>
   import { supabase } from '../lib/supabase/client';
+
+  // Redirect desktop users to the desktop version
+  if (typeof window !== 'undefined') {
+    const isMobile = window.innerWidth < 768;
+    if (!isMobile) {
+      window.location.href = '/messages';
+    }
+  }
 
   interface Friend {
     user_id: string;
@@ -1116,35 +1141,35 @@ import AppLayout from '../layouts/AppLayout.astro';
   let realtimeChannel: any = null;
 
   // Elements
-  const conversationsView = document.getElementById('conversations-view')!;
-  const chatView = document.getElementById('chat-view')!;
-  const convList = document.getElementById('conv-list')!;
-  const convSkeleton = document.getElementById('conv-skeleton')!;
-  const emptyState = document.getElementById('empty-state')!;
-  const searchBtn = document.getElementById('search-btn')!;
-  const searchContainer = document.getElementById('search-container')!;
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
-  const searchClear = document.getElementById('search-clear')!;
-  const newChatBtn = document.getElementById('new-chat-btn')!;
-  const startBtn = document.getElementById('start-btn')!;
-  const tabs = document.querySelectorAll('.conv-tab');
-  const unreadBadge = document.getElementById('unread-badge')!;
+  const conversationsView = document.getElementById('mm-conversations-view')!;
+  const chatView = document.getElementById('mm-chat-view')!;
+  const convList = document.getElementById('mm-list')!;
+  const convSkeleton = document.getElementById('mm-skeleton')!;
+  const emptyState = document.getElementById('mm-empty-state')!;
+  const searchBtn = document.getElementById('mm-search-btn')!;
+  const searchContainer = document.getElementById('mm-search-container')!;
+  const searchInput = document.getElementById('mm-search-input') as HTMLInputElement;
+  const searchClear = document.getElementById('mm-search-clear')!;
+  const newChatBtn = document.getElementById('mm-new-chat-btn')!;
+  const startBtn = document.getElementById('mm-start-btn')!;
+  const tabs = document.querySelectorAll('.mm-tab');
+  const unreadBadge = document.getElementById('mm-unread-badge')!;
 
-  const backBtn = document.getElementById('back-btn')!;
-  const chatAvatar = document.getElementById('chat-avatar') as HTMLImageElement;
-  const chatStatusDot = document.getElementById('chat-status-dot')!;
-  const chatName = document.getElementById('chat-name')!;
-  const chatStatus = document.getElementById('chat-status')!;
-  const chatProfile = document.getElementById('chat-profile') as HTMLAnchorElement;
-  const messagesContainer = document.getElementById('messages-container')!;
-  const messageForm = document.getElementById('message-form') as HTMLFormElement;
-  const messageInput = document.getElementById('message-input') as HTMLInputElement;
-  const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+  const backBtn = document.getElementById('mm-back-btn')!;
+  const chatAvatar = document.getElementById('mm-chat-avatar') as HTMLImageElement;
+  const chatStatusDot = document.getElementById('mm-chat-status-dot')!;
+  const chatName = document.getElementById('mm-chat-name')!;
+  const chatStatus = document.getElementById('mm-chat-status')!;
+  const chatProfile = document.getElementById('mm-chat-profile') as HTMLAnchorElement;
+  const messagesContainer = document.getElementById('mm-messages-container')!;
+  const messageForm = document.getElementById('mm-message-form') as HTMLFormElement;
+  const messageInput = document.getElementById('mm-message-input') as HTMLInputElement;
+  const sendBtn = document.getElementById('mm-send-btn') as HTMLButtonElement;
 
-  const newChatModal = document.getElementById('new-chat-modal')!;
-  const modalClose = document.getElementById('modal-close')!;
-  const modalSearchInput = document.getElementById('modal-search-input') as HTMLInputElement;
-  const modalList = document.getElementById('modal-list')!;
+  const newChatModal = document.getElementById('mm-new-chat-modal')!;
+  const modalClose = document.getElementById('mm-modal-close')!;
+  const modalSearchInput = document.getElementById('mm-modal-search-input') as HTMLInputElement;
+  const modalList = document.getElementById('mm-modal-list')!;
 
   // Initialize
   init();
@@ -1304,7 +1329,7 @@ import AppLayout from '../layouts/AppLayout.astro';
         convList.innerHTML = '';
       } else {
         convList.innerHTML = `
-          <div class="empty-state">
+          <div class="mm-empty-state">
             <p style="color: rgba(255,255,255,0.5);">No hay conversaciones en esta categoría</p>
           </div>
         `;
@@ -1320,26 +1345,26 @@ import AppLayout from '../layouts/AppLayout.astro';
       const lastMsg = conv.last_message.substring(0, 45) + (conv.last_message.length > 45 ? '...' : '');
 
       return `
-        <div class="conv-item" data-conv-id="${conv.id}" data-user-id="${conv.other_user.user_id}" data-name="${conv.other_user.display_name || conv.other_user.username}" data-avatar="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" data-status="${conv.other_user.status}">
-          <div class="conv-avatar-wrap">
-            <img src="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" alt="" class="conv-avatar" onerror="this.src='/images/default-avatar.svg'" />
-            <span class="conv-status-dot ${statusClass}"></span>
+        <div class="mm-item" data-conv-id="${conv.id}" data-user-id="${conv.other_user.user_id}" data-name="${conv.other_user.display_name || conv.other_user.username}" data-avatar="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" data-status="${conv.other_user.status}">
+          <div class="mm-avatar-wrap">
+            <img src="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" alt="" class="mm-avatar" onerror="this.src='/images/default-avatar.svg'" />
+            <span class="mm-status-dot ${statusClass}"></span>
           </div>
-          <div class="conv-content">
-            <div class="conv-row">
-              <span class="conv-name">${conv.other_user.display_name || conv.other_user.username}</span>
-              <span class="conv-time">${time}</span>
+          <div class="mm-content">
+            <div class="mm-row">
+              <span class="mm-name">${conv.other_user.display_name || conv.other_user.username}</span>
+              <span class="mm-time">${time}</span>
             </div>
-            <div class="conv-preview">
-              <span class="conv-last-msg">${lastMsg}</span>
-              ${conv.unread_count > 0 ? `<span class="conv-unread">${conv.unread_count}</span>` : ''}
+            <div class="mm-preview">
+              <span class="mm-last-msg">${lastMsg}</span>
+              ${conv.unread_count > 0 ? `<span class="mm-unread">${conv.unread_count}</span>` : ''}
             </div>
           </div>
         </div>
       `;
     }).join('');
 
-    convList.querySelectorAll('.conv-item').forEach(item => {
+    convList.querySelectorAll('.mm-item').forEach(item => {
       item.addEventListener('click', () => {
         const id = item.getAttribute('data-user-id')!;
         const name = item.getAttribute('data-name')!;
@@ -1419,9 +1444,9 @@ import AppLayout from '../layouts/AppLayout.astro';
 
     modalSearchInput.addEventListener('input', () => {
       const query = modalSearchInput.value.toLowerCase();
-      modalList.querySelectorAll('.modal-item').forEach((item: any) => {
-        const name = item.querySelector('.modal-item-name')?.textContent?.toLowerCase() || '';
-        const username = item.querySelector('.modal-item-username')?.textContent?.toLowerCase() || '';
+      modalList.querySelectorAll('.mm-modal-item').forEach((item: any) => {
+        const name = item.querySelector('.mm-modal-item-name')?.textContent?.toLowerCase() || '';
+        const username = item.querySelector('.mm-modal-item-username')?.textContent?.toLowerCase() || '';
         item.style.display = name.includes(query) || username.includes(query) ? 'flex' : 'none';
       });
     });
@@ -1430,7 +1455,7 @@ import AppLayout from '../layouts/AppLayout.astro';
   async function loadFriendsForModal() {
     if (friends.length === 0) {
       modalList.innerHTML = `
-        <div class="modal-loading">
+        <div class="mm-modal-loading">
           <span style="color: rgba(255,255,255,0.5);">No tienes amigos aún</span>
         </div>
       `;
@@ -1438,16 +1463,16 @@ import AppLayout from '../layouts/AppLayout.astro';
     }
 
     modalList.innerHTML = friends.map(f => `
-      <div class="modal-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
+      <div class="mm-modal-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
         <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="" onerror="this.src='/images/default-avatar.svg'" />
-        <div class="modal-item-info">
-          <div class="modal-item-name">${f.display_name || f.username}</div>
-          <div class="modal-item-username">@${f.username}</div>
+        <div class="mm-modal-item-info">
+          <div class="mm-modal-item-name">${f.display_name || f.username}</div>
+          <div class="mm-modal-item-username">@${f.username}</div>
         </div>
       </div>
     `).join('');
 
-    modalList.querySelectorAll('.modal-item').forEach(item => {
+    modalList.querySelectorAll('.mm-modal-item').forEach(item => {
       item.addEventListener('click', () => {
         const id = item.getAttribute('data-id')!;
         const name = item.getAttribute('data-name')!;
@@ -1466,7 +1491,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     chatAvatar.src = avatar;
     chatProfile.href = `/profile/${id}`;
 
-    chatStatusDot.className = 'chat-status-dot ' + (status === 'online' ? 'online' : status === 'away' ? 'away' : 'offline');
+    chatStatusDot.className = 'mm-chat-status-dot ' + (status === 'online' ? 'online' : status === 'away' ? 'away' : 'offline');
     chatStatus.textContent = status === 'online' ? 'En línea' : status === 'away' ? 'Ausente' : 'Desconectado';
     chatStatus.style.color = status === 'online' ? '#22c55e' : status === 'away' ? '#f59e0b' : 'rgba(255,255,255,0.5)';
 
@@ -1585,8 +1610,8 @@ import AppLayout from '../layouts/AppLayout.astro';
   function renderMessages() {
     if (messages.length === 0) {
       messagesContainer.innerHTML = `
-        <div class="messages-empty">
-          <div class="messages-empty-icon">
+        <div class="mm-messages-empty">
+          <div class="mm-messages-empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
@@ -1604,7 +1629,7 @@ import AppLayout from '../layouts/AppLayout.astro';
       let dateSep = '';
       if (msgDate !== lastDate) {
         lastDate = msgDate;
-        dateSep = `<div class="date-sep"><span>${msgDate}</span></div>`;
+        dateSep = `<div class="mm-date-sep"><span>${msgDate}</span></div>`;
       }
 
       const isMine = msg.sender_id === userId;
@@ -1613,15 +1638,15 @@ import AppLayout from '../layouts/AppLayout.astro';
       const senderAvatar = currentChat?.avatar || '/images/default-avatar.svg';
 
       return `${dateSep}
-        <div class="msg ${isMine ? 'sent' : 'received'}">
-          ${!isMine ? `<img src="${senderAvatar}" alt="" class="msg-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
-          <div class="msg-body">
-            ${!isMine ? `<span class="msg-sender">${senderName}</span>` : ''}
-            <div class="msg-bubble">
+        <div class="mm-msg ${isMine ? 'sent' : 'received'}">
+          ${!isMine ? `<img src="${senderAvatar}" alt="" class="mm-msg-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
+          <div class="mm-msg-body">
+            ${!isMine ? `<span class="mm-msg-sender">${senderName}</span>` : ''}
+            <div class="mm-msg-bubble">
               <p>${escapeHtml(msg.content)}</p>
-              <div class="msg-footer">
-                <span class="msg-time">${time}</span>
-                ${isMine ? `<svg class="msg-check read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
+              <div class="mm-msg-footer">
+                <span class="mm-msg-time">${time}</span>
+                ${isMine ? `<svg class="mm-msg-check read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
               </div>
             </div>
           </div>
