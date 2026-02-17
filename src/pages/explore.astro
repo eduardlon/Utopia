@@ -1,0 +1,772 @@
+---
+// Explore page - Content discovery with recommendations
+import AppLayout from "../layouts/AppLayout.astro";
+---
+
+<AppLayout title="Explorar">
+  <div class="explore-page">
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-bar">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          placeholder="Buscar usuarios, hashtags, contenido..."
+          class="search-input"
+          id="search-input"
+        />
+        <button class="search-clear" id="search-clear" style="display: none;">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="category-filters">
+      <button class="filter-chip active" data-category="all">Todos</button>
+      <button class="filter-chip" data-category="trending">Tendencias</button>
+      <button class="filter-chip" data-category="photos">Fotos</button>
+      <button class="filter-chip" data-category="videos">Videos</button>
+      <button class="filter-chip" data-category="art">Arte</button>
+      <button class="filter-chip" data-category="music">Música</button>
+      <button class="filter-chip" data-category="tech">Tecnología</button>
+    </div>
+
+    <!-- Trending Hashtags -->
+    <div class="trending-section">
+      <h2 class="section-title">Tendencias</h2>
+      <div class="trending-tags">
+        <!-- Trending tags loaded dynamically by JS -->
+        <div class="trending-skeleton">
+          <div class="skel-tag skeleton"></div>
+          <div class="skel-tag skeleton"></div>
+          <div class="skel-tag skeleton"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explore Grid -->
+    <div class="explore-grid" id="explore-grid">
+      <!-- Content will be loaded dynamically -->
+      <div class="grid-skeleton">
+        {
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(() => (
+            <div class="skeleton-item skeleton" />
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-container">
+      <button class="btn btn-secondary" id="load-more-btn"> Cargar más </button>
+    </div>
+  </div>
+</AppLayout>
+
+<style>
+  .explore-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: exploreIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  @keyframes exploreIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .search-section {
+    position: sticky;
+    top: 64px;
+    z-index: 10;
+    padding: 0.5rem 0;
+    background: linear-gradient(
+      180deg,
+      rgba(11, 15, 14, 0.95) 0%,
+      transparent 100%
+    );
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(14, 20, 18, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition:
+      border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .search-bar:focus-within {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.06);
+  }
+
+  .search-bar svg {
+    width: 18px;
+    height: 18px;
+    color: rgba(34, 197, 94, 0.5);
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+  }
+
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .search-clear svg {
+    width: 13px;
+    height: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .search-clear:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .category-filters {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .category-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    padding: 0.45rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .filter-chip:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .filter-chip.active {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #4ade80;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.08);
+  }
+
+  .trending-section {
+    padding: 1.25rem;
+    background: linear-gradient(
+      145deg,
+      rgba(19, 25, 23, 0.7) 0%,
+      rgba(14, 20, 18, 0.5) 100%
+    );
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: -0.01em;
+  }
+
+  .trending-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .trending-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.65rem;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .trending-tag:hover {
+    background: rgba(34, 197, 94, 0.06);
+  }
+
+  .tag-hash {
+    color: #22c55e;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .tag-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 0.88rem;
+  }
+
+  .tag-count {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.72rem;
+    margin-left: auto;
+  }
+
+  .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.35rem;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 767px) {
+    .explore-grid {
+      gap: 2px;
+      border-radius: 10px;
+    }
+  }
+
+  .grid-skeleton {
+    display: contents;
+  }
+
+  .skeleton-item {
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.06) 40%,
+      rgba(255, 255, 255, 0.03) 60%
+    );
+    background-size: 250% 100%;
+    animation: skelShimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes skelShimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .load-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .load-more-container .btn {
+    padding: 0.6rem 1.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .load-more-container .btn:hover {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+  }
+
+  /* Explore Grid Items */
+  .explore-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    background: rgba(19, 25, 23, 0.5);
+  }
+
+  .explore-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .explore-item:hover img {
+    transform: scale(1.05);
+  }
+
+  .explore-item-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .explore-item:hover .explore-item-overlay {
+    opacity: 1;
+  }
+
+  .explore-item.text-item {
+    display: flex;
+    align-items: stretch;
+    padding: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(19, 25, 23, 0.9),
+      rgba(34, 197, 94, 0.06)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+  }
+
+  .explore-text-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.75rem;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .explore-text-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .explore-text-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid rgba(34, 197, 94, 0.3);
+    flex-shrink: 0;
+  }
+
+  .explore-text-author {
+    font-size: 0.72rem;
+    color: #4ade80;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .explore-text-body {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    flex: 1;
+  }
+
+  .explore-text-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 0.4rem;
+  }
+
+  /* Trending skeleton */
+  .trending-skeleton {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .skel-tag {
+    height: 60px;
+    flex: 1;
+    border-radius: 12px;
+  }
+
+  /* Search Results */
+  .search-results-grid {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .search-result-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .search-result-card:hover {
+    background: rgba(34, 197, 94, 0.06);
+    border-color: rgba(34, 197, 94, 0.1);
+  }
+
+  .search-result-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .search-result-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .search-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .search-result-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-result-name {
+    display: block;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.88rem;
+  }
+
+  .search-result-username {
+    display: block;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .search-result-bio {
+    display: block;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 0.15rem;
+  }
+</style>
+
+<script>
+  import { supabase } from "../lib/supabase/client";
+
+  const searchInput = document.getElementById(
+    "search-input",
+  ) as HTMLInputElement;
+  const searchClear = document.getElementById(
+    "search-clear",
+  ) as HTMLButtonElement;
+  const exploreGrid = document.getElementById("explore-grid") as HTMLDivElement;
+  const loadMoreBtn = document.getElementById(
+    "load-more-btn",
+  ) as HTMLButtonElement;
+  const trendingSection = document.querySelector(
+    ".trending-section",
+  ) as HTMLDivElement;
+  const trendingTags = document.querySelector(
+    ".trending-tags",
+  ) as HTMLDivElement;
+
+  let currentPage = 0;
+  const PAGE_SIZE = 12;
+  let allPosts: any[] = [];
+  let searchTimeout: ReturnType<typeof setTimeout>;
+
+  // Load posts for explore grid
+  async function loadPosts(append = false) {
+    if (!append) {
+      exploreGrid.innerHTML = `<div class="grid-skeleton">${Array(12).fill('<div class="skeleton-item skeleton" style="aspect-ratio:1;"></div>').join("")}</div>`;
+    }
+
+    const from = currentPage * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data: posts, error } = await (supabase as any)
+      .from("posts")
+      .select(
+        "id, content, media_urls, created_at, profiles:user_id (username, display_name, avatar_url), interactions(count)",
+      )
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      console.error("Error loading posts:", error);
+      if (!append)
+        exploreGrid.innerHTML =
+          '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:rgba(255,255,255,0.4);">Error al cargar contenido</div>';
+      return;
+    }
+
+    if (!posts || posts.length === 0) {
+      if (!append) {
+        exploreGrid.innerHTML =
+          '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:rgba(255,255,255,0.4);">No hay publicaciones aún. ¡Sé el primero en publicar!</div>';
+      }
+      loadMoreBtn.style.display = "none";
+      return;
+    }
+
+    allPosts = append ? [...allPosts, ...posts] : posts;
+
+    const postsHtml = posts
+      .map((post: any) => {
+        const imgUrl =
+          post.media_urls && post.media_urls.length > 0
+            ? post.media_urls[0]
+            : null;
+        const likeCount = post.interactions?.[0]?.count || 0;
+        if (imgUrl) {
+          return `<a href="/feed" class="explore-item" title="${post.profiles?.username || ""}">
+          <img src="${imgUrl}" alt="" loading="lazy" />
+          <div class="explore-item-overlay">
+            <span>❤️ ${likeCount}</span>
+          </div>
+        </a>`;
+        }
+        // Text-only posts - render as styled cards
+        return `<div class="explore-item text-item">
+        <div class="explore-text-content">
+          <div class="explore-text-header">
+            <img src="${post.profiles?.avatar_url || "/images/default-avatar.svg"}" alt="" class="explore-text-avatar" />
+            <span class="explore-text-author">@${post.profiles?.username || "usuario"}</span>
+          </div>
+          <p class="explore-text-body">${(post.content || "").slice(0, 120)}${(post.content || "").length > 120 ? "..." : ""}</p>
+          <div class="explore-text-footer">
+            <span>❤️ ${likeCount}</span>
+          </div>
+        </div>
+      </div>`;
+      })
+      .join("");
+
+    if (append) {
+      exploreGrid.insertAdjacentHTML("beforeend", postsHtml);
+    } else {
+      exploreGrid.innerHTML = postsHtml;
+    }
+
+    if (posts.length < PAGE_SIZE) {
+      loadMoreBtn.style.display = "none";
+    } else {
+      loadMoreBtn.style.display = "inline-flex";
+    }
+  }
+
+  // Search users
+  async function searchUsers(query: string) {
+    if (query.length < 2) {
+      loadPosts();
+      if (trendingSection) trendingSection.style.display = "block";
+      return;
+    }
+
+    if (trendingSection) trendingSection.style.display = "none";
+
+    exploreGrid.innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:rgba(255,255,255,0.4);">Buscando...</div>';
+
+    const { data: users, error } = await (supabase as any)
+      .from("profiles")
+      .select("id, username, display_name, avatar_url, bio")
+      .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
+      .limit(20);
+
+    if (error || !users || users.length === 0) {
+      exploreGrid.innerHTML =
+        '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:rgba(255,255,255,0.4);">No se encontraron resultados</div>';
+      loadMoreBtn.style.display = "none";
+      return;
+    }
+
+    exploreGrid.innerHTML = `<div class="search-results-grid">${users
+      .map(
+        (u: any) => `
+      <a href="/profile/${u.username}" class="search-result-card">
+        <div class="search-result-avatar">
+          ${
+            u.avatar_url
+              ? `<img src="${u.avatar_url}" alt="${u.username}" />`
+              : `<div class="search-avatar-placeholder">${(u.username || "U").charAt(0).toUpperCase()}</div>`
+          }
+        </div>
+        <div class="search-result-info">
+          <span class="search-result-name">${u.display_name || u.username}</span>
+          <span class="search-result-username">@${u.username}</span>
+          ${u.bio ? `<span class="search-result-bio">${u.bio.slice(0, 60)}</span>` : ""}
+        </div>
+      </a>
+    `,
+      )
+      .join("")}</div>`;
+
+    loadMoreBtn.style.display = "none";
+  }
+
+  // Event listeners
+  searchInput?.addEventListener("input", (e) => {
+    const value = (e.target as HTMLInputElement).value;
+    searchClear.style.display = value ? "flex" : "none";
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => searchUsers(value.trim()), 350);
+  });
+
+  searchClear?.addEventListener("click", () => {
+    searchInput.value = "";
+    searchClear.style.display = "none";
+    searchInput.focus();
+    if (trendingSection) trendingSection.style.display = "block";
+    currentPage = 0;
+    loadPosts();
+  });
+
+  loadMoreBtn?.addEventListener("click", () => {
+    currentPage++;
+    loadPosts(true);
+  });
+
+  // Category filter
+  const filterChips = document.querySelectorAll(".filter-chip");
+  filterChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      filterChips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentPage = 0;
+      loadPosts();
+    });
+  });
+
+  // Load trending hashtags from posts
+  async function loadTrending() {
+    const { data: recentPosts } = await (supabase as any)
+      .from("posts")
+      .select("content")
+      .order("created_at", { ascending: false })
+      .limit(100);
+
+    if (recentPosts && trendingTags) {
+      const tagCounts: Record<string, number> = {};
+      recentPosts.forEach((p: any) => {
+        const tags = (p.content || "").match(/#(\w+)/g);
+        if (tags)
+          tags.forEach((t: string) => {
+            const tag = t.toLowerCase();
+            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+          });
+      });
+
+      const sorted = Object.entries(tagCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+      if (sorted.length > 0) {
+        trendingTags.innerHTML = sorted
+          .map(
+            ([tag, count]) => `
+          <a href="/explore?tag=${tag.slice(1)}" class="trending-tag">
+            <span class="tag-hash">#</span>
+            <span class="tag-name">${tag.slice(1)}</span>
+            <span class="tag-count">${count} publicaciones</span>
+          </a>
+        `,
+          )
+          .join("");
+      } else {
+        trendingTags.innerHTML =
+          '<div style="padding:0.75rem;color:rgba(255,255,255,0.35);font-size:0.82rem;text-align:center;">No hay tendencias aún. Usa #hashtags en tus publicaciones.</div>';
+      }
+    }
+  }
+
+  // Initialize
+  loadPosts();
+  loadTrending();
+</script>

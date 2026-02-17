@@ -1,0 +1,2064 @@
+---
+import '../styles/globals.css';
+import { getCurrentUser } from '../lib/supabase/server';
+
+// Redirect authenticated users to feed
+const user = await getCurrentUser(Astro);
+if (user) {
+  return Astro.redirect('/feed');
+}
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = 'Utopía - Red Social', 
+  description = 'Una nueva forma de conectar. Videollamadas, chat en tiempo real, reels y más.' 
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- Ambient Background -->
+    <div class="ambient-bg">
+      <div class="ambient-orb ambient-orb-1"></div>
+      <div class="ambient-orb ambient-orb-2"></div>
+      <div class="ambient-orb ambient-orb-3"></div>
+      <div class="noise-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <div class="nav-container">
+        <a href="/" class="logo-link">
+          <div class="logo">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="16" cy="16" r="14" stroke="url(#navLogoGradient)" stroke-width="2"/>
+              <circle cx="16" cy="16" r="8" fill="url(#navLogoGradient)" opacity="0.3"/>
+              <circle cx="16" cy="16" r="4" fill="url(#navLogoGradient)"/>
+              <defs>
+                <linearGradient id="navLogoGradient" x1="0" y1="0" x2="32" y2="32">
+                  <stop offset="0%" stop-color="#2dd4a0"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="brand-name">Utopía</span>
+        </a>
+        
+        <div class="nav-links">
+          <a href="#features" class="nav-link">Características</a>
+          <a href="#about" class="nav-link">Acerca de</a>
+          <a href="#contact" class="nav-link">Contacto</a>
+        </div>
+        
+        <div class="nav-actions">
+          <a href="/login" class="btn btn-ghost">Iniciar Sesión</a>
+          <a href="/register" class="btn btn-primary">Registrarse</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div class="mobile-menu" id="mobile-menu">
+        <a href="#features" class="mobile-link">Características</a>
+        <a href="#about" class="mobile-link">Acerca de</a>
+        <a href="#contact" class="mobile-link">Contacto</a>
+        <div class="mobile-actions">
+          <a href="/login" class="btn btn-ghost">Iniciar Sesión</a>
+          <a href="/register" class="btn btn-primary">Registrarse</a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Nueva era de redes sociales</span>
+          </div>
+          
+          <h1 class="hero-title">
+            Conecta en un
+            <span class="text-gradient">nuevo universo</span>
+            social
+          </h1>
+          
+          <p class="hero-subtitle">
+            Videollamadas HD, chat en tiempo real, reels inmersivos y anuncios geolocalizados. 
+            Tu espacio digital premium te espera.
+          </p>
+          
+          <div class="hero-actions">
+            <a href="/register" class="btn btn-primary btn-lg">
+              <span>Comenzar Gratis</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <a href="#features" class="btn btn-glass btn-lg">
+              <span>Explorar</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-value">10K+</span>
+              <span class="stat-label">Usuarios activos</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <span class="stat-value">50K+</span>
+              <span class="stat-label">Publicaciones</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <span class="stat-value">99.9%</span>
+              <span class="stat-label">Uptime</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Visual -->
+        <div class="hero-visual">
+          <div class="app-preview">
+            <div class="preview-header">
+              <div class="preview-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="preview-title">Utopía Feed</span>
+            </div>
+            <div class="preview-content">
+              <!-- Mock Feed Items -->
+              <div class="feed-item">
+                <div class="feed-avatar"></div>
+                <div class="feed-text">
+                  <div class="feed-line feed-line-title"></div>
+                  <div class="feed-line feed-line-body"></div>
+                </div>
+                <div class="feed-image"></div>
+              </div>
+              <div class="feed-item">
+                <div class="feed-avatar"></div>
+                <div class="feed-text">
+                  <div class="feed-line feed-line-title"></div>
+                  <div class="feed-line feed-line-body"></div>
+                </div>
+              </div>
+              <div class="feed-item">
+                <div class="feed-avatar"></div>
+                <div class="feed-text">
+                  <div class="feed-line feed-line-title"></div>
+                  <div class="feed-line feed-line-body"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Notification Cards -->
+          <div class="floating-card floating-card-1">
+            <div class="floating-icon floating-icon-green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="floating-text">
+              <span class="floating-title">Videollamada entrante</span>
+              <span class="floating-subtitle">María García</span>
+            </div>
+          </div>
+
+          <div class="floating-card floating-card-2">
+            <div class="floating-icon floating-icon-red">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <div class="floating-text">
+              <span class="floating-title">+128 likes</span>
+              <span class="floating-subtitle">En tu publicación</span>
+            </div>
+          </div>
+
+          <div class="floating-card floating-card-3">
+            <div class="floating-icon floating-icon-blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="floating-text">
+              <span class="floating-title">Nuevo mensaje</span>
+              <span class="floating-subtitle">Carlos: Hola! 👋</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="features">
+        <div class="section-container">
+          <div class="section-header">
+            <span class="section-badge">Características</span>
+            <h2 class="section-title">
+              Todo lo que necesitas en
+              <span class="text-gradient">un solo lugar</span>
+            </h2>
+            <p class="section-subtitle">
+              Descubre las funcionalidades que hacen de Utopía una experiencia social única.
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <!-- Feature 1: Video Calls -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Videollamadas HD</h3>
+              <p class="feature-description">
+                Llamadas de video y voz en alta definición con WebRTC. 
+                Comparte tu pantalla y conecta cara a cara con tus amigos.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">WebRTC</span>
+                <span class="tag">HD</span>
+              </div>
+            </div>
+
+            <!-- Feature 2: Real-time Chat -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  <line x1="9" y1="10" x2="15" y2="10"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Chat en Tiempo Real</h3>
+              <p class="feature-description">
+                Mensajería instantánea con WebSockets. Envía textos, 
+                imágenes, archivos y reacciona a los mensajes.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">WebSockets</span>
+                <span class="tag">Instantáneo</span>
+              </div>
+            </div>
+
+            <!-- Feature 3: Reels -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/>
+                  <line x1="7" y1="2" x2="7" y2="22"/>
+                  <line x1="17" y1="2" x2="17" y2="22"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <line x1="2" y1="7" x2="7" y2="7"/>
+                  <line x1="2" y1="17" x2="7" y2="17"/>
+                  <line x1="17" y1="17" x2="22" y2="17"/>
+                  <line x1="17" y1="7" x2="22" y2="7"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Reels Verticales</h3>
+              <p class="feature-description">
+                Feed de videos cortos con desplazamiento infinito y 
+                transiciones fluidas. Crea y comparte contenido viral.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">Videos</span>
+                <span class="tag">Infinito</span>
+              </div>
+            </div>
+
+            <!-- Feature 4: Geolocated Ads -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Anuncios Geolocalizados</h3>
+              <p class="feature-description">
+                Descubre eventos y anuncios cerca de ti con mapas 
+                interactivos y marcadores en tiempo real.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">Mapas</span>
+                <span class="tag">GPS</span>
+              </div>
+            </div>
+
+            <!-- Feature 5: Games -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="6" y1="12" x2="10" y2="12"/>
+                  <line x1="8" y1="10" x2="8" y2="14"/>
+                  <line x1="15" y1="13" x2="15.01" y2="13"/>
+                  <line x1="18" y1="11" x2="18.01" y2="11"/>
+                  <rect x="2" y="6" width="20" height="12" rx="2"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Juegos y Entretenimiento</h3>
+              <p class="feature-description">
+                Juega con tus amigos directamente en la app. 
+                Minijuegos casuales y torneos semanales.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">Multiplayer</span>
+                <span class="tag">Diversión</span>
+              </div>
+            </div>
+
+            <!-- Feature 6: Security -->
+            <div class="feature-card">
+              <div class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+              </div>
+              <h3 class="feature-title">Seguridad Premium</h3>
+              <p class="feature-description">
+                Autenticación OAuth con Google y Facebook. 
+                Row Level Security para proteger tus datos.
+              </p>
+              <div class="feature-tags">
+                <span class="tag">OAuth</span>
+                <span class="tag">RLS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Proof Section -->
+      <section id="about" class="social-proof">
+        <div class="section-container">
+          <div class="proof-content">
+            <div class="proof-text">
+              <span class="section-badge">Comunidad</span>
+              <h2 class="section-title">
+                Únete a miles de
+                <span class="text-gradient">usuarios felices</span>
+              </h2>
+              <p class="section-subtitle">
+                Nuestra comunidad crece cada día. Personas de todo el mundo 
+                ya están disfrutando de una nueva forma de conectar.
+              </p>
+
+              <div class="testimonials">
+                <div class="testimonial">
+                  <div class="testimonial-avatar"></div>
+                  <div class="testimonial-content">
+                    <p class="testimonial-text">
+                      "La mejor experiencia en videollamadas que he tenido. 
+                      La calidad es increíble y sin retrasos."
+                    </p>
+                    <span class="testimonial-author">— Ana Martínez</span>
+                  </div>
+                </div>
+
+                <div class="testimonial">
+                  <div class="testimonial-avatar"></div>
+                  <div class="testimonial-content">
+                    <p class="testimonial-text">
+                      "Los reels son adictivos! Paso horas viendo contenido 
+                      de calidad. Me encanta la interfaz."
+                    </p>
+                    <span class="testimonial-author">— Carlos Ruiz</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="proof-visual">
+              <div class="user-avatars">
+                <div class="avatar-stack">
+                  <div class="avatar avatar-1"></div>
+                  <div class="avatar avatar-2"></div>
+                  <div class="avatar avatar-3"></div>
+                  <div class="avatar avatar-4"></div>
+                  <div class="avatar avatar-5"></div>
+                  <div class="avatar avatar-more">+99</div>
+                </div>
+                <p class="avatar-text">Usuarios activos ahora</p>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <span class="stat-number">4.9</span>
+                  <div class="stat-stars">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                  <span class="stat-desc">Calificación promedio</span>
+                </div>
+
+                <div class="stat-card">
+                  <span class="stat-number">24/7</span>
+                  <span class="stat-desc">Soporte disponible</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="cta-section">
+        <div class="section-container">
+          <div class="cta-card">
+            <div class="cta-glow"></div>
+            <h2 class="cta-title">¿Listo para unirte?</h2>
+            <p class="cta-subtitle">
+              Crea tu cuenta gratis y descubre una nueva forma de conectar 
+              con personas de todo el mundo.
+            </p>
+            <div class="cta-actions">
+              <a href="/register" class="btn btn-primary btn-lg">
+                <span>Crear Cuenta Gratis</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+              <a href="/login" class="btn btn-glass btn-lg">
+                <span>Ya tengo cuenta</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer id="contact" class="footer">
+        <div class="footer-container">
+          <div class="footer-main">
+            <div class="footer-brand">
+              <a href="/" class="logo-link">
+                <div class="logo">
+                  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="14" stroke="url(#footerLogoGradient)" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="8" fill="url(#footerLogoGradient)" opacity="0.3"/>
+                    <circle cx="16" cy="16" r="4" fill="url(#footerLogoGradient)"/>
+                    <defs>
+                      <linearGradient id="footerLogoGradient" x1="0" y1="0" x2="32" y2="32">
+                        <stop offset="0%" stop-color="#2dd4a0"/>
+                        <stop offset="100%" stop-color="#10b981"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <span class="brand-name">Utopía</span>
+              </a>
+              <p class="footer-tagline">
+                Una nueva forma de conectar con el mundo.
+              </p>
+            </div>
+
+            <div class="footer-links">
+              <div class="footer-column">
+                <h4 class="footer-heading">Producto</h4>
+                <a href="#features" class="footer-link">Características</a>
+                <a href="#" class="footer-link">Precios</a>
+                <a href="#" class="footer-link">API</a>
+              </div>
+
+              <div class="footer-column">
+                <h4 class="footer-heading">Compañía</h4>
+                <a href="#" class="footer-link">Acerca de</a>
+                <a href="#" class="footer-link">Blog</a>
+                <a href="#" class="footer-link">Carreras</a>
+              </div>
+
+              <div class="footer-column">
+                <h4 class="footer-heading">Legal</h4>
+                <a href="#" class="footer-link">Términos</a>
+                <a href="#" class="footer-link">Privacidad</a>
+                <a href="#" class="footer-link">Cookies</a>
+              </div>
+            </div>
+
+            <div class="footer-social">
+              <h4 class="footer-heading">Síguenos</h4>
+              <div class="social-links">
+                <a href="#" class="social-link" aria-label="Twitter">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                  </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                  </svg>
+                </a>
+                <a href="#" class="social-link" aria-label="GitHub">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-bottom">
+            <p class="copyright">
+              © 2025 Utopía. Todos los derechos reservados.
+            </p>
+            <div class="footer-bottom-links">
+              <a href="#" class="footer-bottom-link">Términos</a>
+              <a href="#" class="footer-bottom-link">Privacidad</a>
+              <a href="#" class="footer-bottom-link">Cookies</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Base Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Sora', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #050505;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient Background */
+  .ambient-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .ambient-orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #10b981 0%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    animation-delay: 0s;
+  }
+
+  .ambient-orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #059669 0%, transparent 70%);
+    bottom: -150px;
+    left: -100px;
+    animation-delay: -7s;
+  }
+
+  .ambient-orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #2dd4a0 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -14s;
+    opacity: 0.2;
+  }
+
+  .noise-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    25% {
+      transform: translate(30px, -30px) scale(1.05);
+    }
+    50% {
+      transform: translate(-20px, 20px) scale(0.95);
+    }
+    75% {
+      transform: translate(-30px, -20px) scale(1.02);
+    }
+  }
+
+  /* Text Gradient */
+  .text-gradient {
+    background: linear-gradient(135deg, #2dd4a0 0%, #10b981 50%, #059669 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1rem 1.5rem;
+    background: rgba(5, 5, 5, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+    filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.3));
+  }
+
+  .logo svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .brand-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #2dd4a0 0%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: #ffffff;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .mobile-menu-btn svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.5rem;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-menu.active {
+    display: flex;
+  }
+
+  .mobile-link {
+    padding: 0.75rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: background 0.2s ease;
+  }
+
+  .mobile-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .mobile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    border: none;
+  }
+
+  .btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-lg {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .btn-lg svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(16, 185, 129, 0.35);
+  }
+
+  .btn-primary:hover::before {
+    opacity: 1;
+  }
+
+  .btn-primary:hover svg {
+    transform: translateX(2px);
+  }
+
+  .btn-primary svg {
+    transition: transform 0.2s ease;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+  }
+
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .btn-glass:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .btn-glass:hover svg {
+    transform: translateY(2px);
+  }
+
+  .btn-glass svg {
+    transition: transform 0.2s ease;
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 1.5rem 4rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: 4rem;
+  }
+
+  .hero-content {
+    flex: 1;
+    max-width: 600px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 100px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #2dd4a0;
+    margin-bottom: 1.5rem;
+    animation: heroFadeUp 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s both;
+  }
+
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: heroFadeUp 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s both;
+  }
+
+  .hero-title .text-gradient {
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 2rem;
+    max-width: 500px;
+    animation: heroFadeUp 0.7s cubic-bezier(0.4,0,0.2,1) 0.35s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    animation: heroFadeUp 0.7s cubic-bezier(0.4,0,0.2,1) 0.45s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    animation: heroFadeUp 0.7s cubic-bezier(0.4,0,0.2,1) 0.55s both;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .stat-label {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Hero Visual */
+  .hero-visual {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    animation: heroFadeUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.4s both;
+  }
+
+  .app-preview {
+    width: 100%;
+    max-width: 320px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 
+      0 32px 64px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+      0 2px 0 rgba(255, 255, 255, 0.03) inset;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .app-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(45, 212, 160, 0.3),
+      transparent
+    );
+  }
+
+  .preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .preview-dots {
+    display: flex;
+    gap: 0.375rem;
+  }
+
+  .preview-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .preview-dots span:first-child {
+    background: #ef4444;
+  }
+
+  .preview-dots span:nth-child(2) {
+    background: #eab308;
+  }
+
+  .preview-dots span:last-child {
+    background: #22c55e;
+  }
+
+  .preview-title {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .preview-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .feed-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+  }
+
+  .feed-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    flex-shrink: 0;
+  }
+
+  .feed-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .feed-line {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  .feed-line-title {
+    width: 60%;
+  }
+
+  .feed-line-body {
+    width: 100%;
+  }
+
+  .feed-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%);
+    flex-shrink: 0;
+  }
+
+  /* Floating Cards */
+  .floating-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+    animation: floatCard 6s ease-in-out infinite;
+  }
+
+  .floating-card-1 {
+    top: 10%;
+    right: 0;
+    animation-delay: 0s;
+  }
+
+  .floating-card-2 {
+    bottom: 30%;
+    left: 0;
+    animation-delay: -2s;
+  }
+
+  .floating-card-3 {
+    bottom: 10%;
+    right: 10%;
+    animation-delay: -4s;
+  }
+
+  @keyframes floatCard {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .floating-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .floating-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .floating-icon-green {
+    background: rgba(16, 185, 129, 0.2);
+    color: #2dd4a0;
+  }
+
+  .floating-icon-red {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+  }
+
+  .floating-icon-blue {
+    background: rgba(59, 130, 246, 0.2);
+    color: #3b82f6;
+  }
+
+  .floating-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .floating-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .floating-subtitle {
+    font-size: 0.6875rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Section Styles */
+  .section-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 4rem;
+  }
+
+  .section-badge {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2dd4a0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Features Section */
+  .features {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 0;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 2rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 
+      0 16px 32px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .feature-card.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(45, 212, 160, 0.2),
+      transparent
+    );
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(34, 197, 94, 0.15);
+    box-shadow: 
+      0 24px 48px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(34, 197, 94, 0.05),
+      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  }
+
+  .feature-card.reveal:hover {
+    transform: translateY(-6px);
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+    color: #2dd4a0;
+  }
+
+  .feature-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .feature-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #ffffff;
+  }
+
+  .feature-description {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1rem;
+  }
+
+  .feature-tags {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    padding: 0.25rem 0.625rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Social Proof Section */
+  .social-proof {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 0;
+  }
+
+  .proof-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .proof-text .section-badge {
+    margin-bottom: 1rem;
+  }
+
+  .proof-text .section-title {
+    text-align: left;
+    margin-bottom: 1rem;
+  }
+
+  .proof-text .section-subtitle {
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .testimonial {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .testimonial:hover {
+    border-color: rgba(34, 197, 94, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .testimonial-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    flex-shrink: 0;
+  }
+
+  .testimonial-content {
+    flex: 1;
+  }
+
+  .testimonial-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .proof-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .user-avatars {
+    text-align: center;
+  }
+
+  .avatar-stack {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid #050505;
+    margin-left: -12px;
+    position: relative;
+  }
+
+  .avatar:first-child {
+    margin-left: 0;
+  }
+
+  .avatar-1 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+  .avatar-2 { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+  .avatar-3 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+  .avatar-4 { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+  .avatar-5 { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+
+  .avatar-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.2);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2dd4a0;
+  }
+
+  .avatar-text {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-stars {
+    display: flex;
+    justify-content: center;
+    gap: 0.125rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-stars svg {
+    width: 14px;
+    height: 14px;
+    color: #fbbf24;
+  }
+
+  .stat-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* CTA Section */
+  .cta-section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 0;
+  }
+
+  .cta-card {
+    position: relative;
+    padding: 4rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 
+      0 32px 64px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(45, 212, 160, 0.3),
+      transparent
+    );
+  }
+
+  .cta-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    position: relative;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-subtitle {
+    position: relative;
+    font-size: 1.0625rem;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Footer */
+  .footer {
+    position: relative;
+    z-index: 1;
+    padding: 4rem 0 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand .logo-link {
+    margin-bottom: 1rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.6;
+  }
+
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .footer-heading {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-link {
+    display: block;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s ease;
+  }
+
+  .footer-link:hover {
+    color: #ffffff;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .social-link {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s ease;
+  }
+
+  .social-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  .social-link svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .copyright {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .footer-bottom-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-bottom-link {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-bottom-link:hover {
+    color: #ffffff;
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    .hero {
+      flex-direction: column;
+      text-align: center;
+      padding-top: 6rem;
+    }
+
+    .hero-content {
+      max-width: 100%;
+    }
+
+    .hero-subtitle {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      justify-content: center;
+    }
+
+    .hero-stats {
+      justify-content: center;
+    }
+
+    .hero-visual {
+      min-height: 400px;
+    }
+
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .proof-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .proof-text .section-title,
+    .proof-text .section-subtitle {
+      text-align: center;
+    }
+
+    .testimonials {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .footer-main {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .footer-brand {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .nav-actions {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-title .text-gradient {
+      display: inline;
+    }
+
+    .hero-stats {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .stat-divider {
+      display: none;
+    }
+
+    .floating-card {
+      display: none;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .footer-brand {
+      grid-column: span 1;
+    }
+
+    .footer-links {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .cta-card {
+      padding: 2.5rem 1.5rem;
+    }
+
+    .cta-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+    }
+
+    .btn-lg {
+      width: 100%;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-links {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { supabase } from '../lib/supabase/client';
+  
+  // Handle OAuth callback tokens when Supabase redirects to site_url instead of redirect_to
+  // This happens when accessing from network IP but Supabase redirects to localhost
+  async function handleOAuthTokens() {
+    const hash = window.location.hash;
+    const params = new URLSearchParams(hash.substring(1));
+    
+    // Check if we have OAuth tokens in the URL hash
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+    
+    // Get the saved origin from localStorage
+    const savedOrigin = localStorage.getItem('oauth_redirect_origin');
+    console.log('[Index] Saved origin from localStorage:', savedOrigin);
+    console.log('[Index] Current origin:', window.location.origin);
+    
+    if (error) {
+      console.error('[Index] OAuth error:', error, errorDescription);
+      // Clean the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      localStorage.removeItem('oauth_redirect_origin');
+      return;
+    }
+    
+    if (accessToken && refreshToken) {
+      console.log('[Index] Detected OAuth tokens in URL, processing...');
+      
+      try {
+        // Set the session using the tokens
+        const { data, error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+        
+        if (sessionError) {
+          console.error('[Index] Error setting session:', sessionError);
+        } else {
+          console.log('[Index] Session established successfully');
+          // Clean the URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          localStorage.removeItem('oauth_redirect_origin');
+          
+          // Check if we need to redirect back to the original origin (network IP)
+          if (savedOrigin && savedOrigin !== window.location.origin) {
+            console.log('[Index] Redirecting back to original origin:', savedOrigin);
+            // Redirect to the saved origin with the session
+            window.location.href = `${savedOrigin}/feed`;
+          } else {
+            // Redirect to feed on the same origin
+            window.location.href = '/feed';
+          }
+          return;
+        }
+      } catch (err) {
+        console.error('[Index] Exception setting session:', err);
+      }
+    }
+    
+    // Also check for code parameter (PKCE flow)
+    const code = params.get('code');
+    if (code) {
+      console.log('[Index] Detected OAuth code in URL, exchanging...');
+      try {
+        const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (exchangeError) {
+          console.error('[Index] Error exchanging code:', exchangeError);
+        } else {
+          console.log('[Index] Code exchanged successfully');
+          // Clean the URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+          localStorage.removeItem('oauth_redirect_origin');
+          
+          // Check if we need to redirect back to the original origin (network IP)
+          if (savedOrigin && savedOrigin !== window.location.origin) {
+            console.log('[Index] Redirecting back to original origin:', savedOrigin);
+            // Redirect to the saved origin with the session
+            window.location.href = `${savedOrigin}/feed`;
+          } else {
+            // Redirect to feed on the same origin
+            window.location.href = '/feed';
+          }
+          return;
+        }
+      } catch (err) {
+        console.error('[Index] Exception exchanging code:', err);
+      }
+    }
+  }
+  
+  // Run OAuth handler on page load
+  handleOAuthTokens();
+  
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuBtn?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('active');
+  });
+
+  // Close mobile menu when clicking a link
+  const mobileLinks = document.querySelectorAll('.mobile-link');
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.remove('active');
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    if (!(anchor instanceof HTMLAnchorElement)) return;
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+      const target = document.querySelector(href);
+      if (target instanceof HTMLElement) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+
+  // Scroll-reveal for feature cards and sections
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        const el = entry.target as HTMLElement;
+        const delay = el.dataset.delay ? parseInt(el.dataset.delay) : index * 100;
+        setTimeout(() => {
+          el.classList.add('reveal');
+        }, delay);
+        revealObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.feature-card').forEach((card, i) => {
+    (card as HTMLElement).dataset.delay = String(i * 120);
+    revealObserver.observe(card);
+  });
+
+  // Parallax effect for floating cards
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        document.querySelectorAll('.floating-card').forEach((card, i) => {
+          const speed = 0.02 + i * 0.01;
+          (card as HTMLElement).style.transform = `translateY(${-scrollY * speed}px)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+</script>

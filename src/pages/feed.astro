@@ -1,0 +1,850 @@
+---
+// Feed page - Main social feed with posts
+import AppLayout from "../layouts/AppLayout.astro";
+import FeedComponent from "../components/react/Feed";
+import OnlineUsers from "../components/react/OnlineUsers";
+import { getCurrentUser } from "../lib/supabase/server";
+import { supabase } from "../lib/supabase/client";
+
+// Fetch user data server-side to avoid flash
+const user = await getCurrentUser(Astro);
+let avatarUrl = "/images/default-avatar.svg";
+
+if (user) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.avatar_url) {
+    avatarUrl = profile.avatar_url;
+  }
+}
+---
+
+<AppLayout title="Feed - Utopía">
+  <OnlineUsers client:visible slot="sidebar-right" />
+  <div class="feed-page">
+    <!-- Inline Create Post Section -->
+    <div class="create-post-section glass" id="create-post-box">
+      <div class="create-post-header">
+        <img
+          src={avatarUrl}
+          alt="Tu avatar"
+          class="avatar-small"
+          id="user-avatar"
+        />
+        <button class="create-post-trigger" id="expand-post-btn" type="button">
+          ¿Qué estás pensando?
+        </button>
+        <!-- Privacy Selector (top-right) -->
+        <div class="privacy-selector" id="privacy-selector">
+          <button class="privacy-toggle-btn" type="button" id="privacy-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="privacy-icon">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span id="privacy-label">Amigos</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="privacy-dropdown" id="privacy-dropdown" style="display:none;">
+            <button class="privacy-option" data-value="public" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              <span>Público</span>
+            </button>
+            <button class="privacy-option active" data-value="friends" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Amigos</span>
+            </button>
+            <button class="privacy-option" data-value="private" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>Solo yo</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expanded Form (hidden by default) -->
+      <div
+        class="create-post-expanded"
+        id="post-form-expanded"
+        style="display:none;"
+      >
+        <textarea
+          class="post-textarea"
+          id="post-content"
+          placeholder="Comparte algo con tus amigos..."
+          rows="3"
+          maxlength="2000"></textarea>
+
+        <!-- Image Preview -->
+        <div
+          class="image-preview-container"
+          id="image-preview-container"
+          style="display:none;"
+        >
+          <img id="image-preview" alt="Vista previa" />
+          <button class="remove-image-btn" id="remove-image-btn" type="button"
+            >✕</button
+          >
+        </div>
+
+        <div class="create-post-footer">
+          <div class="create-post-actions">
+            <label class="action-btn" for="image-input">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span>Foto</span>
+              <input
+                type="file"
+                id="image-input"
+                accept="image/*"
+                style="display:none;"
+              />
+            </label>
+            <button class="action-btn" type="button" id="location-btn">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>Ubicación</span>
+            </button>
+          </div>
+          <div class="post-submit-area">
+            <span class="char-count" id="char-count">0/2000</span>
+            <button
+              class="btn btn-primary btn-sm publish-btn"
+              id="publish-btn"
+              disabled
+            >
+              <span class="publish-text">Publicar</span>
+              <span class="publish-loading" style="display:none;">
+                <span class="spinner-small"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feed Content -->
+    <div class="feed-content">
+      <FeedComponent client:visible />
+    </div>
+  </div>
+</AppLayout>
+
+<script>
+  import { supabase } from "../lib/supabase/client";
+
+  let selectedFile: File | null = null;
+  let selectedPrivacy = "friends";
+
+  // Server-side loaded avatar is already set
+  const expandBtn = document.getElementById("expand-post-btn");
+  const formExpanded = document.getElementById("post-form-expanded");
+  const postContent = document.getElementById(
+    "post-content",
+  ) as HTMLTextAreaElement;
+  const imageInput = document.getElementById("image-input") as HTMLInputElement;
+  const imagePreviewContainer = document.getElementById(
+    "image-preview-container",
+  );
+  const imagePreview = document.getElementById(
+    "image-preview",
+  ) as HTMLImageElement;
+  const removeImageBtn = document.getElementById("remove-image-btn");
+  const publishBtn = document.getElementById("publish-btn");
+  const charCount = document.getElementById("char-count");
+  const avatarEl = document.getElementById("user-avatar") as HTMLImageElement;
+
+  // Provide fallback just in case
+  avatarEl.onerror = () => {
+    avatarEl.src = "/images/default-avatar.svg";
+  };
+
+  // Expand post form
+  expandBtn?.addEventListener("click", () => {
+    if (formExpanded) {
+      formExpanded.style.display = "block";
+      expandBtn.style.display = "none";
+      postContent?.focus();
+    }
+  });
+
+  // Collapse post form when clicking outside
+  document.addEventListener("click", (e) => {
+    const target = e.target as Element;
+    const createPostSection = document.querySelector(".create-post-section");
+    const isInsideCreatePost = createPostSection?.contains(target);
+
+    if (!isInsideCreatePost && formExpanded && formExpanded.style.display === "block") {
+      // Only collapse if no content and no image
+      const hasContent = (postContent?.value.trim().length || 0) > 0;
+      const hasImage = selectedFile !== null;
+
+      if (!hasContent && !hasImage) {
+        formExpanded.style.display = "none";
+        if (expandBtn) {
+          expandBtn.style.display = "block";
+        }
+        // Reset textarea height
+        if (postContent) {
+          postContent.style.height = "auto";
+        }
+      }
+    }
+  });
+
+  // Character count + enable/disable publish
+  postContent?.addEventListener("input", () => {
+    const len = postContent.value.length;
+    if (charCount) charCount.textContent = `${len}/2000`;
+    updatePublishState();
+  });
+
+  // Auto-resize textarea
+  postContent?.addEventListener("input", () => {
+    postContent.style.height = "auto";
+    postContent.style.height = postContent.scrollHeight + "px";
+  });
+
+  function updatePublishState() {
+    const hasContent = (postContent?.value.trim().length || 0) > 0;
+    const hasImage = selectedFile !== null;
+    if (publishBtn) {
+      (publishBtn as HTMLButtonElement).disabled = !hasContent && !hasImage;
+    }
+  }
+
+  // Image handling
+  imageInput?.addEventListener("change", (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (imagePreview && imagePreviewContainer) {
+          imagePreview.src = ev.target?.result as string;
+          imagePreviewContainer.style.display = "block";
+        }
+      };
+      reader.readAsDataURL(file);
+      updatePublishState();
+    }
+  });
+
+  removeImageBtn?.addEventListener("click", () => {
+    selectedFile = null;
+    if (imagePreviewContainer) imagePreviewContainer.style.display = "none";
+    if (imageInput) imageInput.value = "";
+    updatePublishState();
+  });
+
+  // Publish post
+  publishBtn?.addEventListener("click", async () => {
+    const content = postContent?.value.trim();
+    if (!content && !selectedFile) return;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
+    // Show loading
+    const publishText = publishBtn.querySelector(
+      ".publish-text",
+    ) as HTMLElement;
+    const publishLoading = publishBtn.querySelector(
+      ".publish-loading",
+    ) as HTMLElement;
+    if (publishText) publishText.style.display = "none";
+    if (publishLoading) publishLoading.style.display = "inline-flex";
+    (publishBtn as HTMLButtonElement).disabled = true;
+
+    let mediaUrls: string[] = [];
+
+    // Upload image if present
+    if (selectedFile) {
+      const fileExt = selectedFile.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("media")
+        .upload(fileName, selectedFile, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        alert("Error al subir la imagen");
+        resetPublishBtn();
+        return;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("media").getPublicUrl(fileName);
+
+      mediaUrls = [publicUrl];
+    }
+
+    // Create post
+    const { error } = await supabase.from("posts").insert({
+      user_id: user.id,
+      content: content || "",
+      media_urls: mediaUrls.length > 0 ? mediaUrls : null,
+      visibility: selectedPrivacy,
+    });
+
+    if (error) {
+      console.error("Post error:", error);
+      alert("Error al publicar");
+      resetPublishBtn();
+      return;
+    }
+
+    // Success - reset form
+    if (postContent) postContent.value = "";
+    selectedFile = null;
+    if (imagePreviewContainer) imagePreviewContainer.style.display = "none";
+    if (imageInput) imageInput.value = "";
+    if (charCount) charCount.textContent = "0/2000";
+    if (expandBtn) expandBtn.style.display = "block";
+    if (formExpanded) formExpanded.style.display = "none";
+    resetPublishBtn();
+
+    // Reload feed by dispatching event
+    window.dispatchEvent(new CustomEvent("new-post-created"));
+  });
+
+  function resetPublishBtn() {
+    const publishText = publishBtn?.querySelector(
+      ".publish-text",
+    ) as HTMLElement;
+    const publishLoading = publishBtn?.querySelector(
+      ".publish-loading",
+    ) as HTMLElement;
+    if (publishText) publishText.style.display = "inline";
+    if (publishLoading) publishLoading.style.display = "none";
+    updatePublishState();
+  }
+
+  // Privacy selector logic
+  const privacyToggle = document.getElementById("privacy-toggle");
+  const privacyDropdown = document.getElementById("privacy-dropdown");
+  const privacyLabel = document.getElementById("privacy-label");
+  const privacyOptions = document.querySelectorAll(".privacy-option");
+
+  privacyToggle?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (privacyDropdown) {
+      privacyDropdown.style.display = privacyDropdown.style.display === "none" ? "flex" : "none";
+    }
+  });
+
+  privacyOptions.forEach((opt) => {
+    opt.addEventListener("click", () => {
+      const value = opt.getAttribute("data-value") || "friends";
+      selectedPrivacy = value;
+      if (privacyLabel) privacyLabel.textContent = opt.querySelector("span")?.textContent || "Amigos";
+      privacyOptions.forEach((o) => o.classList.remove("active"));
+      opt.classList.add("active");
+      if (privacyDropdown) privacyDropdown.style.display = "none";
+    });
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener("click", () => {
+    if (privacyDropdown) privacyDropdown.style.display = "none";
+  });
+</script>
+
+<style>
+  .feed-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1rem;
+    animation: feedIn 0.6s ease both;
+  }
+
+  @keyframes feedIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Stories Styles */
+  .stories-bar {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    display: flex;
+    gap: 1rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(145deg, rgba(19, 25, 23, 0.75) 0%, rgba(14, 20, 18, 0.6) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(24px);
+  }
+
+  .stories-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .story-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    padding: 2px;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s;
+  }
+
+  .story-item:hover .story-avatar {
+    transform: scale(1.08);
+    border-color: #22c55e;
+  }
+
+  .story-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .story-item.add-story .story-avatar {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .story-add-icon {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: 2px solid #0b0f0e;
+    font-size: 14px;
+  }
+
+  .story-item span {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
+  .create-post-section {
+    padding: 1.25rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(145deg, rgba(19, 25, 23, 0.75) 0%, rgba(14, 20, 18, 0.6) 100%);
+    border: 1px solid rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: visible;
+    z-index: 10;
+  }
+
+  .create-post-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.12), transparent);
+  }
+
+  .create-post-section:focus-within {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 4px 24px rgba(34, 197, 94, 0.08), 0 0 0 1px rgba(34, 197, 94, 0.06);
+  }
+
+  .create-post-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .avatar-small {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34, 197, 94, 0.2);
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: border-color 0.2s;
+  }
+
+  .create-post-section:focus-within .avatar-small {
+    border-color: rgba(34, 197, 94, 0.4);
+  }
+
+  .create-post-trigger {
+    flex: 1;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 2rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .create-post-trigger:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(34, 197, 94, 0.2);
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .create-post-expanded {
+    margin-top: 0.85rem;
+    animation: expandIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  @keyframes expandIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 600px;
+    }
+  }
+
+  .post-textarea {
+    width: 100%;
+    min-height: 80px;
+    max-height: 300px;
+    padding: 0.85rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    color: var(--text-primary, #f0fdf4);
+    font-family: inherit;
+    font-size: 0.925rem;
+    line-height: 1.55;
+    resize: none;
+    overflow: hidden;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+
+  .post-textarea:focus {
+    outline: none;
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.06);
+  }
+
+  .post-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .image-preview-container {
+    position: relative;
+    margin-top: 0.75rem;
+    border-radius: 14px;
+    overflow: hidden;
+    max-height: 300px;
+    animation: expandIn 0.3s ease both;
+  }
+
+  .image-preview-container img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .remove-image-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.65);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s;
+  }
+
+  .remove-image-btn:hover {
+    background: rgba(220, 38, 38, 0.85);
+    transform: scale(1.1);
+  }
+
+  .create-post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.85rem;
+    margin-top: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .create-post-actions {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+  }
+
+  .action-btn:hover {
+    background: rgba(34, 197, 94, 0.1);
+    color: #4ade80;
+  }
+
+  .action-btn:active {
+    transform: scale(0.95);
+  }
+
+  .action-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .post-submit-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .char-count {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: 500;
+  }
+
+  .publish-btn {
+    padding: 0.55rem 1.4rem;
+    font-weight: 600;
+    border-radius: 2rem;
+    min-width: 95px;
+    font-size: 0.85rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .publish-btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+
+  .publish-btn:not(:disabled):active {
+    transform: scale(0.97);
+  }
+
+  .publish-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .spinner-small {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .publish-loading {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .feed-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  /* Privacy Selector - top right */
+  .privacy-selector {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .privacy-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    background: rgba(34, 197, 94, 0.08);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 20px;
+    color: #4ade80;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .privacy-toggle-btn:hover {
+    background: rgba(34, 197, 94, 0.14);
+    border-color: rgba(34, 197, 94, 0.35);
+  }
+
+  .privacy-toggle-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .chevron-icon {
+    width: 12px !important;
+    height: 12px !important;
+    opacity: 0.6;
+  }
+
+  .privacy-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    background: rgba(19,25,23,0.95);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 12px;
+    padding: 0.5rem 0;
+    min-width: 140px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(34,197,94,0.1);
+    animation: dropdownIn 0.2s ease both;
+  }
+
+  @keyframes privacyDropIn {
+    from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .privacy-option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.82rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    width: 100%;
+    text-align: left;
+  }
+
+  .privacy-option:hover {
+    background: rgba(34, 197, 94, 0.08);
+    color: #fff;
+  }
+
+  .privacy-option.active {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+  }
+
+  .privacy-option svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    .feed-page {
+      padding: 0.5rem;
+      gap: 1rem;
+    }
+
+    .action-btn span {
+      display: none;
+    }
+
+    .privacy-btn span {
+      display: inline !important;
+    }
+
+    .create-post-section {
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+  }
+</style>

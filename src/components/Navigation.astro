@@ -1,0 +1,1335 @@
+---
+// Navigation component - Server-side rendered with client-side interactivity
+---
+
+<nav class="nav-container" role="navigation" aria-label="Main navigation">
+  <div class="nav-content">
+    <!-- Logo -->
+    <a href="/feed" class="nav-logo" aria-label="Utopía - Home">
+      <span class="logo-text">Utopía</span>
+      <span class="logo-accent"></span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="nav-links-desktop">
+      <a href="/feed" class="nav-link" data-active="false">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Inicio</span>
+      </a>
+      <a href="/reels" class="nav-link" data-active="false">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+          <line x1="7" y1="2" x2="7" y2="22"></line>
+          <line x1="17" y1="2" x2="17" y2="22"></line>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <line x1="2" y1="7" x2="7" y2="7"></line>
+          <line x1="2" y1="17" x2="7" y2="17"></line>
+          <line x1="17" y1="17" x2="22" y2="17"></line>
+          <line x1="17" y1="7" x2="22" y2="7"></line>
+        </svg>
+        <span>Reels</span>
+      </a>
+      <a href="/explore" class="nav-link" data-active="false">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Explorar</span>
+      </a>
+      <a href="/map" class="nav-link" data-active="false">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span>Mapa</span>
+      </a>
+      <a href="/radio" class="nav-link" data-active="false">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="8"></circle>
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v2m0 16v2m10-10h-2M4 12H2"></path>
+        </svg>
+        <span>Radio</span>
+      </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="nav-search">
+      <div class="search-wrapper glass" id="search-trigger">
+        <svg
+          class="search-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span class="search-placeholder">Buscar en Utopía...</span>
+        <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+      </div>
+    </div>
+
+    <!-- Search Modal Container -->
+    <div id="search-modal-container"></div>
+
+    <!-- User Actions -->
+    <div class="nav-actions">
+      <button
+        class="nav-action-btn"
+        aria-label="Notifications"
+        id="notifications-btn"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge" id="notification-count" hidden>0</span>
+      </button>
+      <button
+        class="nav-action-btn"
+        aria-label="Messages"
+        id="messages-btn"
+        onclick="window.location.href='/messages'"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+          ></path>
+        </svg>
+        <span class="notification-badge" id="message-count" hidden>0</span>
+      </button>
+
+      <!-- Profile Dropdown -->
+      <div class="profile-dropdown" id="profile-dropdown">
+        <button
+          class="nav-avatar-btn"
+          aria-label="Profile menu"
+          id="profile-dropdown-toggle"
+          aria-expanded="false"
+        >
+          <div class="nav-avatar glass">
+            <img
+              src="/images/default-avatar.svg"
+              alt="Profile"
+              class="avatar-img"
+              id="nav-avatar"
+            />
+          </div>
+          <svg
+            class="dropdown-chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div class="dropdown-menu" id="dropdown-menu" hidden>
+          <div class="dropdown-header">
+            <img
+              src="/images/default-avatar.svg"
+              alt="Profile"
+              class="dropdown-avatar"
+              id="dropdown-avatar"
+            />
+            <div class="dropdown-user-info">
+              <span class="dropdown-name" id="dropdown-name">Usuario</span>
+              <span class="dropdown-username" id="dropdown-username"
+                >@usuario</span
+              >
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="/profile" class="dropdown-item">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span>Mi Perfil</span>
+          </a>
+
+          <a href="/friends" class="dropdown-item">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span>Amigos</span>
+          </a>
+
+          <a href="/settings" class="dropdown-item">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+            <span>Configuración</span>
+          </a>
+
+          <a href="/saved" class="dropdown-item">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+              ></path>
+            </svg>
+            <span>Guardados</span>
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <button class="dropdown-item logout-btn" id="logout-btn">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="mobile-menu-btn"
+      id="mobile-menu-toggle"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div class="nav-mobile-menu" id="mobile-menu" hidden>
+    <div class="mobile-menu-content glass">
+      <a href="/feed" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Feed</span>
+      </a>
+      <a href="/reels" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+          <line x1="7" y1="2" x2="7" y2="22"></line>
+          <line x1="17" y1="2" x2="17" y2="22"></line>
+        </svg>
+        <span>Reels</span>
+      </a>
+      <a href="/explore" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Explore</span>
+      </a>
+      <a href="/map" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span>Map</span>
+      </a>
+      <a href="/radio" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="8"></circle>
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v2m0 16v2m10-10h-2M4 12H2"></path>
+        </svg>
+        <span>Radio</span>
+      </a>
+      <a href="/messages" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+          ></path>
+        </svg>
+        <span>Mensajes</span>
+      </a>
+      <a href="/profile" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Profile</span>
+      </a>
+      <a href="/settings" class="mobile-nav-link">
+        <svg
+          class="nav-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+          ></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.95) 0%,
+      rgba(10, 10, 10, 0.85) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    height: 64px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-accent {
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #22c55e, transparent);
+    border-radius: 1px;
+  }
+
+  .nav-links-desktop {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-links-desktop {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: #fff;
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .nav-link[data-active="true"] {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.2);
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .nav-search {
+    display: none;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .nav-search {
+      display: block;
+    }
+  }
+
+  .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    background: rgba(18, 18, 18, 0.8);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .search-wrapper:focus-within {
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  }
+
+  .search-icon {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  .search-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .search-shortcut {
+    display: none;
+    padding: 0.125rem 0.375rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-family: monospace;
+  }
+
+  @media (min-width: 1024px) {
+    .search-shortcut {
+      display: block;
+    }
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-action-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nav-action-btn:hover {
+    background: rgba(34, 197, 94, 0.15);
+    color: #fff;
+  }
+
+  .nav-action-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: #22c55e;
+    border-radius: 9px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0a0a0a;
+  }
+
+  .nav-avatar-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .nav-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .nav-avatar:hover {
+    border-color: rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .avatar-img.loaded {
+    opacity: 1;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .mobile-menu-btn {
+      display: none;
+    }
+  }
+
+  .hamburger-line {
+    width: 22px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  .nav-mobile-menu {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: rgba(10, 10, 10, 0.98);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  }
+
+  .nav-mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-nav-link:hover {
+    background: rgba(34, 197, 94, 0.15);
+    color: #fff;
+  }
+
+  .mobile-nav-link .nav-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Profile Dropdown */
+  .profile-dropdown {
+    position: relative;
+  }
+
+  .nav-avatar-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .dropdown-chevron {
+    width: 16px;
+    height: 16px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s ease;
+  }
+
+  .nav-avatar-btn[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 280px;
+    background: rgba(18, 18, 18, 0.98);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 1rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.2s ease;
+  }
+
+  .dropdown-menu[hidden] {
+    display: none;
+  }
+
+  @keyframes dropdownFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .dropdown-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .dropdown-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .dropdown-name {
+    font-weight: 600;
+    color: white;
+    font-size: 0.9375rem;
+  }
+
+  .dropdown-username {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8125rem;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0.5rem 0;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: none;
+    background: transparent;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+  }
+
+  .dropdown-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .logout-btn {
+    color: #ef4444;
+  }
+
+  .logout-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+  }
+</style>
+
+<script>
+  import { supabase } from "../lib/supabase/client";
+
+  // Mobile menu toggle
+  const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  mobileMenuToggle?.addEventListener("click", () => {
+    const isExpanded =
+      mobileMenuToggle.getAttribute("aria-expanded") === "true";
+    mobileMenuToggle.setAttribute("aria-expanded", (!isExpanded).toString());
+    if (mobileMenu) mobileMenu.hidden = isExpanded;
+  });
+
+  // Profile dropdown toggle
+  const profileDropdownToggle = document.getElementById(
+    "profile-dropdown-toggle",
+  );
+  const dropdownMenu = document.getElementById("dropdown-menu");
+
+  profileDropdownToggle?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const isExpanded =
+      profileDropdownToggle.getAttribute("aria-expanded") === "true";
+    profileDropdownToggle.setAttribute(
+      "aria-expanded",
+      (!isExpanded).toString(),
+    );
+    if (dropdownMenu) dropdownMenu.hidden = isExpanded;
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest(".profile-dropdown")) {
+      profileDropdownToggle?.setAttribute("aria-expanded", "false");
+      if (dropdownMenu) dropdownMenu.hidden = true;
+    }
+  });
+
+  // Close dropdown on escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      profileDropdownToggle?.setAttribute("aria-expanded", "false");
+      if (dropdownMenu) dropdownMenu.hidden = true;
+    }
+  });
+
+  // Logout functionality
+  document.getElementById("logout-btn")?.addEventListener("click", async () => {
+    try {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  });
+
+  // Load user profile data
+  async function loadUserProfile() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      // Get profile from database
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (profile) {
+        // Update avatar
+        const navAvatar = document.getElementById(
+          "nav-avatar",
+        ) as HTMLImageElement;
+        const dropdownAvatar = document.getElementById(
+          "dropdown-avatar",
+        ) as HTMLImageElement;
+        const avatarUrl = profile.avatar_url || "/images/default-avatar.svg";
+
+        if (navAvatar) {
+          navAvatar.src = avatarUrl;
+          navAvatar.classList.add('loaded');
+        }
+        if (dropdownAvatar) {
+          dropdownAvatar.src = avatarUrl;
+          dropdownAvatar.classList.add('loaded');
+        }
+
+        // Update name and username
+        const dropdownName = document.getElementById("dropdown-name");
+        const dropdownUsername = document.getElementById("dropdown-username");
+
+        if (dropdownName)
+          dropdownName.textContent = profile.display_name || profile.username;
+        if (dropdownUsername)
+          dropdownUsername.textContent = `@${profile.username}`;
+      }
+    }
+  }
+
+  // Load profile on page load
+  loadUserProfile();
+
+  // Search modal functionality
+  const searchTrigger = document.getElementById("search-trigger");
+  const searchModalContainer = document.getElementById(
+    "search-modal-container",
+  );
+  let searchModalOpen = false;
+
+  function openSearchModal() {
+    if (searchModalOpen) return;
+    searchModalOpen = true;
+
+    // Create modal element
+    const modal = document.createElement("div");
+    modal.id = "search-modal";
+    modal.innerHTML = `
+      <div class="search-modal-overlay">
+        <div class="search-modal">
+          <div class="search-header">
+            <div class="search-input-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" placeholder="Buscar personas..." id="search-input-modal" autofocus />
+            </div>
+            <button class="close-btn" id="close-search">Cancelar</button>
+          </div>
+          <div class="search-results" id="search-results">
+            <div class="loading-hint">Escribe para buscar personas</div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    searchModalContainer?.appendChild(modal);
+    document.body.style.overflow = "hidden";
+
+    // Focus input
+    setTimeout(() => {
+      (
+        document.getElementById("search-input-modal") as HTMLInputElement
+      )?.focus();
+    }, 100);
+
+    // Add event listeners
+    document
+      .getElementById("close-search")
+      ?.addEventListener("click", closeSearchModal);
+    modal
+      .querySelector(".search-modal-overlay")
+      ?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeSearchModal();
+      });
+
+    // Search input handler
+    const searchInput = document.getElementById(
+      "search-input-modal",
+    ) as HTMLInputElement;
+    let searchTimeout: ReturnType<typeof setTimeout>;
+
+    searchInput?.addEventListener("input", (e) => {
+      clearTimeout(searchTimeout);
+      const query = (e.target as HTMLInputElement).value;
+
+      if (query.length < 2) {
+        document.getElementById("search-results")!.innerHTML =
+          '<div class="loading-hint">Escribe al menos 2 caracteres</div>';
+        return;
+      }
+
+      document.getElementById("search-results")!.innerHTML =
+        '<div class="loading-state"><div class="spinner"></div><p>Buscando...</p></div>';
+
+      searchTimeout = setTimeout(() => performSearch(query), 300);
+    });
+  }
+
+  async function performSearch(query: string) {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      const { data: users } = await (supabase as any)
+        .from("profiles")
+        .select("*")
+        .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
+        .neq("id", user?.id || "")
+        .limit(10);
+
+      const resultsEl = document.getElementById("search-results");
+
+      if (!users || users.length === 0) {
+        resultsEl!.innerHTML =
+          '<div class="empty-state"><p>No se encontraron resultados</p></div>';
+        return;
+      }
+
+      resultsEl!.innerHTML = users
+        .map(
+          (u: any) => `
+        <a href="/profile/${u.username}" class="result-item">
+          <div class="result-avatar">
+            ${
+              u.avatar_url
+                ? `<img src="${u.avatar_url}" alt="${u.username}" />`
+                : `<div class="avatar-placeholder">${u.username.charAt(0).toUpperCase()}</div>`
+            }
+          </div>
+          <div class="result-info">
+            <span class="result-name">${u.display_name || u.username}</span>
+            <span class="result-username">@${u.username}</span>
+          </div>
+        </a>
+      `,
+        )
+        .join("");
+
+      // Add click handlers to close modal
+      resultsEl?.querySelectorAll(".result-item").forEach((item) => {
+        item.addEventListener("click", closeSearchModal);
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+      document.getElementById("search-results")!.innerHTML =
+        '<div class="empty-state"><p>Error al buscar</p></div>';
+    }
+  }
+
+  function closeSearchModal() {
+    searchModalOpen = false;
+    const modal = document.getElementById("search-modal");
+    if (modal) modal.remove();
+    document.body.style.overflow = "";
+  }
+
+  searchTrigger?.addEventListener("click", openSearchModal);
+
+  // Keyboard shortcut for search
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "/" && !searchModalOpen) {
+      e.preventDefault();
+      openSearchModal();
+    }
+    if (e.key === "Escape" && searchModalOpen) {
+      closeSearchModal();
+    }
+  });
+
+  // Set active nav link based on current path
+  const currentPath = window.location.pathname;
+  document.querySelectorAll(".nav-link, .mobile-nav-link").forEach((link) => {
+    const href = link.getAttribute("href");
+    if (href && currentPath.startsWith(href) && href !== "/") {
+      link.setAttribute("data-active", "true");
+    }
+  });
+</script>
+
+<style is:global>
+  /* Search Modal Styles */
+  .search-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8vh;
+    animation: searchOverlayIn 0.2s ease;
+  }
+
+  @keyframes searchOverlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .search-modal {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 1rem;
+    background: rgba(14, 20, 18, 0.97);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    overflow: hidden;
+    animation: searchModalIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(34, 197, 94, 0.05);
+  }
+
+  @keyframes searchModalIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .search-modal .search-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .search-modal .search-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.9rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-modal .search-input-wrapper:focus-within {
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.06);
+  }
+
+  .search-modal .search-input-wrapper svg {
+    width: 18px;
+    height: 18px;
+    color: rgba(34, 197, 94, 0.5);
+    flex-shrink: 0;
+  }
+
+  .search-modal .search-input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 0.925rem;
+    font-family: inherit;
+    outline: none;
+  }
+
+  .search-modal .search-input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .search-modal .close-btn {
+    padding: 0.45rem 0.85rem;
+    background: transparent;
+    border: none;
+    color: #4ade80;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .search-modal .close-btn:hover {
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .search-modal .search-results {
+    max-height: 55vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 197, 94, 0.15) transparent;
+  }
+
+  .search-modal .search-results::-webkit-scrollbar { width: 3px; }
+  .search-modal .search-results::-webkit-scrollbar-thumb {
+    background: rgba(34, 197, 94, 0.15);
+    border-radius: 2px;
+  }
+
+  .search-modal .loading-hint,
+  .search-modal .loading-state,
+  .search-modal .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .search-modal .spinner {
+    width: 28px;
+    height: 28px;
+    border: 2.5px solid rgba(34, 197, 94, 0.15);
+    border-top-color: #22c55e;
+    border-radius: 50%;
+    animation: searchSpin 0.7s linear infinite;
+  }
+
+  @keyframes searchSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  .search-modal .result-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0;
+    cursor: pointer;
+  }
+
+  .search-modal .result-item:hover {
+    background: rgba(34, 197, 94, 0.06);
+  }
+
+  .search-modal .result-item:active {
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .search-modal .result-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1.5px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .search-modal .result-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .search-modal .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .search-modal .result-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-modal .result-name {
+    display: block;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-modal .result-username {
+    display: block;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .search-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+</style>

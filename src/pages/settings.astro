@@ -1,0 +1,1323 @@
+---
+// Settings page - Account settings
+import AppLayout from "../layouts/AppLayout.astro";
+import SettingsProfileEdit from "../components/react/SettingsProfileEdit";
+---
+
+<AppLayout title="Configuración">
+  <div class="settings-page">
+    <!-- Header -->
+    <div class="settings-header">
+      <h1>Configuración</h1>
+    </div>
+
+    <!-- Settings Navigation -->
+    <div class="settings-nav">
+      <button class="nav-item active" data-section="account">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Cuenta</span>
+      </button>
+      <button class="nav-item" data-section="privacy">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Privacidad</span>
+      </button>
+      <button class="nav-item" data-section="notifications">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span>Notificaciones</span>
+      </button>
+      <button class="nav-item" data-section="appearance">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span>Apariencia</span>
+      </button>
+      <button class="nav-item" data-section="security">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <span>Seguridad</span>
+      </button>
+      <button class="nav-item" data-section="about">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Acerca de</span>
+      </button>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="settings-content">
+      <!-- Account Section -->
+      <div class="settings-section" id="section-account">
+        <h2 class="section-title">Cuenta</h2>
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+          <img
+            src="/images/default-avatar.svg"
+            alt="Profile"
+            class="profile-avatar"
+          />
+          <div class="profile-info">
+            <span class="profile-name">Tu Nombre</span>
+            <span class="profile-username">@tu_usuario</span>
+          </div>
+          <SettingsProfileEdit client:load />
+        </div>
+
+        <!-- Account Settings -->
+        <div class="settings-group">
+          <h3 class="group-title">Información personal</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Correo electrónico</span>
+              <span class="setting-value">usuario@ejemplo.com</span>
+            </div>
+            <button class="change-btn">Cambiar</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Teléfono</span>
+              <span class="setting-value">No configurado</span>
+            </div>
+            <button class="change-btn">Añadir</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Fecha de nacimiento</span>
+              <span class="setting-value">1 de enero, 2000</span>
+            </div>
+            <button class="change-btn">Cambiar</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Preferencias de cuenta</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Idioma</span>
+              <span class="setting-value">Español</span>
+            </div>
+            <button class="change-btn">Cambiar</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Zona horaria</span>
+              <span class="setting-value">América/Bogota (UTC-5)</span>
+            </div>
+            <button class="change-btn">Cambiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy Section -->
+      <div class="settings-section" id="section-privacy" style="display: none;">
+        <h2 class="section-title">Privacidad</h2>
+
+        <div class="settings-group">
+          <h3 class="group-title">Visibilidad del perfil</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Cuenta privada</span>
+              <span class="setting-desc"
+                >Solo tus seguidores podrán ver tu contenido</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="private-account" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Mostrar actividad</span>
+              <span class="setting-desc"
+                >Permitir que otros vean cuando estás en línea</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="show-activity" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Interacciones</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Permitir comentarios</span>
+              <span class="setting-desc"
+                >Otros usuarios pueden comentar en tus publicaciones</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="allow-comments" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Permitir menciones</span>
+              <span class="setting-desc"
+                >Otros usuarios pueden mencionarte en sus publicaciones</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="allow-mentions" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Permitir etiquetas</span>
+              <span class="setting-desc"
+                >Otros usuarios pueden etiquetarte en fotos</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="allow-tags" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Bloqueados y restringidos</h3>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Usuarios bloqueados</span>
+              <span class="setting-value">0 usuarios</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Usuarios restringidos</span>
+              <span class="setting-value">0 usuarios</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications Section -->
+      <div
+        class="settings-section"
+        id="section-notifications"
+        style="display: none;"
+      >
+        <h2 class="section-title">Notificaciones</h2>
+
+        <div class="settings-group">
+          <h3 class="group-title">Preferencias de notificaciones</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Notificaciones push</span>
+              <span class="setting-desc"
+                >Recibir notificaciones en tu dispositivo</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="push-notifications" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Notificaciones por correo</span>
+              <span class="setting-desc"
+                >Recibir resúmenes por correo electrónico</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="email-notifications" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Tipos de notificaciones</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Nuevos seguidores</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notify-followers" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Me gusta</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notify-likes" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Comentarios</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notify-comments" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Mensajes directos</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notify-messages" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance Section -->
+      <div
+        class="settings-section"
+        id="section-appearance"
+        style="display: none;"
+      >
+        <h2 class="section-title">Apariencia</h2>
+
+        <div class="settings-group">
+          <h3 class="group-title">Tema</h3>
+
+          <div class="theme-options">
+            <button class="theme-option active" data-theme="dark">
+              <div class="theme-preview dark">
+                <div class="preview-bar"></div>
+                <div class="preview-content"></div>
+              </div>
+              <span>Oscuro</span>
+            </button>
+            <button class="theme-option" data-theme="light">
+              <div class="theme-preview light">
+                <div class="preview-bar"></div>
+                <div class="preview-content"></div>
+              </div>
+              <span>Claro</span>
+            </button>
+            <button class="theme-option" data-theme="system">
+              <div class="theme-preview system">
+                <div class="preview-bar"></div>
+                <div class="preview-content"></div>
+              </div>
+              <span>Sistema</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Accesibilidad</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Reducir movimiento</span>
+              <span class="setting-desc"
+                >Minimiza las animaciones en la interfaz</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="reduce-motion" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Texto grande</span>
+              <span class="setting-desc">Aumenta el tamaño del texto</span>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="large-text" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Alto contraste</span>
+              <span class="setting-desc"
+                >Mejora la legibilidad con mayor contraste</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="high-contrast" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Section -->
+      <div
+        class="settings-section"
+        id="section-security"
+        style="display: none;"
+      >
+        <h2 class="section-title">Seguridad</h2>
+
+        <div class="settings-group">
+          <h3 class="group-title">Contraseña</h3>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Cambiar contraseña</span>
+              <span class="setting-desc">Última vez cambiada hace 30 días</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Autenticación de dos factores</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Autenticación por SMS</span>
+              <span class="setting-desc"
+                >Recibe códigos de verificación por mensaje de texto</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="2fa-sms" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">App autenticadora</span>
+              <span class="setting-desc"
+                >Usa Google Authenticator o similar</span
+              >
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="2fa-app" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3 class="group-title">Sesiones activas</h3>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Dispositivos conectados</span>
+              <span class="setting-value">2 dispositivos</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <button class="btn btn-danger btn-full-width" id="logout-all-btn">
+            Cerrar sesión en todos los dispositivos
+          </button>
+        </div>
+
+        <div class="settings-group danger-zone">
+          <h3 class="group-title">Zona de peligro</h3>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Descargar mis datos</span>
+              <span class="setting-desc"
+                >Obtén una copia de todos tus datos</span
+              >
+            </div>
+            <button class="btn btn-secondary btn-sm">Descargar</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label">Desactivar cuenta</span>
+              <span class="setting-desc">Desactiva temporalmente tu cuenta</span
+              >
+            </div>
+            <button class="btn btn-secondary btn-sm">Desactivar</button>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-label danger">Eliminar cuenta</span>
+              <span class="setting-desc"
+                >Elimina permanentemente tu cuenta y todos tus datos</span
+              >
+            </div>
+            <button class="btn btn-danger btn-sm">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="settings-section" id="section-about" style="display: none;">
+        <h2 class="section-title">Acerca de</h2>
+
+        <div class="about-logo">
+          <div class="logo-icon">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M8 12h8"></path>
+              <path d="M12 8v8"></path>
+            </svg>
+          </div>
+          <h3>Utopía</h3>
+          <span class="version">Versión 1.0.0</span>
+        </div>
+
+        <div class="settings-group">
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Términos de servicio</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Política de privacidad</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Centro de ayuda</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+
+          <div class="setting-item clickable">
+            <div class="setting-info">
+              <span class="setting-label">Reportar un problema</span>
+            </div>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="chevron"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="#" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+              ></path>
+            </svg>
+          </a>
+          <a href="#" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              ></path>
+            </svg>
+          </a>
+          <a href="#" class="social-link">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+
+        <p class="copyright">© 2025 Utopía. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </div>
+</AppLayout>
+
+<style>
+  .settings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .settings-header {
+    padding: 0.5rem 0;
+  }
+
+  .settings-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .settings-nav {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .settings-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: rgba(18, 18, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+  }
+
+  .nav-item.active {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #22c55e;
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .settings-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .profile-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(18, 18, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+  }
+
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .profile-name {
+    font-weight: 600;
+    color: white;
+    font-size: 1rem;
+  }
+
+  .profile-username {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+  }
+
+  .settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(18, 18, 18, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1rem;
+  }
+
+  .group-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .setting-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 0.75rem;
+    transition: background 0.2s ease;
+  }
+
+  .setting-item.clickable {
+    cursor: pointer;
+  }
+
+  .setting-item.clickable:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .setting-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .setting-label {
+    font-size: 0.9375rem;
+    color: white;
+  }
+
+  .setting-label.danger {
+    color: #ef4444;
+  }
+
+  .setting-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .setting-value {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .change-btn {
+    padding: 0.375rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .change-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .chevron {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+  }
+
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+    border-radius: 24px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+  }
+
+  .toggle input:checked + .toggle-slider {
+    background-color: #22c55e;
+  }
+
+  .toggle input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+  }
+
+  .theme-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .theme-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .theme-option.active {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .theme-option span {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .theme-preview {
+    width: 100%;
+    height: 60px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .theme-preview.dark {
+    background: #0a0a0a;
+  }
+
+  .theme-preview.light {
+    background: #ffffff;
+  }
+
+  .theme-preview.system {
+    background: linear-gradient(135deg, #0a0a0a 50%, #ffffff 50%);
+  }
+
+  .preview-bar {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .theme-preview.light .preview-bar {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .preview-content {
+    padding: 0.5rem;
+  }
+
+  .danger-zone {
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+
+  .danger-zone .group-title {
+    color: #ef4444;
+  }
+
+  .about-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .logo-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .logo-icon svg {
+    width: 32px;
+    height: 32px;
+    color: white;
+  }
+
+  .about-logo h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+  }
+
+  .version {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease;
+  }
+
+  .social-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .social-link svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .copyright {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    padding: 1rem 0;
+  }
+
+  .btn-full-width {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  /* Save confirmation toast */
+  .save-toast {
+    position: fixed;
+    bottom: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    color: #4ade80;
+    padding: 0.5rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    animation:
+      toastIn 0.25s ease,
+      toastOut 0.3s ease 1.5s forwards;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes toastIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  @keyframes toastOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-50%) translateY(8px);
+    }
+  }
+</style>
+
+<script>
+  import { supabase } from "../lib/supabase/client";
+
+  // elements
+  const navItems = document.querySelectorAll(".nav-item");
+  const sections = document.querySelectorAll(
+    ".settings-section",
+  ) as NodeListOf<HTMLElement>;
+  const themeOptions = document.querySelectorAll(".theme-option");
+  const logoutBtn = document.getElementById("logout-all-btn");
+  // const editProfileBtn = document.querySelector(".profile-card .btn-secondary"); (Replaced by React component)
+
+  // Load profile data
+  async function loadProfile() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (profile) {
+      const nameEl = document.querySelector(".profile-name");
+      const userEl = document.querySelector(".profile-username");
+      const avatarEl = document.querySelector(
+        ".profile-avatar",
+      ) as HTMLImageElement;
+      const emailEl = document.querySelector(".setting-value"); // First one is email
+
+      if (nameEl) nameEl.textContent = profile.display_name || "Usuario";
+      if (userEl) userEl.textContent = "@" + (profile.username || "usuario");
+      if (avatarEl && profile.avatar_url) avatarEl.src = profile.avatar_url;
+      if (emailEl) emailEl.textContent = user.email || "";
+    }
+  }
+
+  loadProfile();
+
+  // Navigation logic
+  navItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      // Remove active class from all items
+      navItems.forEach((nav) => nav.classList.remove("active"));
+      // Add active class to clicked item
+      item.classList.add("active");
+
+      // Hide all sections
+      sections.forEach((section) => {
+        section.style.display = "none";
+      });
+
+      // Show target section
+      const targetId = item.getAttribute("data-section");
+      const targetSection = document.getElementById(`section-${targetId}`);
+      if (targetSection) {
+        targetSection.style.display = "block";
+      }
+
+      // On mobile, scroll to content
+      if (window.innerWidth < 768 && targetSection) {
+        targetSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  });
+
+  // Theme logic
+  themeOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      themeOptions.forEach((opt) => opt.classList.remove("active"));
+      option.classList.add("active");
+
+      const theme = option.getAttribute("data-theme");
+      if (theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+        if (theme === "dark") document.documentElement.classList.add("dark");
+        else if (theme === "light")
+          document.documentElement.classList.remove("dark");
+      }
+    });
+  });
+
+  // Settings persistence via Supabase user_settings
+  const settingsToggleIds = [
+    "private-account",
+    "show-activity",
+    "allow-comments",
+    "allow-mentions",
+    "allow-tags",
+    "push-notifications",
+    "email-notifications",
+    "notify-followers",
+    "notify-likes",
+    "notify-comments",
+    "notify-messages",
+    "reduce-motion",
+    "large-text",
+    "high-contrast",
+    "2fa-sms",
+    "2fa-app",
+  ];
+
+  // Convert toggle ID to DB column name (kebab-case → snake_case)
+  function toColumnName(id: string): string {
+    return id.replace(/-/g, "_");
+  }
+
+  // Load saved settings from Supabase
+  async function loadSettings() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    try {
+      const { data, error } = await (supabase as any)
+        .from("user_settings")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") {
+        // PGRST116 = no rows found; anything else means we fall back to localStorage
+        console.warn(
+          "Settings load error, using localStorage fallback:",
+          error.message,
+        );
+        loadFromLocalStorage();
+        return;
+      }
+
+      if (data) {
+        // Apply saved settings to all toggles
+        settingsToggleIds.forEach((id) => {
+          const toggle = document.getElementById(id) as HTMLInputElement;
+          const col = toColumnName(id);
+          if (toggle && data[col] !== undefined && data[col] !== null) {
+            toggle.checked = data[col];
+          }
+        });
+      }
+    } catch {
+      loadFromLocalStorage();
+    }
+  }
+
+  function loadFromLocalStorage() {
+    settingsToggleIds.forEach((id) => {
+      const toggle = document.getElementById(id) as HTMLInputElement;
+      const saved = localStorage.getItem(`setting_${id}`);
+      if (toggle && saved !== null) {
+        toggle.checked = saved === "true";
+      }
+    });
+  }
+
+  // Save a single setting to Supabase
+  async function saveSetting(settingId: string, value: boolean) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const col = toColumnName(settingId);
+
+    try {
+      const { error } = await (supabase as any)
+        .from("user_settings")
+        .upsert({ user_id: user.id, [col]: value }, { onConflict: "user_id" });
+
+      if (error) throw error;
+      showSaveToast();
+    } catch {
+      // Fallback to localStorage
+      localStorage.setItem(`setting_${settingId}`, value.toString());
+    }
+  }
+
+  function showSaveToast() {
+    // Remove existing toast
+    document.querySelector(".save-toast")?.remove();
+    const toast = document.createElement("div");
+    toast.className = "save-toast";
+    toast.innerHTML = "✓ Guardado";
+    document.querySelector(".settings-page")?.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+
+  loadSettings();
+
+  // Attach change listeners to all toggles
+  settingsToggleIds.forEach((id) => {
+    const toggle = document.getElementById(id) as HTMLInputElement;
+    if (toggle) {
+      toggle.addEventListener("change", () => {
+        saveSetting(id, toggle.checked);
+      });
+    }
+  });
+
+  // Logout all
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "/login";
+    });
+  }
+</script>

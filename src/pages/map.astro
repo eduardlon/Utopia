@@ -1,0 +1,2678 @@
+---
+// Map page - Geolocated alerts for disasters, events, safety issues
+import AppLayout from "../layouts/AppLayout.astro";
+---
+
+<AppLayout title="Mapa de Alertas">
+  <div class="map-page">
+    <!-- Header -->
+    <div class="map-header">
+      <h1>Mapa de Alertas</h1>
+      <button class="btn btn-primary" id="create-alert-btn">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Crear Alerta</span>
+      </button>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-chips">
+        <button class="filter-chip active" data-type="all">
+          <span class="chip-icon">📍</span>
+          <span>Todas</span>
+        </button>
+        <button class="filter-chip" data-type="disaster">
+          <span class="chip-icon">🚨</span>
+          <span>Desastres</span>
+        </button>
+        <button class="filter-chip" data-type="safety">
+          <span class="chip-icon">⚠️</span>
+          <span>Seguridad</span>
+        </button>
+        <button class="filter-chip" data-type="traffic">
+          <span class="chip-icon">🚗</span>
+          <span>Tráfico</span>
+        </button>
+        <button class="filter-chip" data-type="event">
+          <span class="chip-icon">🎉</span>
+          <span>Eventos</span>
+        </button>
+      </div>
+
+      <div class="radius-control">
+        <label for="radius-select">Radio:</label>
+        <select id="radius-select">
+          <option value="1000">1 km</option>
+          <option value="5000" selected>5 km</option>
+          <option value="10000">10 km</option>
+          <option value="25000">25 km</option>
+          <option value="50000">50 km</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-container" id="map-container">
+      <div id="map" style="height: 100%; width: 100%;"></div>
+
+      <!-- Map Loading -->
+      <div class="map-loading" id="map-loading">
+        <div class="spinner"></div>
+        <p id="map-loading-text">Obteniendo tu ubicación...</p>
+      </div>
+
+      <!-- Location Button -->
+      <button class="location-btn" id="location-btn" title="Mi ubicación">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v4m0 12v4M2 12h4m12 0h4"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Alert List Sidebar -->
+    <div class="alert-sidebar" id="alert-sidebar">
+      <div class="sidebar-header">
+        <h3>Alertas Cercanas</h3>
+        <button class="close-sidebar-btn" id="close-sidebar-btn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="alert-list" id="alert-list">
+        <div class="empty-state">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          >
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <p>No hay alertas en esta área</p>
+        </div>
+      </div>
+
+      <!-- Alert Detail Panel -->
+      <div class="alert-detail" id="alert-detail" style="display:none;">
+        <button class="detail-back-btn" id="detail-back-btn">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            width="18"
+            height="18"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Volver a alertas</span>
+        </button>
+        <div class="detail-header" id="detail-header"></div>
+        <div class="detail-comments" id="detail-comments">
+          <h4 class="comments-title">Comentarios</h4>
+          <div class="comments-list" id="comments-list">
+            <div class="comments-empty">No hay comentarios aún</div>
+          </div>
+          <form class="comment-form" id="comment-form">
+            <div class="comment-input-row">
+              <input
+                type="text"
+                id="comment-input"
+                placeholder="Escribe un comentario..."
+                autocomplete="off"
+              />
+              <label
+                class="comment-img-btn"
+                for="comment-image-input"
+                title="Adjuntar imagen"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="18"
+                  height="18"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </label>
+              <input
+                type="file"
+                id="comment-image-input"
+                accept="image/*"
+                style="display:none"
+              />
+              <button type="submit" class="comment-send-btn">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="18"
+                  height="18"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div
+              class="comment-img-preview"
+              id="comment-img-preview"
+              style="display:none;"
+            >
+              <img id="comment-preview-img" alt="Preview" />
+              <button
+                type="button"
+                class="remove-comment-img"
+                id="remove-comment-img">✕</button
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Alert Modal -->
+    <div class="modal-overlay" id="create-alert-modal" style="display: none;">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Crear Alerta</h2>
+          <button class="modal-close" id="close-modal-btn">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <form id="alert-form" class="alert-form">
+          <div class="form-group">
+            <label for="alert-title">Título *</label>
+            <input
+              type="text"
+              id="alert-title"
+              name="title"
+              required
+              placeholder="Ej: Incendio forestal"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="alert-type">Tipo de alerta *</label>
+            <select id="alert-type" name="alert_type" required>
+              <option value="">Seleccionar tipo</option>
+              <option value="disaster">🚨 Desastre natural</option>
+              <option value="safety">⚠️ Seguridad pública</option>
+              <option value="traffic">🚗 Tráfico/Carreteras</option>
+              <option value="event">🎉 Evento comunitario</option>
+              <option value="other">📍 Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="alert-severity">Severidad</label>
+            <select id="alert-severity" name="severity">
+              <option value="info">ℹ️ Información</option>
+              <option value="warning">⚠️ Advertencia</option>
+              <option value="danger">🔴 Peligro</option>
+              <option value="critical">🆘 Crítico</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="alert-description">Descripción</label>
+            <textarea
+              id="alert-description"
+              name="description"
+              rows="3"
+              placeholder="Describe la situación..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="alert-radius">Radio (metros)</label>
+              <input
+                type="number"
+                id="alert-radius"
+                name="radius"
+                value="1000"
+                min="100"
+                max="50000"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="alert-image">Foto (opcional)</label>
+            <div class="image-upload-area" id="alert-image-area">
+              <input
+                type="file"
+                id="alert-image"
+                name="image"
+                accept="image/*"
+                style="display:none"
+              />
+              <label
+                for="alert-image"
+                class="image-upload-label"
+                id="alert-image-label"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="24"
+                  height="24"
+                >
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span>Agregar foto</span>
+              </label>
+              <div
+                class="alert-image-preview"
+                id="alert-image-preview"
+                style="display:none"
+              >
+                <img id="alert-preview-img" alt="Vista previa" />
+                <button
+                  type="button"
+                  class="remove-img-btn"
+                  id="remove-alert-image">✕</button
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group location-preview">
+            <label>Ubicación</label>
+            <div class="location-display" id="location-display">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span id="location-text">Selecciona una ubicación en el mapa</span
+              >
+              <button
+                type="button"
+                class="location-picker-btn"
+                id="location-picker-btn"
+                title="Seleccionar ubicación"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  width="16"
+                  height="16"
+                >
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                  ></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <input type="hidden" id="alert-latitude" name="latitude" />
+            <input type="hidden" id="alert-longitude" name="longitude" />
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancel-alert-btn">Cancelar</button
+            >
+            <button type="submit" class="btn btn-primary">Crear Alerta</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Custom Message/Confirm Modal -->
+    <div class="msg-modal-overlay" id="msg-modal-overlay" style="display:none;">
+      <div class="msg-modal glass">
+        <div class="msg-modal-icon" id="msg-modal-icon"></div>
+        <h3 class="msg-modal-title" id="msg-modal-title"></h3>
+        <p class="msg-modal-text" id="msg-modal-text"></p>
+        <div class="msg-modal-actions" id="msg-modal-actions"></div>
+      </div>
+    </div>
+  </div>
+</AppLayout>
+
+<style>
+  /* Global button styles for map page */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: inherit;
+    text-decoration: none;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+  }
+  
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  
+  .btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #fff;
+  }
+  
+  .btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+  }
+  
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+  
+  .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+  
+  .btn-icon {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+  }
+
+  /* Full screen map override */
+  .map-page {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    animation: mapFadeIn 0.5s ease both;
+  }
+  
+  @media (max-width: 767px) {
+    .map-page {
+      top: 0;
+      bottom: 64px;
+    }
+  }
+
+  @keyframes mapFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .map-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    gap: 1rem;
+    background: rgba(11, 15, 14, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 10;
+  }
+
+  .map-header h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .map-header .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .map-header .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+
+  .map-header .btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+    background: rgba(11, 15, 14, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    z-index: 10;
+  }
+
+  .filter-chips {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    background: rgba(19, 25, 23, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+  }
+
+  .filter-chip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .filter-chip:active {
+    transform: scale(0.96);
+  }
+
+  .filter-chip.active {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.1);
+  }
+
+  .chip-icon {
+    font-size: 0.85rem;
+  }
+
+  .radius-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .radius-control label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+  }
+
+  .radius-control select {
+    padding: 0.4rem 0.75rem;
+    background: rgba(19, 25, 23, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  .radius-control select:focus {
+    border-color: rgba(34, 197, 94, 0.4);
+    outline: none;
+  }
+
+  .map-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: rgba(14, 20, 18, 0.6);
+    min-height: 300px;
+  }
+
+  .map-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 12, 0.95);
+    z-index: 1000;
+    gap: 1rem;
+  }
+
+  .map-loading.hidden {
+    display: none;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(34, 197, 94, 0.15);
+    border-top-color: #22c55e;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .map-loading p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+  }
+
+  .location-btn {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    z-index: 500;
+    box-shadow: 0 4px 18px rgba(34, 197, 94, 0.3);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .location-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+  }
+
+  .location-btn:active {
+    transform: scale(0.95);
+  }
+  .location-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .alert-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 340px;
+    height: 100%;
+    background: rgba(10, 14, 12, 0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-left: 1px solid rgba(34, 197, 94, 0.12);
+    z-index: 600;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition:
+      transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.35s ease;
+    overflow: hidden;
+  }
+
+  .alert-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .alert-sidebar.expanded {
+    width: 450px;
+  }
+
+  @media (max-width: 767px) {
+    .alert-sidebar {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid rgba(34, 197, 94, 0.12);
+    }
+    .alert-sidebar.expanded {
+      width: 100%;
+    }
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.15rem;
+    background: rgba(10, 14, 12, 0.98);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.15);
+    flex-shrink: 0;
+    min-height: 56px;
+    position: relative;
+    z-index: 20;
+  }
+
+  .sidebar-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    padding-right: 1rem;
+  }
+
+  .close-sidebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .close-sidebar-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .close-sidebar-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .alert-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(34, 197, 94, 0.2) transparent;
+  }
+
+  .alert-list::-webkit-scrollbar {
+    width: 3px;
+  }
+  .alert-list::-webkit-scrollbar-thumb {
+    background: rgba(34, 197, 94, 0.2);
+    border-radius: 2px;
+  }
+
+  .alert-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: alertSlideIn 0.3s ease both;
+    overflow: hidden;
+  }
+  
+  .alert-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .alert-item-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 120px;
+    min-height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 0.25rem;
+    overflow: hidden;
+  }
+
+  @keyframes alertSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .alert-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(34, 197, 94, 0.15);
+  }
+  
+  .alert-item:active {
+    transform: scale(0.98);
+  }
+
+  .alert-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  .alert-icon.disaster {
+    background: rgba(239, 68, 68, 0.15);
+  }
+  .alert-icon.safety {
+    background: rgba(245, 158, 11, 0.15);
+  }
+  .alert-icon.traffic {
+    background: rgba(59, 130, 246, 0.15);
+  }
+  .alert-icon.event {
+    background: rgba(139, 92, 246, 0.15);
+  }
+  .alert-icon.other {
+    background: rgba(107, 114, 128, 0.15);
+  }
+
+  .alert-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .alert-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.2rem;
+  }
+
+  .alert-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .alert-comment-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    color: rgba(34, 197, 94, 0.7);
+    font-weight: 500;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+
+  .empty-state svg {
+    width: 44px;
+    height: 44px;
+    color: rgba(255, 255, 255, 0.15);
+    margin-bottom: 0.75rem;
+  }
+  .empty-state p {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 4.5rem 1rem 1rem;
+    animation: overlayIn 0.2s ease;
+  }
+
+  @keyframes overlayIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    background: rgba(14, 20, 18, 0.98);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    border-radius: 1.25rem;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    animation: modalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes modalIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .modal-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+  }
+
+  .modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+  .modal-close svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .alert-form {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.7rem 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(34, 197, 94, 0.4);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.06);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  .location-preview {
+    margin-top: 0.25rem;
+  }
+
+  .location-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .location-display:hover {
+    border-color: rgba(34, 197, 94, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .location-display svg {
+    width: 18px;
+    height: 18px;
+    color: #22c55e;
+  }
+
+  .location-picker-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    border-radius: 8px;
+    color: #4ade80;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .location-picker-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.4);
+    transform: scale(1.05);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .form-actions .btn {
+    flex: 1;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .form-actions .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+
+  @media (max-width: 767px) {
+    .filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .radius-control {
+      justify-content: flex-start;
+    }
+    .alert-sidebar {
+      width: 100%;
+    }
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .image-upload-area {
+    margin-top: 0.25rem;
+  }
+
+  .image-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .image-upload-label:hover {
+    border-color: rgba(34, 197, 94, 0.35);
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(34, 197, 94, 0.04);
+  }
+
+  .image-upload-label svg {
+    color: rgba(34, 197, 94, 0.6);
+  }
+
+  .alert-image-preview {
+    position: relative;
+    margin-top: 0.5rem;
+  }
+
+  .alert-image-preview img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .remove-img-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 26px;
+    height: 26px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .remove-img-btn:hover {
+    background: rgba(239, 68, 68, 0.8);
+    transform: scale(1.1);
+  }
+
+  /* Alert Detail Panel */
+  .alert-detail {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    animation: detailSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes detailSlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .detail-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    color: #4ade80;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin: 0.5rem;
+  }
+
+  .detail-back-btn:hover {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+  
+  .detail-back-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .detail-header {
+    padding: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    overflow: hidden;
+  }
+
+  .detail-alert-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.35rem;
+  }
+  .detail-alert-desc {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+  .detail-alert-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+  .detail-alert-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    display: block;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .detail-alert-img:hover {
+    transform: scale(1.05);
+  }
+
+  .detail-comments {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .comments-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0.75rem 0.85rem 0.35rem;
+  }
+  .comments-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0.5rem;
+    max-height: 40vh;
+  }
+  .comments-empty {
+    text-align: center;
+    padding: 1.5rem;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+  }
+
+  .comment-item {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.55rem 0.35rem;
+    animation: commentIn 0.2s ease;
+  }
+
+  @keyframes commentIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .comment-avatar {
+    width: 40px;
+    height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 1px solid rgba(34, 197, 94, 0.15);
+  }
+
+  .comment-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .comment-author {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .comment-text {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+    margin-top: 0.15rem;
+  }
+  .comment-time {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 0.2rem;
+  }
+  .comment-attached-img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .comment-form {
+    padding: 0.65rem 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .comment-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .comment-input-row input[type="text"] {
+    flex: 1;
+    padding: 0.55rem 0.75rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    color: white;
+    font-size: 0.8rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .comment-input-row input[type="text"]:focus {
+    border-color: rgba(34, 197, 94, 0.3);
+  }
+
+  .comment-img-btn,
+  .comment-send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 8px;
+    color: #4ade80;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .comment-img-btn:hover,
+  .comment-send-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.35);
+    transform: scale(1.05);
+  }
+  
+  .comment-send-btn svg,
+  .comment-img-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .comment-img-preview {
+    position: relative;
+    margin-top: 0.5rem;
+  }
+
+  .comment-img-preview img {
+    width: 100%;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .remove-comment-img {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.65);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .remove-comment-img:hover {
+    background: rgba(239, 68, 68, 0.8);
+  }
+
+  .picking-location {
+    cursor: crosshair !important;
+    outline: 3px solid #f59e0b;
+    outline-offset: -3px;
+  }
+
+  .pick-location-toast {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(245, 158, 11, 0.95);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 12px;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    animation: toastIn 0.3s ease both;
+    white-space: nowrap;
+  }
+
+  @keyframes toastIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Leaflet Alert Popup Styles */
+  .alert-custom-popup .leaflet-popup-content-wrapper {
+    background: rgba(15, 20, 18, 0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: white;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    overflow: hidden;
+    max-width: 300px;
+  }
+
+  .alert-custom-popup .leaflet-popup-content {
+    margin: 0;
+    width: 100% !important;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .alert-custom-popup .leaflet-popup-tip {
+    background: rgba(15, 20, 18, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .alert-popup {
+    padding: 0.875rem;
+    max-width: 280px;
+    overflow: hidden;
+  }
+
+  .alert-popup-header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .alert-popup-icon {
+    font-size: 1rem;
+  }
+
+  .alert-popup-type {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .alert-popup-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .alert-popup-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .alert-popup-desc {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .alert-popup-btn {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.2),
+      rgba(16, 185, 129, 0.15)
+    );
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 10px;
+    color: #4ade80;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .alert-popup-btn:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.35),
+      rgba(16, 185, 129, 0.25)
+    );
+    border-color: rgba(34, 197, 94, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+  }
+
+  .alert-popup-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Fixed image sizes for comments */
+  .comment-image {
+    width: 100%;
+    max-width: 100%;
+    max-height: 150px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-top: 0.375rem;
+    overflow: hidden;
+  }
+
+  /* Delete alert button */
+  .delete-alert-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 10px;
+    color: #f87171;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    width: 100%;
+  }
+
+  .delete-alert-btn:hover {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.2));
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  }
+  
+  .delete-alert-btn svg {
+    flex-shrink: 0;
+  }
+
+  .delete-alert-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Sidebar header improvements */
+  .sidebar-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: relative;
+    z-index: 10;
+  }
+
+  .sidebar-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(10, 15, 12, 0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  /* Alert item in sidebar — expand on hover */
+  .alert-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .alert-item:hover {
+    transform: scale(1.02);
+    z-index: 2;
+  }
+
+  /* Custom Message Modal */
+  .msg-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 1rem;
+    animation: msgOverlayIn 0.2s ease;
+  }
+
+  @keyframes msgOverlayIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .msg-modal {
+    width: 100%;
+    max-width: 380px;
+    background: rgba(14, 20, 18, 0.98);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    border-radius: 1.25rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    animation: msgModalIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes msgModalIn {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .msg-modal-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .msg-modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.5rem;
+  }
+
+  .msg-modal-text {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  .msg-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .msg-modal-actions button {
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    min-width: 100px;
+    border: none;
+  }
+
+  .msg-btn-cancel {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .msg-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .msg-btn-confirm {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+  .msg-btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+  }
+
+  .msg-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+  }
+  .msg-btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
+  }
+
+  .msg-btn-ok {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.3);
+  }
+  .msg-btn-ok:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(34, 197, 94, 0.4);
+  }
+</style>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script>
+  import { supabase } from "../lib/supabase/client";
+  import L from "leaflet";
+
+  // Fix for default marker icons
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
+    iconUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+  });
+
+  // ── Custom Modal Utilities ──
+  const msgOverlay = document.getElementById("msg-modal-overlay")!;
+  const msgIcon = document.getElementById("msg-modal-icon")!;
+  const msgTitle = document.getElementById("msg-modal-title")!;
+  const msgText = document.getElementById("msg-modal-text")!;
+  const msgActions = document.getElementById("msg-modal-actions")!;
+
+  function showMsg(icon: string, title: string, text: string) {
+    msgIcon.textContent = icon;
+    msgTitle.textContent = title;
+    msgText.textContent = text;
+    msgActions.innerHTML = `<button class="msg-btn-ok" id="msg-ok-btn">Aceptar</button>`;
+    msgOverlay.style.display = "flex";
+    document.getElementById("msg-ok-btn")!.addEventListener("click", () => {
+      msgOverlay.style.display = "none";
+    });
+  }
+
+  function showConfirm(
+    icon: string,
+    title: string,
+    text: string,
+    danger = false,
+  ): Promise<boolean> {
+    return new Promise((resolve) => {
+      msgIcon.textContent = icon;
+      msgTitle.textContent = title;
+      msgText.textContent = text;
+      msgActions.innerHTML = `
+        <button class="msg-btn-cancel" id="msg-cancel-btn">Cancelar</button>
+        <button class="${danger ? "msg-btn-danger" : "msg-btn-confirm"}" id="msg-confirm-btn">${danger ? "Eliminar" : "Aceptar"}</button>
+      `;
+      msgOverlay.style.display = "flex";
+      document
+        .getElementById("msg-cancel-btn")!
+        .addEventListener("click", () => {
+          msgOverlay.style.display = "none";
+          resolve(false);
+        });
+      document
+        .getElementById("msg-confirm-btn")!
+        .addEventListener("click", () => {
+          msgOverlay.style.display = "none";
+          resolve(true);
+        });
+    });
+  }
+
+  // Map state
+  let map: L.Map | null = null;
+  let userLocation: { lat: number; lng: number } | null = null;
+  let selectedLocation: { lat: number; lng: number } | null = null;
+  let markers: L.Marker[] = [];
+  let currentFilter = "all";
+  let currentRadius = 5000;
+
+  // DOM Elements
+  const mapLoading = document.getElementById("map-loading");
+  const createAlertBtn = document.getElementById("create-alert-btn");
+  const createAlertModal = document.getElementById("create-alert-modal");
+  const closeModalBtn = document.getElementById("close-modal-btn");
+  const cancelAlertBtn = document.getElementById("cancel-alert-btn");
+  const alertForm = document.getElementById("alert-form") as HTMLFormElement;
+  const locationBtn = document.getElementById("location-btn");
+  const alertSidebar = document.getElementById("alert-sidebar");
+  const closeSidebarBtn = document.getElementById("close-sidebar-btn");
+  const radiusSelect = document.getElementById(
+    "radius-select",
+  ) as HTMLSelectElement;
+  const filterChips = document.querySelectorAll(".filter-chip");
+
+  let radiusCircles: L.Circle[] = [];
+  let pickLocationMarker: L.Marker | null = null;
+
+  let userRadiusCircle: L.Circle | null = null;
+
+  // Initialize map — waits for geolocation first
+  async function initMap() {
+    const defaultLocation = { lat: 4.6097, lng: -74.0817 };
+    const loadingText = document.getElementById("map-loading-text");
+
+    // Wait for geolocation before creating the map
+    const loc = await new Promise<{ lat: number; lng: number }>((resolve) => {
+      if (!navigator.geolocation) {
+        if (loadingText)
+          loadingText.textContent =
+            "GPS no disponible, usando ubicación predeterminada...";
+        setTimeout(() => resolve(defaultLocation), 800);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        () => {
+          if (loadingText)
+            loadingText.textContent =
+              "No se pudo obtener ubicación, usando predeterminada...";
+          setTimeout(() => resolve(defaultLocation), 800);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 },
+      );
+    });
+
+    userLocation = loc;
+
+    map = L.map("map").setView([loc.lat, loc.lng], 14);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(map);
+
+    addUserMarker(loc.lat, loc.lng);
+
+    // Hide loading
+    mapLoading?.classList.add("hidden");
+
+    // Load alerts
+    await loadAlerts();
+
+    // Map click: pick location for new alert
+    let pickingLocation = false;
+
+    map?.on("click", (e: L.LeafletMouseEvent) => {
+      if (pickingLocation || createAlertModal?.style.display !== "none") {
+        selectedLocation = { lat: e.latlng.lat, lng: e.latlng.lng };
+        updateLocationDisplay();
+        // Show temporary marker on picked location
+        if (pickLocationMarker) pickLocationMarker.remove();
+        const pickIcon = L.divIcon({
+          className: "pick-marker",
+          html: '<div style="background:#f59e0b;width:14px;height:14px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>',
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        });
+        pickLocationMarker = L.marker([e.latlng.lat, e.latlng.lng], {
+          icon: pickIcon,
+        }).addTo(map!);
+
+        // If in picking mode, restore the modal
+        if (pickingLocation) {
+          pickingLocation = false;
+          if (createAlertModal) createAlertModal.style.display = "flex";
+          document
+            .getElementById("map-container")
+            ?.classList.remove("picking-location");
+        }
+      }
+    });
+
+    // Location picker button in the modal
+    document
+      .getElementById("location-picker-btn")
+      ?.addEventListener("click", () => {
+        pickingLocation = true;
+        // Minimize the modal to let user click on the map
+        if (createAlertModal) createAlertModal.style.display = "none";
+        document
+          .getElementById("map-container")
+          ?.classList.add("picking-location");
+        // Show a toast/notification
+        const toast = document.createElement("div");
+        toast.className = "pick-location-toast";
+        toast.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Haz clic en el mapa para seleccionar la ubicación';
+        document.querySelector(".map-page")?.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+      });
+
+    // Draw initial radius circle
+    if (map && userLocation) {
+      userRadiusCircle = L.circle([userLocation.lat, userLocation.lng], {
+        radius: currentRadius,
+        color: "#22c55e",
+        fillColor: "#22c55e",
+        fillOpacity: 0.06,
+        weight: 2,
+        opacity: 0.5,
+        dashArray: "8 6",
+      }).addTo(map);
+    }
+  }
+
+  function addUserMarker(lat: number, lng: number) {
+    const userIcon = L.divIcon({
+      className: "user-marker",
+      html: '<div style="background: #22c55e; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>',
+      iconSize: [16, 16],
+      iconAnchor: [8, 8],
+    });
+
+    L.marker([lat, lng], { icon: userIcon }).addTo(map!);
+  }
+
+  async function loadAlerts() {
+    // Clear existing markers and radius circles
+    markers.forEach((m) => m.remove());
+    markers = [];
+    radiusCircles.forEach((c) => c.remove());
+    radiusCircles = [];
+
+    const { data: alerts, error } = await (supabase as any)
+      .from("map_alerts")
+      .select("*, profiles(username, display_name, avatar_url)")
+      .eq("active", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error loading alerts:", error);
+      return;
+    }
+
+    if (alerts) {
+      const severityColors: Record<string, string> = {
+        info: "#3b82f6",
+        warning: "#f59e0b",
+        danger: "#ef4444",
+        critical: "#dc2626",
+      };
+
+      alerts.forEach((alert: any) => {
+        if (currentFilter !== "all" && alert.alert_type !== currentFilter) {
+          return;
+        }
+
+        const color = severityColors[alert.severity] || "#22c55e";
+
+        const marker = L.marker([alert.latitude, alert.longitude]).addTo(map!);
+
+        // Click marker → show preview popup with 'Ver más' button
+        const popupContent = `
+          <div class="alert-popup">
+            <div class="alert-popup-header">
+              <span class="alert-popup-icon">${getAlertIcon(alert.alert_type)}</span>
+              <span class="alert-popup-type">${getAlertTypeLabel(alert.alert_type)}</span>
+            </div>
+            <div class="alert-popup-title">${alert.title}</div>
+            ${alert.image_url ? `<img class="alert-popup-img" src="${alert.image_url}" alt="" />` : ""}
+            ${alert.description ? `<div class="alert-popup-desc">${alert.description.substring(0, 80)}${alert.description.length > 80 ? "..." : ""}</div>` : ""}
+            <button class="alert-popup-btn" data-alert-popup-id="${alert.id}">Ver más</button>
+          </div>
+        `;
+        marker.bindPopup(popupContent, {
+          className: "alert-custom-popup",
+          maxWidth: 260,
+          minWidth: 200,
+        });
+
+        marker.on("popupopen", () => {
+          setTimeout(() => {
+            const btn = document.querySelector(
+              `[data-alert-popup-id="${alert.id}"]`,
+            );
+            btn?.addEventListener("click", () => {
+              marker.closePopup();
+              showAlertDetail(alert);
+              alertSidebar?.classList.add("open");
+            });
+          }, 50);
+        });
+
+        markers.push(marker);
+
+        // Draw radius circle if alert has radius
+        if (alert.radius && alert.radius > 0) {
+          const circle = L.circle([alert.latitude, alert.longitude], {
+            radius: alert.radius,
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.08,
+            weight: 1.5,
+            opacity: 0.4,
+            dashArray: "6 4",
+          }).addTo(map!);
+          radiusCircles.push(circle);
+        }
+      });
+
+      updateAlertListWithDetail(alerts);
+    }
+  }
+
+  function updateAlertList(alerts: any[]) {
+    const alertList = document.getElementById("alert-list");
+    if (!alertList) return;
+
+    const filteredAlerts =
+      currentFilter === "all"
+        ? alerts
+        : alerts.filter((a) => a.alert_type === currentFilter);
+
+    if (filteredAlerts.length === 0) {
+      alertList.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <p>No hay alertas en esta área</p>
+        </div>
+      `;
+      return;
+    }
+
+    alertList.innerHTML = filteredAlerts
+      .map(
+        (alert) => `
+      <div class="alert-item" data-lat="${alert.latitude}" data-lng="${alert.longitude}">
+        <div class="alert-icon ${alert.alert_type}">
+          ${getAlertIcon(alert.alert_type)}
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">${alert.title}</div>
+          <div class="alert-meta">
+            <span>${formatTimeAgo(alert.created_at)}</span>
+            <span>•</span>
+            <span>${getAlertTypeLabel(alert.alert_type)}</span>
+          </div>
+        </div>
+      </div>
+    `,
+      )
+      .join("");
+
+    // Add click handlers
+    alertList.querySelectorAll(".alert-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const lat = parseFloat(item.getAttribute("data-lat") || "0");
+        const lng = parseFloat(item.getAttribute("data-lng") || "0");
+        map?.setView([lat, lng], 16);
+      });
+    });
+  }
+
+  function getAlertIcon(type: string): string {
+    const icons: Record<string, string> = {
+      disaster: "🚨",
+      safety: "⚠️",
+      traffic: "🚗",
+      event: "🎉",
+      other: "📍",
+    };
+    return icons[type] || "📍";
+  }
+
+  function getAlertTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      disaster: "Desastre",
+      safety: "Seguridad",
+      traffic: "Tráfico",
+      event: "Evento",
+      other: "Otro",
+    };
+    return labels[type] || type;
+  }
+
+  function formatTimeAgo(dateStr: string): string {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 60) return `hace ${minutes}m`;
+    if (hours < 24) return `hace ${hours}h`;
+    return `hace ${days}d`;
+  }
+
+  function updateLocationDisplay() {
+    const locationText = document.getElementById("location-text");
+    const latInput = document.getElementById(
+      "alert-latitude",
+    ) as HTMLInputElement;
+    const lngInput = document.getElementById(
+      "alert-longitude",
+    ) as HTMLInputElement;
+
+    if (selectedLocation) {
+      locationText!.textContent = `${selectedLocation.lat.toFixed(6)}, ${selectedLocation.lng.toFixed(6)}`;
+      latInput.value = selectedLocation.lat.toString();
+      lngInput.value = selectedLocation.lng.toString();
+    }
+  }
+
+  // Event Listeners
+  createAlertBtn?.addEventListener("click", () => {
+    createAlertModal!.style.display = "flex";
+    // Use user location or map center as default
+    const center = map?.getCenter();
+    if (center) {
+      selectedLocation = { lat: center.lat, lng: center.lng };
+      updateLocationDisplay();
+    }
+  });
+
+  closeModalBtn?.addEventListener("click", () => {
+    createAlertModal!.style.display = "none";
+  });
+
+  cancelAlertBtn?.addEventListener("click", () => {
+    createAlertModal!.style.display = "none";
+  });
+
+  locationBtn?.addEventListener("click", () => {
+    if (userLocation) {
+      map?.setView([userLocation.lat, userLocation.lng], 14);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        map?.setView([userLocation.lat, userLocation.lng], 14);
+        addUserMarker(userLocation.lat, userLocation.lng);
+      });
+    }
+  });
+
+  closeSidebarBtn?.addEventListener("click", () => {
+    alertSidebar?.classList.remove("open");
+  });
+
+  radiusSelect?.addEventListener("change", () => {
+    currentRadius = parseInt(radiusSelect.value);
+    // Draw user radius circle on map
+    if (userRadiusCircle) userRadiusCircle.remove();
+    if (userLocation && map) {
+      userRadiusCircle = L.circle([userLocation.lat, userLocation.lng], {
+        radius: currentRadius,
+        color: "#22c55e",
+        fillColor: "#22c55e",
+        fillOpacity: 0.06,
+        weight: 2,
+        opacity: 0.5,
+        dashArray: "8 6",
+      }).addTo(map);
+    }
+    loadAlerts();
+  });
+
+  filterChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      filterChips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      currentFilter = chip.getAttribute("data-type") || "all";
+      loadAlerts();
+    });
+  });
+
+  alertForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(alertForm);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      showMsg(
+        "🔒",
+        "Sesión requerida",
+        "Debes iniciar sesión para crear alertas",
+      );
+      return;
+    }
+
+    const lat = parseFloat(formData.get("latitude") as string);
+    const lng = parseFloat(formData.get("longitude") as string);
+
+    if (isNaN(lat) || isNaN(lng)) {
+      showMsg(
+        "📍",
+        "Ubicación requerida",
+        "Por favor selecciona una ubicación en el mapa",
+      );
+      return;
+    }
+
+    const { error } = await (supabase as any).from("map_alerts").insert({
+      user_id: user.id,
+      title: formData.get("title"),
+      description: formData.get("description"),
+      alert_type: formData.get("alert_type"),
+      severity: formData.get("severity"),
+      latitude: lat,
+      longitude: lng,
+      radius: parseInt(formData.get("radius") as string),
+      image_url: await uploadAlertImage(user.id),
+    });
+
+    if (error) {
+      console.error("Error creating alert:", error);
+      showMsg("❌", "Error", "Error al crear la alerta");
+      return;
+    }
+
+    createAlertModal!.style.display = "none";
+    alertForm.reset();
+    loadAlerts();
+  });
+
+  // Image upload handling for alerts
+  const alertImageInput = document.getElementById(
+    "alert-image",
+  ) as HTMLInputElement;
+  const alertImagePreview = document.getElementById("alert-image-preview");
+  const alertPreviewImg = document.getElementById(
+    "alert-preview-img",
+  ) as HTMLImageElement;
+  const removeAlertImage = document.getElementById("remove-alert-image");
+  const alertImageLabel = document.getElementById("alert-image-label");
+  let alertImageFile: File | null = null;
+
+  alertImageInput?.addEventListener("change", (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      alertImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (alertPreviewImg && alertImagePreview && alertImageLabel) {
+          alertPreviewImg.src = ev.target?.result as string;
+          alertImagePreview.style.display = "block";
+          alertImageLabel.style.display = "none";
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  removeAlertImage?.addEventListener("click", () => {
+    alertImageFile = null;
+    if (alertImagePreview) alertImagePreview.style.display = "none";
+    if (alertImageLabel) alertImageLabel.style.display = "flex";
+    if (alertImageInput) alertImageInput.value = "";
+  });
+
+  async function uploadAlertImage(userId: string): Promise<string | null> {
+    if (!alertImageFile) return null;
+    const ext = alertImageFile.name.split(".").pop();
+    const fileName = `alerts/${userId}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("media")
+      .upload(fileName, alertImageFile);
+    if (error) {
+      console.error("Image upload error:", error);
+      return null;
+    }
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("media").getPublicUrl(fileName);
+    return publicUrl;
+  }
+
+  // ===== Alert Detail & Comments =====
+  const alertDetail = document.getElementById("alert-detail");
+  const alertListEl = document.getElementById("alert-list");
+  const detailHeader = document.getElementById("detail-header");
+  const commentsList = document.getElementById("comments-list");
+  const commentForm = document.getElementById(
+    "comment-form",
+  ) as HTMLFormElement;
+  const commentInput = document.getElementById(
+    "comment-input",
+  ) as HTMLInputElement;
+  const commentImageInput = document.getElementById(
+    "comment-image-input",
+  ) as HTMLInputElement;
+  const commentImgPreview = document.getElementById("comment-img-preview");
+  const commentPreviewImg = document.getElementById(
+    "comment-preview-img",
+  ) as HTMLImageElement;
+  const removeCommentImg = document.getElementById("remove-comment-img");
+  let currentAlertId: string | null = null;
+  let commentImageFile: File | null = null;
+
+  document.getElementById("detail-back-btn")?.addEventListener("click", () => {
+    if (alertDetail) alertDetail.style.display = "none";
+    if (alertListEl) alertListEl.style.display = "block";
+    alertSidebar?.classList.remove("expanded");
+    currentAlertId = null;
+  });
+
+  async function showAlertDetail(alert: any) {
+    currentAlertId = alert.id;
+    if (alertListEl) alertListEl.style.display = "none";
+    if (alertDetail) alertDetail.style.display = "flex";
+    alertSidebar?.classList.add("open");
+    alertSidebar?.classList.add("expanded");
+
+    // Check if the current user is the alert creator
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+    const isCreator = currentUser && currentUser.id === alert.user_id;
+
+    if (detailHeader) {
+      detailHeader.innerHTML = `
+        <div class="detail-alert-title">${getAlertIcon(alert.alert_type)} ${alert.title}</div>
+        ${alert.description ? `<div class="detail-alert-desc">${alert.description}</div>` : ""}
+        <div class="detail-alert-meta">
+          <span>${getAlertTypeLabel(alert.alert_type)}</span>
+          <span>•</span>
+          <span>${alert.severity || "info"}</span>
+          <span>•</span>
+          <span>${formatTimeAgo(alert.created_at)}</span>
+          <span>•</span>
+          <span>${alert.profiles?.display_name || alert.profiles?.username || "Anónimo"}</span>
+        </div>
+        ${alert.image_url ? `<img class="detail-alert-img" src="${alert.image_url}" alt="Alert image" />` : ""}
+        ${isCreator ? `<button class="delete-alert-btn" id="delete-alert-btn" data-alert-id="${alert.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Eliminar alerta</button>` : ""}
+      `;
+
+      // Add delete handler if creator
+      if (isCreator) {
+        document
+          .getElementById("delete-alert-btn")
+          ?.addEventListener("click", async () => {
+            const confirmed = await showConfirm(
+              "🗑️",
+              "Eliminar alerta",
+              "¿Estás seguro de que quieres eliminar esta alerta? Esta acción no se puede deshacer.",
+              true,
+            );
+            if (!confirmed) return;
+            const { error } = await (supabase as any)
+              .from("map_alerts")
+              .delete()
+              .eq("id", alert.id);
+            if (error) {
+              console.error("Error deleting alert:", error);
+              showMsg("❌", "Error", "Error al eliminar la alerta");
+              return;
+            }
+            // Go back to list and reload
+            if (alertDetail) alertDetail.style.display = "none";
+            if (alertListEl) alertListEl.style.display = "block";
+            currentAlertId = null;
+            loadAlerts();
+          });
+      }
+    }
+
+    loadComments(alert.id);
+  }
+
+  async function loadComments(alertId: string) {
+    if (!commentsList) return;
+    commentsList.innerHTML = '<div class="comments-empty">Cargando...</div>';
+
+    const { data: comments, error } = await (supabase as any)
+      .from("alert_comments")
+      .select("*, profiles:user_id (username, display_name, avatar_url)")
+      .eq("alert_id", alertId)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      commentsList.innerHTML =
+        '<div class="comments-empty">Error al cargar comentarios</div>';
+      return;
+    }
+
+    if (!comments || comments.length === 0) {
+      commentsList.innerHTML =
+        '<div class="comments-empty">No hay comentarios aún. ¡Sé el primero!</div>';
+      return;
+    }
+
+    commentsList.innerHTML = comments
+      .map(
+        (c: any) => `
+      <div class="comment-item">
+        <img class="comment-avatar" src="${c.profiles?.avatar_url || "/images/default-avatar.svg"}" alt="" />
+        <div class="comment-body">
+          <span class="comment-author">${c.profiles?.display_name || c.profiles?.username || "Usuario"}</span>
+          <div class="comment-text">${c.content}</div>
+          ${c.image_url ? `<img class="comment-image" src="${c.image_url}" alt="" />` : ""}
+          <div class="comment-time">${formatTimeAgo(c.created_at)}</div>
+        </div>
+      </div>
+    `,
+      )
+      .join("");
+
+    commentsList.scrollTop = commentsList.scrollHeight;
+  }
+
+  // Comment image preview
+  commentImageInput?.addEventListener("change", (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (file) {
+      commentImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (commentPreviewImg && commentImgPreview) {
+          commentPreviewImg.src = ev.target?.result as string;
+          commentImgPreview.style.display = "block";
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  removeCommentImg?.addEventListener("click", () => {
+    commentImageFile = null;
+    if (commentImgPreview) commentImgPreview.style.display = "none";
+    if (commentImageInput) commentImageInput.value = "";
+  });
+
+  async function uploadCommentImage(userId: string): Promise<string | null> {
+    if (!commentImageFile) return null;
+    const ext = commentImageFile.name.split(".").pop();
+    const fileName = `alert-comments/${userId}/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("media")
+      .upload(fileName, commentImageFile);
+    if (error) {
+      console.error("Comment image upload error:", error);
+      return null;
+    }
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("media").getPublicUrl(fileName);
+    return publicUrl;
+  }
+
+  commentForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!currentAlertId) return;
+    const content = commentInput?.value?.trim();
+    if (!content && !commentImageFile) return;
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      showMsg("🔒", "Sesión requerida", "Debes iniciar sesión para comentar");
+      return;
+    }
+
+    const { error } = await (supabase as any).from("alert_comments").insert({
+      alert_id: currentAlertId,
+      user_id: user.id,
+      content: content || "",
+    });
+
+    if (error) {
+      console.error("Error posting comment:", error);
+      showMsg("❌", "Error", "Error al publicar comentario");
+      return;
+    }
+
+    commentInput.value = "";
+    commentImageFile = null;
+    if (commentImgPreview) commentImgPreview.style.display = "none";
+    if (commentImageInput) commentImageInput.value = "";
+    loadComments(currentAlertId);
+  });
+
+  // Update alert list items to open detail view
+  function updateAlertListWithDetail(alerts: any[]) {
+    const alertListContainer = document.getElementById("alert-list");
+    if (!alertListContainer) return;
+
+    const filteredAlerts =
+      currentFilter === "all"
+        ? alerts
+        : alerts.filter((a) => a.alert_type === currentFilter);
+
+    if (filteredAlerts.length === 0) {
+      alertListContainer.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <p>No hay alertas en esta área</p>
+        </div>
+      `;
+      return;
+    }
+
+    alertListContainer.innerHTML = filteredAlerts
+      .map(
+        (alert) => `
+      <div class="alert-item" data-alert-id="${alert.id}" data-lat="${alert.latitude}" data-lng="${alert.longitude}">
+        <div class="alert-item-header">
+          <div class="alert-icon ${alert.alert_type}">
+            ${getAlertIcon(alert.alert_type)}
+          </div>
+          <div class="alert-content">
+            <div class="alert-title">${alert.title}</div>
+            <div class="alert-meta">
+              <span>${formatTimeAgo(alert.created_at)}</span>
+              <span>•</span>
+              <span>${getAlertTypeLabel(alert.alert_type)}</span>
+            </div>
+          </div>
+        </div>
+        ${alert.image_url ? `<img class="alert-item-image" src="${alert.image_url}" alt="${alert.title}" />` : ''}
+      </div>
+    `,
+      )
+      .join("");
+
+    // Store alerts for detail view
+    alertListContainer.querySelectorAll(".alert-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const alertId = item.getAttribute("data-alert-id");
+        const lat = parseFloat(item.getAttribute("data-lat") || "0");
+        const lng = parseFloat(item.getAttribute("data-lng") || "0");
+        map?.setView([lat, lng], 16);
+
+        const alertData = filteredAlerts.find((a: any) => a.id === alertId);
+        if (alertData) showAlertDetail(alertData);
+      });
+    });
+  }
+
+  // Real-time subscription for new comments
+  function subscribeToComments() {
+    (supabase as any)
+      .channel("alert-comments-realtime")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "alert_comments" },
+        (payload: any) => {
+          if (currentAlertId && payload.new.alert_id === currentAlertId) {
+            loadComments(currentAlertId);
+          }
+        },
+      )
+      .subscribe();
+  }
+
+  subscribeToComments();
+
+  // Initialize
+  initMap();
+</script>

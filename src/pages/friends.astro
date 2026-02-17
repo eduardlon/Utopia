@@ -1,0 +1,49 @@
+---
+import AppLayout from '../layouts/AppLayout.astro';
+import FriendsList from '../components/react/FriendsList';
+---
+
+<AppLayout title="Amigos - Utopía">
+  <div class="friends-page">
+    <div class="page-header">
+      <h1>Amigos</h1>
+      <p class="subtitle">Gestiona tus amistades y solicitudes</p>
+    </div>
+
+    <div class="friends-container">
+      <FriendsList client:load />
+    </div>
+  </div>
+</AppLayout>
+
+<style>
+  .friends-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+  }
+
+  .friends-container {
+    background: rgba(18, 18, 18, 0.6);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    border-radius: 1rem;
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+  }
+</style>

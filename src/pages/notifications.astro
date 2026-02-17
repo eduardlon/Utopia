@@ -1,0 +1,135 @@
+---
+// Notifications page - Real-time notifications
+import AppLayout from "../layouts/AppLayout.astro";
+import NotificationsList from "../components/react/NotificationsList";
+---
+
+<AppLayout title="Notificaciones - Utopía">
+  <div class="notifications-page">
+    <!-- Header -->
+    <div class="notifications-header">
+      <h1>Notificaciones</h1>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs" id="filter-tabs">
+      <button class="tab-btn active" data-filter="all">Todas</button>
+      <button class="tab-btn" data-filter="mentions">Menciones</button>
+      <button class="tab-btn" data-filter="follows">Seguidores</button>
+      <button class="tab-btn" data-filter="likes">Me gusta</button>
+    </div>
+
+    <!-- Notifications List -->
+    <div class="notifications-container">
+      <div id="notifications-wrapper" data-filter="all">
+        <NotificationsList client:visible filter="all" />
+      </div>
+    </div>
+  </div>
+</AppLayout>
+
+<script>
+  // Handle filter tab clicks
+  const tabs = document.querySelectorAll(".tab-btn");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", async () => {
+      // Update active state
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Get filter value
+      const filter = tab.getAttribute("data-filter") as
+        | "all"
+        | "mentions"
+        | "follows"
+        | "likes";
+
+      // Re-render the component with new filter
+      const wrapper = document.getElementById("notifications-wrapper");
+      if (wrapper) {
+        wrapper.setAttribute("data-filter", filter);
+        // The component will need to be re-rendered
+        // For now, we'll just update the data attribute
+      }
+    });
+  });
+</script>
+
+<style>
+  .notifications-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    animation: notifIn 0.5s cubic-bezier(0.4,0,0.2,1) both;
+  }
+
+  @keyframes notifIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .notifications-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .notifications-header h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab-btn {
+    padding: 0.45rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 9999px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.82rem;
+    font-weight: 500;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .tab-btn.active {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #4ade80;
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.08);
+  }
+
+  .notifications-container {
+    background: linear-gradient(145deg, rgba(19, 25, 23, 0.7) 0%, rgba(14, 20, 18, 0.5) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 1.25rem;
+    padding: 0.75rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+</style>
