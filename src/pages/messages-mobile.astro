@@ -4,11 +4,22 @@ import AppLayout from '../layouts/AppLayout.astro';
 
 <AppLayout title="Mensajes">
   <div class="messages-mobile-page">
+    <!-- Header -->
     <div class="mm-header">
-      <h1>Mensajes</h1>
-      <p class="mm-subtitle">Chatea con tus amigos en línea</p>
+      <div class="mm-header-top">
+        <h1>Mensajes</h1>
+        <button class="mm-new-btn" id="new-chat-btn" title="Nueva conversación">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+      <p class="mm-subtitle">Chatea con tus amigos en tiempo real</p>
     </div>
     
+    <!-- Tabs -->
     <div class="mm-tabs">
       <button class="mm-tab active" data-tab="online">
         <span class="tab-dot"></span>
@@ -17,9 +28,14 @@ import AppLayout from '../layouts/AppLayout.astro';
       </button>
       <button class="mm-tab" data-tab="all">
         Todos
+        <span class="tab-count" id="all-count">0</span>
+      </button>
+      <button class="mm-tab" data-tab="recent">
+        Recientes
       </button>
     </div>
     
+    <!-- Search -->
     <div class="mm-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
@@ -28,10 +44,10 @@ import AppLayout from '../layouts/AppLayout.astro';
       <input type="text" placeholder="Buscar amigos..." id="search-input" />
     </div>
     
+    <!-- Friends List -->
     <div class="mm-list" id="friends-list">
-      <!-- Loading skeleton -->
       <div class="mm-skeleton">
-        {[1, 2, 3, 4, 5].map(i => (
+        {[1, 2, 3, 4, 5].map(() => (
           <div class="mm-skel-item">
             <div class="mm-skel-avatar"></div>
             <div class="mm-skel-info">
@@ -47,6 +63,7 @@ import AppLayout from '../layouts/AppLayout.astro';
   <!-- Chat Modal -->
   <div class="chat-modal" id="chat-modal" hidden>
     <div class="chat-modal-content">
+      <!-- Chat Header -->
       <div class="chat-header">
         <button class="chat-back" id="chat-back">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -56,32 +73,65 @@ import AppLayout from '../layouts/AppLayout.astro';
         <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
         <div class="chat-user-info">
           <span class="chat-name" id="chat-name">Usuario</span>
-          <span class="chat-status" id="chat-status">En línea</span>
+          <span class="chat-status" id="chat-status">
+            <span class="status-dot"></span>
+            En línea
+          </span>
         </div>
-        <a href="#" class="chat-profile" id="chat-profile">
+        <a href="#" class="chat-profile-btn" id="chat-profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="1"></circle>
-            <circle cx="19" cy="12" r="1"></circle>
-            <circle cx="5" cy="12" r="1"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
         </a>
       </div>
       
+      <!-- Messages Area -->
       <div class="chat-messages" id="chat-messages">
         <div class="chat-empty">
+          <div class="chat-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <p>No hay mensajes aún</p>
-          <p class="chat-empty-hint">¡Envía el primer mensaje!</p>
+          <span>¡Envía el primer mensaje!</span>
         </div>
       </div>
       
-      <form class="chat-input" id="chat-form">
-        <input type="text" placeholder="Escribe un mensaje..." id="chat-input" />
-        <button type="submit">
+      <!-- Input Area -->
+      <form class="chat-input-area" id="chat-form">
+        <input type="text" placeholder="Escribe un mensaje..." id="chat-input" autocomplete="off" />
+        <button type="submit" id="send-btn" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
           </svg>
         </button>
       </form>
+    </div>
+  </div>
+  
+  <!-- New Chat Modal -->
+  <div class="new-chat-modal" id="new-chat-modal" hidden>
+    <div class="new-chat-content glass">
+      <div class="new-chat-header">
+        <h3>Nueva conversación</h3>
+        <button class="close-modal-btn" id="close-new-chat">✕</button>
+      </div>
+      <div class="new-chat-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" placeholder="Buscar amigo..." id="new-chat-search" />
+      </div>
+      <div class="new-chat-list" id="new-chat-list">
+        <div class="loading-state">
+          <div class="spinner-small"></div>
+          <span>Cargando amigos...</span>
+        </div>
+      </div>
     </div>
   </div>
 </AppLayout>
@@ -92,20 +142,54 @@ import AppLayout from '../layouts/AppLayout.astro';
     padding-bottom: 100px;
     max-width: 600px;
     margin: 0 auto;
+    min-height: calc(100vh - 64px);
   }
 
+  /* Header */
   .mm-header {
     margin-bottom: 1.5rem;
   }
 
+  .mm-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
   .mm-header h1 {
     font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0 0 0.25rem 0;
+    font-weight: 800;
+    margin: 0;
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    letter-spacing: -0.02em;
+  }
+
+  .mm-new-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 50%;
+    color: #22c55e;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mm-new-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    transform: scale(1.05);
+  }
+
+  .mm-new-btn svg {
+    width: 20px;
+    height: 20px;
   }
 
   .mm-subtitle {
@@ -114,10 +198,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     margin: 0;
   }
 
+  /* Tabs */
   .mm-tabs {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
   }
 
   .mm-tab {
@@ -125,19 +212,26 @@ import AppLayout from '../layouts/AppLayout.astro';
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 2rem;
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .mm-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .mm-tab.active {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.25);
     color: #22c55e;
   }
 
@@ -145,31 +239,49 @@ import AppLayout from '../layouts/AppLayout.astro';
     width: 8px;
     height: 8px;
     border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .mm-tab.active .tab-dot {
     background: #22c55e;
+    opacity: 1;
     animation: pulse 2s ease-in-out infinite;
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.7; }
   }
 
   .tab-count {
-    background: rgba(34, 197, 94, 0.2);
+    background: rgba(255, 255, 255, 0.1);
     padding: 0.125rem 0.5rem;
     border-radius: 1rem;
     font-size: 0.75rem;
+    font-weight: 600;
   }
 
+  .mm-tab.active .tab-count {
+    background: rgba(34, 197, 94, 0.2);
+  }
+
+  /* Search */
   .mm-search {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.875rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 1rem;
     margin-bottom: 1rem;
+    transition: all 0.2s;
+  }
+
+  .mm-search:focus-within {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.05);
   }
 
   .mm-search svg {
@@ -192,25 +304,32 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: rgba(255, 255, 255, 0.4);
   }
 
+  /* Friends List */
   .mm-list {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.375rem;
   }
 
   .mm-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
+    gap: 0.875rem;
+    padding: 0.875rem;
     background: rgba(255, 255, 255, 0.02);
+    border: 1px solid transparent;
     border-radius: 1rem;
     cursor: pointer;
     transition: all 0.2s;
   }
 
   .mm-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .mm-item:active {
+    transform: scale(0.98);
   }
 
   .mm-item-avatar {
@@ -219,29 +338,36 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   .mm-item-avatar img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(34, 197, 94, 0.2);
+    border: 2px solid rgba(34, 197, 94, 0.15);
+    transition: border-color 0.2s;
+  }
+
+  .mm-item:hover .mm-item-avatar img {
+    border-color: rgba(34, 197, 94, 0.3);
   }
 
   .mm-item-status-dot {
     position: absolute;
     bottom: 2px;
     right: 2px;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    border: 2px solid #0b0f0e;
+    border: 3px solid #0b0f0e;
   }
 
   .mm-item-status-dot.online {
     background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
   }
 
   .mm-item-status-dot.away {
     background: #f59e0b;
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
   }
 
   .mm-item-status-dot.offline {
@@ -257,30 +383,51 @@ import AppLayout from '../layouts/AppLayout.astro';
     font-size: 1rem;
     font-weight: 600;
     color: white;
-    margin-bottom: 0.125rem;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mm-item-name .verified-badge {
+    width: 14px;
+    height: 14px;
+    color: #22c55e;
   }
 
   .mm-item-status {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .mm-item-status.online-text {
+    color: #22c55e;
   }
 
   .mm-item-msg-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    border: 1px solid rgba(34, 197, 94, 0.15);
     border-radius: 50%;
     color: #22c55e;
     transition: all 0.2s;
   }
 
-  .mm-item-msg-btn:hover {
-    background: rgba(34, 197, 94, 0.2);
-    transform: scale(1.05);
+  .mm-item:hover .mm-item-msg-btn {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.25);
+  }
+
+  .mm-item-msg-btn svg {
+    width: 20px;
+    height: 20px;
   }
 
   .mm-empty {
@@ -289,8 +436,19 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: rgba(255, 255, 255, 0.4);
   }
 
+  .mm-empty-icon {
+    margin-bottom: 1rem;
+    color: rgba(34, 197, 94, 0.3);
+  }
+
   .mm-empty p {
-    margin: 0;
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mm-empty span {
+    font-size: 0.875rem;
   }
 
   /* Skeleton */
@@ -303,13 +461,13 @@ import AppLayout from '../layouts/AppLayout.astro';
   .mm-skel-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem;
+    gap: 0.875rem;
+    padding: 0.875rem;
   }
 
   .mm-skel-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.05);
     animation: shimmer 1.5s infinite;
@@ -321,7 +479,7 @@ import AppLayout from '../layouts/AppLayout.astro';
 
   .mm-skel-name {
     height: 14px;
-    width: 120px;
+    width: 140px;
     border-radius: 7px;
     background: rgba(255, 255, 255, 0.05);
     animation: shimmer 1.5s infinite 0.1s;
@@ -330,22 +488,22 @@ import AppLayout from '../layouts/AppLayout.astro';
 
   .mm-skel-status {
     height: 10px;
-    width: 80px;
+    width: 90px;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.05);
     animation: shimmer 1.5s infinite 0.2s;
   }
 
   @keyframes shimmer {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.8; }
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
   }
 
   /* Chat Modal */
   .chat-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: #0a0a0a;
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -359,7 +517,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: linear-gradient(180deg, #0a0a0a 0%, #121212 100%);
+    background: linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%);
   }
 
   .chat-header {
@@ -367,8 +525,10 @@ import AppLayout from '../layouts/AppLayout.astro';
     align-items: center;
     gap: 0.75rem;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.6);
+    border-bottom: 1px solid rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   .chat-back {
@@ -378,10 +538,21 @@ import AppLayout from '../layouts/AppLayout.astro';
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.05);
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 50%;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .chat-back:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+  }
+
+  .chat-back svg {
+    width: 20px;
+    height: 20px;
   }
 
   .chat-avatar {
@@ -389,7 +560,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     height: 44px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(34, 197, 94, 0.3);
+    border: 2px solid rgba(34, 197, 94, 0.25);
   }
 
   .chat-user-info {
@@ -399,27 +570,52 @@ import AppLayout from '../layouts/AppLayout.astro';
 
   .chat-name {
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: white;
+    margin-bottom: 0.125rem;
   }
 
   .chat-status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
     font-size: 0.8rem;
     color: #22c55e;
   }
 
-  .chat-profile {
+  .chat-status .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .chat-profile-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
     background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.2s;
   }
 
+  .chat-profile-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+  }
+
+  .chat-profile-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Messages */
   .chat-messages {
     flex: 1;
     overflow-y: auto;
@@ -427,6 +623,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
   }
 
   .chat-empty {
@@ -436,92 +633,153 @@ import AppLayout from '../layouts/AppLayout.astro';
     align-items: center;
     justify-content: center;
     color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+  }
+
+  .chat-empty-icon {
+    margin-bottom: 1rem;
+    color: rgba(34, 197, 94, 0.3);
+  }
+
+  .chat-empty-icon svg {
+    width: 48px;
+    height: 48px;
   }
 
   .chat-empty p {
-    margin: 0;
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  .chat-empty-hint {
+  .chat-empty span {
     font-size: 0.875rem;
-    margin-top: 0.5rem !important;
   }
 
-  .chat-message {
-    display: flex;
-    max-width: 80%;
+  .date-separator {
+    text-align: center;
+    margin: 0.75rem 0;
   }
 
-  .chat-message.sent {
-    margin-left: auto;
-  }
-
-  .chat-message.received {
-    margin-right: auto;
-  }
-
-  .chat-bubble {
-    padding: 0.75rem 1rem;
+  .date-separator span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.75rem;
     border-radius: 1rem;
   }
 
-  .chat-message.sent .chat-bubble {
-    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-    border-bottom-right-radius: 0.25rem;
+  .message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    animation: msgIn 0.2s ease-out;
   }
 
-  .chat-message.received .chat-bubble {
-    background: rgba(255, 255, 255, 0.08);
-    border-bottom-left-radius: 0.25rem;
+  @keyframes msgIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .chat-bubble p {
-    margin: 0;
-    color: white;
-    font-size: 0.95rem;
+  .message.sent {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+
+  .message.received {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .message-sender {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.25rem;
+    padding: 0 0.25rem;
+  }
+
+  .message.sent .message-sender {
+    display: none;
+  }
+
+  .message-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 1.25rem;
+    max-width: 100%;
     word-wrap: break-word;
   }
 
-  .chat-time {
-    display: block;
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.25rem;
-    text-align: right;
+  .message.sent .message-bubble {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    border-bottom-right-radius: 0.25rem;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
   }
 
-  .chat-message.received .chat-time {
+  .message.received .message-bubble {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-bottom-left-radius: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .message-bubble p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .message-time {
+    display: block;
+    text-align: right;
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-top: 0.3rem;
+  }
+
+  .message.received .message-time {
     text-align: left;
   }
 
-  .chat-input {
+  /* Input Area */
+  .chat-input-area {
     display: flex;
     gap: 0.75rem;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(34, 197, 94, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
-  .chat-input input {
+  .chat-input-area input {
     flex: 1;
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 1.125rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 1.5rem;
     color: white;
     font-size: 1rem;
     outline: none;
+    transition: all 0.2s;
   }
 
-  .chat-input input::placeholder {
+  .chat-input-area input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .chat-input input:focus {
+  .chat-input-area input:focus {
     border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.05);
   }
 
-  .chat-input button {
+  .chat-input-area button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -532,16 +790,208 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-radius: 50%;
     color: white;
     cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
+    transition: all 0.2s;
+    flex-shrink: 0;
   }
 
-  .chat-input button:disabled {
-    opacity: 0.5;
+  .chat-input-area button:disabled {
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
-  .chat-input button:not(:disabled):hover {
+  .chat-input-area button:not(:disabled):hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+  }
+
+  .chat-input-area button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* New Chat Modal */
+  .new-chat-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1100;
+  }
+
+  .new-chat-modal[hidden] {
+    display: none;
+  }
+
+  .new-chat-content {
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.5rem;
+    background: rgba(19, 25, 23, 0.95);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .new-chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .new-chat-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+  }
+
+  .close-modal-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .new-chat-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .new-chat-search svg {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .new-chat-search input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .new-chat-search input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .new-chat-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .new-chat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .new-chat-item:hover {
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .new-chat-item img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(34, 197, 94, 0.15);
+  }
+
+  .new-chat-item-info {
+    flex: 1;
+  }
+
+  .new-chat-item-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: white;
+  }
+
+  .new-chat-item-username {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Loading State */
+  .loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.875rem;
+  }
+
+  .spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(34, 197, 94, 0.2);
+    border-top-color: #22c55e;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Scrollbar */
+  .chat-messages::-webkit-scrollbar,
+  .new-chat-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-messages::-webkit-scrollbar-thumb,
+  .new-chat-list::-webkit-scrollbar-thumb {
+    background: rgba(34, 197, 94, 0.2);
+    border-radius: 2px;
   }
 </style>
 
@@ -564,50 +1014,74 @@ import AppLayout from '../layouts/AppLayout.astro';
     created_at: string;
   }
 
+  interface Conversation {
+    id: string;
+    other_user: Friend;
+    last_message: string;
+    last_message_at: string;
+  }
+
   let friends: Friend[] = [];
   let filteredFriends: Friend[] = [];
+  let conversations: Conversation[] = [];
   let currentTab = 'online';
-  let currentChat: { id: string; name: string; avatar: string } | null = null;
+  let currentChat: { id: string; name: string; avatar: string; status: string } | null = null;
   let conversationId: string | null = null;
   let userId: string | null = null;
   let messages: Message[] = [];
+  let realtimeChannel: any = null;
 
+  // Elements
   const friendsList = document.getElementById('friends-list')!;
   const chatModal = document.getElementById('chat-modal')!;
   const chatMessages = document.getElementById('chat-messages')!;
   const chatForm = document.getElementById('chat-form') as HTMLFormElement;
   const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+  const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
   const chatName = document.getElementById('chat-name')!;
   const chatAvatar = document.getElementById('chat-avatar') as HTMLImageElement;
+  const chatStatus = document.getElementById('chat-status')!;
   const chatProfile = document.getElementById('chat-profile') as HTMLAnchorElement;
   const chatBack = document.getElementById('chat-back')!;
   const searchInput = document.getElementById('search-input') as HTMLInputElement;
   const onlineCount = document.getElementById('online-count')!;
+  const allCount = document.getElementById('all-count')!;
   const tabs = document.querySelectorAll('.mm-tab');
+  const newChatBtn = document.getElementById('new-chat-btn')!;
+  const newChatModal = document.getElementById('new-chat-modal')!;
+  const closeNewChat = document.getElementById('close-new-chat')!;
+  const newChatSearch = document.getElementById('new-chat-search') as HTMLInputElement;
+  const newChatList = document.getElementById('new-chat-list')!;
 
   // Initialize
-  loadFriends();
-  setupEventListeners();
+  init();
+
+  async function init() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
+    userId = user.id;
+    await Promise.all([loadFriends(), loadConversations()]);
+    setupEventListeners();
+  }
 
   async function loadFriends() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    userId = user.id;
-
     // Get friend IDs
     const { data: friendships } = await (supabase as any)
       .from('friendships')
       .select('requester_id, addressee_id')
       .eq('status', 'accepted')
-      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`);
+      .or(`requester_id.eq.${userId},addressee_id.eq.${userId}`);
 
     if (!friendships || friendships.length === 0) {
-      renderEmpty();
+      renderEmpty('No tienes amigos aún', 'Agrega amigos para poder chatear');
       return;
     }
 
     const friendIds = friendships.map((f: any) =>
-      f.requester_id === user.id ? f.addressee_id : f.requester_id
+      f.requester_id === userId ? f.addressee_id : f.requester_id
     );
 
     // Get friend profiles
@@ -649,56 +1123,137 @@ import AppLayout from '../layouts/AppLayout.astro';
       return 0;
     });
 
-    updateOnlineCount();
+    updateCounts();
     filterAndRender();
   }
 
-  function updateOnlineCount() {
+  async function loadConversations() {
+    try {
+      const { data: participations } = await (supabase as any)
+        .from('conversation_participants')
+        .select('conversation_id')
+        .eq('user_id', userId);
+
+      if (!participations || participations.length === 0) return;
+
+      const convIds = participations.map((p: any) => p.conversation_id);
+
+      for (const convId of convIds) {
+        const { data: otherParts } = await (supabase as any)
+          .from('conversation_participants')
+          .select('user_id')
+          .eq('conversation_id', convId)
+          .neq('user_id', userId);
+
+        if (!otherParts || otherParts.length === 0) continue;
+
+        const otherUserId = otherParts[0].user_id;
+
+        const { data: profile } = await (supabase as any)
+          .from('profiles')
+          .select('id, username, display_name, avatar_url')
+          .eq('id', otherUserId)
+          .single();
+
+        if (!profile) continue;
+
+        const { data: lastMsg } = await (supabase as any)
+          .from('messages')
+          .select('content, created_at')
+          .eq('conversation_id', convId)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+
+        conversations.push({
+          id: convId,
+          other_user: {
+            user_id: profile.id,
+            username: profile.username,
+            display_name: profile.display_name,
+            avatar_url: profile.avatar_url,
+            status: 'offline',
+            last_seen: '',
+          },
+          last_message: lastMsg?.content || 'Sin mensajes',
+          last_message_at: lastMsg?.created_at || '',
+        });
+      }
+
+      // Sort by most recent
+      conversations.sort((a, b) => {
+        if (!a.last_message_at) return 1;
+        if (!b.last_message_at) return -1;
+        return new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime();
+      });
+    } catch (e) {
+      console.error('Error loading conversations:', e);
+    }
+  }
+
+  function updateCounts() {
     const online = friends.filter(f => f.status === 'online' || f.status === 'away').length;
     onlineCount.textContent = online.toString();
+    allCount.textContent = friends.length.toString();
   }
 
   function filterAndRender() {
     const search = searchInput.value.toLowerCase();
     
-    filteredFriends = friends.filter(f => {
-      const matchesSearch = (f.display_name || f.username).toLowerCase().includes(search);
-      const matchesTab = currentTab === 'online' 
-        ? (f.status === 'online' || f.status === 'away')
-        : true;
-      return matchesSearch && matchesTab;
-    });
+    if (currentTab === 'recent') {
+      // Show recent conversations
+      filteredFriends = conversations.map(c => ({
+        ...c.other_user,
+        last_message: c.last_message,
+        last_message_at: c.last_message_at,
+      })) as any[];
+    } else {
+      filteredFriends = friends.filter(f => {
+        const matchesSearch = (f.display_name || f.username).toLowerCase().includes(search);
+        const matchesTab = currentTab === 'online' 
+          ? (f.status === 'online' || f.status === 'away')
+          : true;
+        return matchesSearch && matchesTab;
+      });
+    }
 
     renderFriends();
   }
 
   function renderFriends() {
     if (filteredFriends.length === 0) {
-      friendsList.innerHTML = `
-        <div class="mm-empty">
-          <p>${currentTab === 'online' ? 'No hay amigos en línea' : 'No tienes amigos aún'}</p>
-        </div>
-      `;
+      const message = currentTab === 'online' 
+        ? 'No hay amigos en línea' 
+        : currentTab === 'recent'
+        ? 'No tienes conversaciones recientes'
+        : 'No tienes amigos aún';
+      renderEmpty(message, '');
       return;
     }
 
-    friendsList.innerHTML = filteredFriends.map(f => `
-      <div class="mm-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}">
-        <div class="mm-item-avatar">
-          <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
-          <span class="mm-item-status-dot ${f.status}"></span>
+    friendsList.innerHTML = filteredFriends.map(f => {
+      const statusClass = f.status === 'online' ? 'online' : f.status === 'away' ? 'away' : 'offline';
+      const statusText = f.status === 'online' ? 'Activo ahora' : f.status === 'away' ? 'Ausente' : 'Desconectado';
+      const lastMsg = (f as any).last_message;
+      
+      return `
+        <div class="mm-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
+          <div class="mm-item-avatar">
+            <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
+            <span class="mm-item-status-dot ${statusClass}"></span>
+          </div>
+          <div class="mm-item-info">
+            <div class="mm-item-name">${f.display_name || f.username}</div>
+            <div class="mm-item-status ${f.status === 'online' ? 'online-text' : ''}">${lastMsg || statusText}</div>
+          </div>
+          <div class="mm-item-msg-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
         </div>
-        <div class="mm-item-info">
-          <div class="mm-item-name">${f.display_name || f.username}</div>
-          <div class="mm-item-status">${f.status === 'online' ? 'Activo ahora' : f.status === 'away' ? 'Ausente' : 'Desconectado'}</div>
-        </div>
-        <div class="mm-item-msg-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     // Add click listeners
     friendsList.querySelectorAll('.mm-item').forEach(item => {
@@ -706,15 +1261,22 @@ import AppLayout from '../layouts/AppLayout.astro';
         const id = item.getAttribute('data-id')!;
         const name = item.getAttribute('data-name')!;
         const avatar = item.getAttribute('data-avatar')!;
-        openChat(id, name, avatar);
+        const status = item.getAttribute('data-status')!;
+        openChat(id, name, avatar, status);
       });
     });
   }
 
-  function renderEmpty() {
+  function renderEmpty(message: string, hint: string) {
     friendsList.innerHTML = `
       <div class="mm-empty">
-        <p>Agrega amigos para poder chatear</p>
+        <div class="mm-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <p>${message}</p>
+        ${hint ? `<span>${hint}</span>` : ''}
       </div>
     `;
   }
@@ -738,22 +1300,93 @@ import AppLayout from '../layouts/AppLayout.astro';
 
     // Chat form
     chatForm.addEventListener('submit', sendMessage);
+    chatInput.addEventListener('input', () => {
+      sendBtn.disabled = chatInput.value.trim().length === 0;
+    });
+
+    // New chat modal
+    newChatBtn.addEventListener('click', () => {
+      newChatModal.hidden = false;
+      loadFriendsForNewChat();
+    });
+
+    closeNewChat.addEventListener('click', () => {
+      newChatModal.hidden = true;
+    });
+
+    newChatModal.addEventListener('click', (e) => {
+      if (e.target === newChatModal) {
+        newChatModal.hidden = true;
+      }
+    });
+
+    newChatSearch.addEventListener('input', () => {
+      const query = newChatSearch.value.toLowerCase();
+      newChatList.querySelectorAll('.new-chat-item').forEach((item: any) => {
+        const name = item.querySelector('.new-chat-item-name')?.textContent?.toLowerCase() || '';
+        const username = item.querySelector('.new-chat-item-username')?.textContent?.toLowerCase() || '';
+        item.style.display = name.includes(query) || username.includes(query) ? 'flex' : 'none';
+      });
+    });
   }
 
-  async function openChat(id: string, name: string, avatar: string) {
-    currentChat = { id, name, avatar };
+  async function loadFriendsForNewChat() {
+    if (friends.length === 0) {
+      newChatList.innerHTML = `
+        <div class="mm-empty">
+          <p>No tienes amigos aún</p>
+          <span>Agrega amigos para poder chatear</span>
+        </div>
+      `;
+      return;
+    }
+
+    newChatList.innerHTML = friends.map(f => `
+      <div class="new-chat-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
+        <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="${f.username}" onerror="this.src='/images/default-avatar.svg'" />
+        <div class="new-chat-item-info">
+          <div class="new-chat-item-name">${f.display_name || f.username}</div>
+          <div class="new-chat-item-username">@${f.username}</div>
+        </div>
+      </div>
+    `).join('');
+
+    newChatList.querySelectorAll('.new-chat-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.getAttribute('data-id')!;
+        const name = item.getAttribute('data-name')!;
+        const avatar = item.getAttribute('data-avatar')!;
+        const status = item.getAttribute('data-status')!;
+        newChatModal.hidden = true;
+        openChat(id, name, avatar, status);
+      });
+    });
+  }
+
+  async function openChat(id: string, name: string, avatar: string, status: string) {
+    currentChat = { id, name, avatar, status };
     chatName.textContent = name;
     chatAvatar.src = avatar;
     chatProfile.href = `/profile/${id}`;
+    
+    // Update status
+    const statusText = status === 'online' ? 'En línea' : status === 'away' ? 'Ausente' : 'Desconectado';
+    chatStatus.innerHTML = `<span class="status-dot" style="background: ${status === 'online' ? '#22c55e' : status === 'away' ? '#f59e0b' : 'rgba(255,255,255,0.3)'}"></span>${statusText}`;
+    
     chatModal.hidden = false;
     messages = [];
     renderMessages();
 
     await loadConversation(id);
+    chatInput.focus();
   }
 
   function closeChat() {
     chatModal.hidden = true;
+    if (realtimeChannel) {
+      supabase.removeChannel(realtimeChannel);
+      realtimeChannel = null;
+    }
     currentChat = null;
     conversationId = null;
     messages = [];
@@ -819,7 +1452,7 @@ import AppLayout from '../layouts/AppLayout.astro';
       .select('*')
       .eq('conversation_id', convId)
       .order('created_at', { ascending: true })
-      .limit(50);
+      .limit(100);
 
     if (data) {
       messages = data;
@@ -828,7 +1461,11 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   function subscribeToMessages(convId: string) {
-    supabase
+    if (realtimeChannel) {
+      supabase.removeChannel(realtimeChannel);
+    }
+
+    realtimeChannel = supabase
       .channel(`messages:${convId}`)
       .on('postgres_changes', {
         event: 'INSERT',
@@ -836,8 +1473,11 @@ import AppLayout from '../layouts/AppLayout.astro';
         table: 'messages',
         filter: `conversation_id=eq.${convId}`,
       }, (payload) => {
-        messages.push(payload.new as Message);
-        renderMessages();
+        const msg = payload.new as Message;
+        if (msg.sender_id !== userId) {
+          messages.push(msg);
+          renderMessages();
+        }
       })
       .subscribe();
   }
@@ -846,38 +1486,78 @@ import AppLayout from '../layouts/AppLayout.astro';
     if (messages.length === 0) {
       chatMessages.innerHTML = `
         <div class="chat-empty">
+          <div class="chat-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
           <p>No hay mensajes aún</p>
-          <p class="chat-empty-hint">¡Envía el primer mensaje!</p>
+          <span>¡Envía el primer mensaje!</span>
         </div>
       `;
       return;
     }
 
-    chatMessages.innerHTML = messages.map(msg => `
-      <div class="chat-message ${msg.sender_id === userId ? 'sent' : 'received'}">
-        <div class="chat-bubble">
-          <p>${msg.content}</p>
-          <span class="chat-time">${new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+    let lastDate = '';
+    chatMessages.innerHTML = messages.map(msg => {
+      const msgDate = new Date(msg.created_at).toLocaleDateString('es');
+      let dateSep = '';
+      if (msgDate !== lastDate) {
+        lastDate = msgDate;
+        dateSep = `<div class="date-separator"><span>${msgDate}</span></div>`;
+      }
+      
+      const isMine = msg.sender_id === userId;
+      const time = new Date(msg.created_at).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+      const senderName = currentChat?.name || 'Usuario';
+      
+      return `${dateSep}
+        <div class="message ${isMine ? 'sent' : 'received'}">
+          ${!isMine ? `<span class="message-sender">${senderName}</span>` : ''}
+          <div class="message-bubble">
+            <p>${escapeHtml(msg.content)}</p>
+            <span class="message-time">${time}</span>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
   async function sendMessage(e: Event) {
     e.preventDefault();
-    if (!chatInput.value.trim() || !conversationId || !userId) return;
-
     const content = chatInput.value.trim();
-    chatInput.value = '';
+    if (!content || !conversationId || !userId) return;
 
-    await (supabase as any)
+    chatInput.value = '';
+    sendBtn.disabled = true;
+
+    const { data: msg, error } = await (supabase as any)
       .from('messages')
       .insert({
         conversation_id: conversationId,
         sender_id: userId,
         content,
-      });
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Send error:', error);
+      chatInput.value = content;
+      return;
+    }
+
+    if (msg) {
+      messages.push(msg);
+      renderMessages();
+    }
+  }
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 </script>

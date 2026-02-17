@@ -410,6 +410,10 @@ import AppLayout from "../layouts/AppLayout.astro";
       return;
     }
 
+    // Get current conversation to show sender name
+    const currentConv = conversations.find(c => c.id === currentConversationId);
+    const otherUserName = currentConv?.other_user.display_name || currentConv?.other_user.username || 'Usuario';
+
     let lastDate = "";
     chatMessages.innerHTML = msgs
       .map((msg) => {
@@ -431,6 +435,7 @@ import AppLayout from "../layouts/AppLayout.astro";
         );
         return `${dateSep}
         <div class="message ${isMine ? "sent" : "received"}">
+          ${!isMine ? `<span class="message-sender">${otherUserName}</span>` : ''}
           <div class="message-bubble">
             <p>${escapeHtml(msg.content || "")}</p>
             <span class="message-time">${time}</span>
@@ -478,9 +483,15 @@ import AppLayout from "../layouts/AppLayout.astro";
         minute: "2-digit",
       },
     );
+    
+    // Get current conversation to show sender name
+    const currentConv = conversations.find(c => c.id === currentConversationId);
+    const otherUserName = currentConv?.other_user.display_name || currentConv?.other_user.username || 'Usuario';
+    
     const msgEl = document.createElement("div");
     msgEl.className = `message ${isMine ? "sent" : "received"} animate-in`;
     msgEl.innerHTML = `
+      ${!isMine ? `<span class="message-sender">${otherUserName}</span>` : ''}
       <div class="message-bubble">
         <p>${escapeHtml(msg.content || "")}</p>
         <span class="message-time">${time}</span>
@@ -1010,6 +1021,15 @@ import AppLayout from "../layouts/AppLayout.astro";
     background: rgba(255, 255, 255, 0.08);
     color: var(--text-primary, #f0fdf4);
     border-bottom-left-radius: 0.25rem;
+  }
+
+  .message-sender {
+    display: block;
+    font-size: 0.75rem;
+    color: #22c55e;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    padding-left: 0.25rem;
   }
 
   .message-bubble p {
