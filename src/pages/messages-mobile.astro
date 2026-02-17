@@ -3,135 +3,135 @@ import AppLayout from '../layouts/AppLayout.astro';
 ---
 
 <AppLayout title="Mensajes">
-  <div class="messages-mobile-page">
-    <!-- Header -->
-    <div class="mm-header">
-      <div class="mm-header-top">
+  <div class="messages-app">
+    <!-- Conversations List View -->
+    <div class="conversations-view" id="conversations-view">
+      <!-- Header -->
+      <div class="conv-header">
         <h1>Mensajes</h1>
-        <div class="mm-header-actions">
-          <button class="mm-icon-btn" id="search-toggle-btn" title="Buscar">
+        <div class="conv-header-actions">
+          <button class="conv-icon-btn" id="search-btn" title="Buscar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </button>
-          <button class="mm-icon-btn" id="new-chat-btn" title="Nueva conversación">
+          <button class="conv-icon-btn" id="new-chat-btn" title="Nueva conversación">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              <line x1="12" y1="8" x2="12" y2="16"></line>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </button>
         </div>
       </div>
+
       <!-- Search Bar (hidden by default) -->
-      <div class="mm-search-bar" id="search-bar" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" placeholder="Buscar conversaciones..." id="search-input" />
-        <button class="mm-search-close" id="search-close-btn">
+      <div class="search-container" id="search-container" hidden>
+        <div class="search-box">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
+          <input type="text" placeholder="Buscar conversaciones..." id="search-input" />
+          <button class="search-clear" id="search-clear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="conv-tabs">
+        <button class="conv-tab active" data-tab="all">Todos</button>
+        <button class="conv-tab" data-tab="unread">
+          No leídos
+          <span class="tab-badge" id="unread-badge" hidden>0</span>
+        </button>
+        <button class="conv-tab" data-tab="online">En línea</button>
+      </div>
+
+      <!-- Conversations List -->
+      <div class="conv-list" id="conv-list">
+        <!-- Loading Skeleton -->
+        <div class="conv-skeleton" id="conv-skeleton">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map(() => (
+            <div class="skeleton-item">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-content">
+                <div class="skeleton-row">
+                  <div class="skeleton-name"></div>
+                  <div class="skeleton-time"></div>
+                </div>
+                <div class="skeleton-message"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" hidden>
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <h3>Sin mensajes</h3>
+        <p>No tienes conversaciones aún</p>
+        <button class="start-btn" id="start-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Iniciar chat
         </button>
       </div>
     </div>
-    
-    <!-- Tabs -->
-    <div class="mm-tabs">
-      <button class="mm-tab active" data-tab="all">
-        Todos
-      </button>
-      <button class="mm-tab" data-tab="unread">
-        No leídos
-        <span class="tab-badge" id="unread-count" hidden>0</span>
-      </button>
-      <button class="mm-tab" data-tab="online">
-        En línea
-      </button>
-    </div>
-    
-    <!-- Conversations List -->
-    <div class="mm-conversations" id="conversations-list">
-      <!-- Loading skeleton -->
-      <div class="mm-skeleton">
-        {[1, 2, 3, 4, 5, 6].map(() => (
-          <div class="mm-skel-item">
-            <div class="mm-skel-avatar"></div>
-            <div class="mm-skel-content">
-              <div class="mm-skel-row">
-                <div class="mm-skel-name"></div>
-                <div class="mm-skel-time"></div>
-              </div>
-              <div class="mm-skel-msg"></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-    
-    <!-- Empty State -->
-    <div class="mm-empty-state" id="empty-state" hidden>
-      <div class="mm-empty-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </div>
-      <h3>Sin mensajes</h3>
-      <p>No tienes conversaciones aún</p>
-      <button class="mm-start-btn" id="start-chat-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        Iniciar conversación
-      </button>
-    </div>
-  </div>
-  
-  <!-- Chat Modal -->
-  <div class="chat-modal" id="chat-modal" hidden>
-    <div class="chat-modal-content">
+
+    <!-- Chat View (hidden by default) -->
+    <div class="chat-view" id="chat-view" hidden>
       <!-- Chat Header -->
       <div class="chat-header">
-        <button class="chat-back" id="chat-back">
+        <button class="back-btn" id="back-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"></path>
           </svg>
         </button>
-        <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
+        <div class="chat-avatar-wrap">
+          <img src="/images/default-avatar.svg" alt="" class="chat-avatar" id="chat-avatar" />
+          <span class="chat-status-dot" id="chat-status-dot"></span>
+        </div>
         <div class="chat-user-info">
           <span class="chat-name" id="chat-name">Usuario</span>
           <span class="chat-status" id="chat-status">En línea</span>
         </div>
-        <a href="#" class="chat-profile-btn" id="chat-profile">
+        <a href="#" class="chat-menu-btn" id="chat-profile">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
+            <circle cx="12" cy="12" r="1"></circle>
             <circle cx="19" cy="12" r="1"></circle>
             <circle cx="5" cy="12" r="1"></circle>
           </svg>
         </a>
       </div>
-      
-      <!-- Messages Area -->
-      <div class="chat-messages" id="chat-messages">
-        <div class="chat-empty">
-          <div class="chat-empty-icon">
+
+      <!-- Messages Container -->
+      <div class="messages-container" id="messages-container">
+        <div class="messages-empty" id="messages-empty">
+          <div class="messages-empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
           </div>
-          <p>No hay mensajes aún</p>
+          <p>No hay mensajes</p>
           <span>¡Envía el primer mensaje!</span>
         </div>
       </div>
-      
-      <!-- Input Area -->
-      <form class="chat-input-area" id="chat-form">
-        <input type="text" placeholder="Escribe un mensaje..." id="chat-input" autocomplete="off" />
+
+      <!-- Message Input -->
+      <form class="message-input-area" id="message-form">
+        <input type="text" placeholder="Escribe un mensaje..." id="message-input" autocomplete="off" />
         <button type="submit" id="send-btn" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -140,26 +140,26 @@ import AppLayout from '../layouts/AppLayout.astro';
         </button>
       </form>
     </div>
-  </div>
-  
-  <!-- New Chat Modal -->
-  <div class="new-chat-modal" id="new-chat-modal" hidden>
-    <div class="new-chat-content glass">
-      <div class="new-chat-header">
-        <h3>Nueva conversación</h3>
-        <button class="close-modal-btn" id="close-new-chat">✕</button>
-      </div>
-      <div class="new-chat-search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input type="text" placeholder="Buscar amigo..." id="new-chat-search" />
-      </div>
-      <div class="new-chat-list" id="new-chat-list">
-        <div class="loading-state">
-          <div class="spinner-small"></div>
-          <span>Cargando amigos...</span>
+
+    <!-- New Chat Modal -->
+    <div class="modal-overlay" id="new-chat-modal" hidden>
+      <div class="modal-content glass">
+        <div class="modal-header">
+          <h3>Nueva conversación</h3>
+          <button class="modal-close" id="modal-close">✕</button>
+        </div>
+        <div class="modal-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Buscar amigo..." id="modal-search-input" />
+        </div>
+        <div class="modal-list" id="modal-list">
+          <div class="modal-loading">
+            <div class="spinner"></div>
+            <span>Cargando...</span>
+          </div>
         </div>
       </div>
     </div>
@@ -167,42 +167,48 @@ import AppLayout from '../layouts/AppLayout.astro';
 </AppLayout>
 
 <style>
-  .messages-mobile-page {
+  /* Main Container */
+  .messages-app {
     min-height: calc(100vh - 64px);
-    padding-bottom: 80px;
+    background: #0a0a0a;
+    padding-bottom: 70px;
+  }
+
+  /* Conversations View */
+  .conversations-view {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
   }
 
   /* Header */
-  .mm-header {
-    background: rgba(0, 0, 0, 0.4);
-    padding: 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .mm-header-top {
+  .conv-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 
-  .mm-header h1 {
+  .conv-header h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    margin: 0;
     color: white;
+    margin: 0;
   }
 
-  .mm-header-actions {
+  .conv-header-actions {
     display: flex;
     gap: 0.5rem;
   }
 
-  .mm-icon-btn {
+  .conv-icon-btn {
     width: 40px;
     height: 40px;
     display: flex;
@@ -216,27 +222,22 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .mm-icon-btn:hover {
+  .conv-icon-btn:hover {
     background: rgba(255, 255, 255, 0.1);
     color: white;
   }
 
-  .mm-icon-btn svg {
+  .conv-icon-btn svg {
     width: 20px;
     height: 20px;
   }
 
-  /* Search Bar */
-  .mm-search-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+  /* Search Container */
+  .search-container {
     padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1.5rem;
-    animation: slideDown 0.2s ease-out;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    animation: slideDown 0.2s ease;
   }
 
   @keyframes slideDown {
@@ -244,14 +245,24 @@ import AppLayout from '../layouts/AppLayout.astro';
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .mm-search-bar svg {
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+  }
+
+  .search-box svg {
     width: 18px;
     height: 18px;
     color: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
   }
 
-  .mm-search-bar input {
+  .search-box input {
     flex: 1;
     background: none;
     border: none;
@@ -260,11 +271,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     outline: none;
   }
 
-  .mm-search-bar input::placeholder {
+  .search-box input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .mm-search-close {
+  .search-clear {
     width: 24px;
     height: 24px;
     display: flex;
@@ -277,21 +288,21 @@ import AppLayout from '../layouts/AppLayout.astro';
     cursor: pointer;
   }
 
-  .mm-search-close svg {
+  .search-clear svg {
     width: 14px;
     height: 14px;
   }
 
   /* Tabs */
-  .mm-tabs {
+  .conv-tabs {
     display: flex;
     gap: 0.25rem;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .mm-tab {
+  .conv-tab {
     display: flex;
     align-items: center;
     gap: 0.375rem;
@@ -306,11 +317,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .mm-tab:hover {
+  .conv-tab:hover {
     color: rgba(255, 255, 255, 0.7);
   }
 
-  .mm-tab.active {
+  .conv-tab.active {
     background: rgba(34, 197, 94, 0.15);
     color: #22c55e;
   }
@@ -327,35 +338,35 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Conversations List */
-  .mm-conversations {
-    display: flex;
-    flex-direction: column;
+  .conv-list {
+    flex: 1;
+    overflow-y: auto;
   }
 
-  .mm-conv-item {
+  .conv-item {
     display: flex;
     align-items: center;
     gap: 0.875rem;
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 1.25rem;
     cursor: pointer;
     transition: background 0.15s;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 
-  .mm-conv-item:hover {
+  .conv-item:hover {
     background: rgba(255, 255, 255, 0.03);
   }
 
-  .mm-conv-item:active {
+  .conv-item:active {
     background: rgba(255, 255, 255, 0.05);
   }
 
-  .mm-conv-avatar-wrap {
+  .conv-avatar-wrap {
     position: relative;
     flex-shrink: 0;
   }
 
-  .mm-conv-avatar {
+  .conv-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -363,7 +374,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid rgba(34, 197, 94, 0.15);
   }
 
-  .mm-conv-status-dot {
+  .conv-status-dot {
     position: absolute;
     bottom: 2px;
     right: 2px;
@@ -373,32 +384,32 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 3px solid #0a0a0a;
   }
 
-  .mm-conv-status-dot.online {
+  .conv-status-dot.online {
     background: #22c55e;
     box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
   }
 
-  .mm-conv-status-dot.away {
+  .conv-status-dot.away {
     background: #f59e0b;
   }
 
-  .mm-conv-status-dot.offline {
+  .conv-status-dot.offline {
     background: rgba(255, 255, 255, 0.3);
   }
 
-  .mm-conv-content {
+  .conv-content {
     flex: 1;
     min-width: 0;
   }
 
-  .mm-conv-row {
+  .conv-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.25rem;
   }
 
-  .mm-conv-name {
+  .conv-name {
     font-size: 1rem;
     font-weight: 600;
     color: white;
@@ -407,20 +418,20 @@ import AppLayout from '../layouts/AppLayout.astro';
     text-overflow: ellipsis;
   }
 
-  .mm-conv-time {
+  .conv-time {
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.4);
     flex-shrink: 0;
     margin-left: 0.5rem;
   }
 
-  .mm-conv-preview {
+  .conv-preview {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
-  .mm-conv-last-msg {
+  .conv-last-msg {
     font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.5);
     white-space: nowrap;
@@ -429,7 +440,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     flex: 1;
   }
 
-  .mm-conv-unread {
+  .conv-unread {
     background: #22c55e;
     color: white;
     font-size: 0.7rem;
@@ -444,7 +455,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     flex-shrink: 0;
   }
 
-  .mm-conv-check {
+  .conv-check {
     width: 16px;
     height: 16px;
     color: #22c55e;
@@ -452,39 +463,40 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Empty State */
-  .mm-empty-state {
+  .empty-state {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
     text-align: center;
   }
 
-  .mm-empty-icon {
+  .empty-icon {
     margin-bottom: 1.5rem;
     color: rgba(34, 197, 94, 0.3);
   }
 
-  .mm-empty-icon svg {
+  .empty-icon svg {
     width: 64px;
     height: 64px;
   }
 
-  .mm-empty-state h3 {
+  .empty-state h3 {
     font-size: 1.25rem;
     font-weight: 600;
     color: white;
     margin: 0 0 0.5rem 0;
   }
 
-  .mm-empty-state p {
+  .empty-state p {
     font-size: 0.95rem;
     color: rgba(255, 255, 255, 0.5);
     margin: 0 0 1.5rem 0;
   }
 
-  .mm-start-btn {
+  .start-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -499,31 +511,31 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: all 0.2s;
   }
 
-  .mm-start-btn:hover {
+  .start-btn:hover {
     transform: scale(1.02);
     box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
   }
 
-  .mm-start-btn svg {
+  .start-btn svg {
     width: 18px;
     height: 18px;
   }
 
   /* Skeleton */
-  .mm-skeleton {
+  .conv-skeleton {
     display: flex;
     flex-direction: column;
   }
 
-  .mm-skel-item {
+  .skeleton-item {
     display: flex;
     align-items: center;
     gap: 0.875rem;
-    padding: 0.875rem 1rem;
+    padding: 0.875rem 1.25rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   }
 
-  .mm-skel-avatar {
+  .skeleton-avatar {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -531,17 +543,17 @@ import AppLayout from '../layouts/AppLayout.astro';
     animation: shimmer 1.5s infinite;
   }
 
-  .mm-skel-content {
+  .skeleton-content {
     flex: 1;
   }
 
-  .mm-skel-row {
+  .skeleton-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
   }
 
-  .mm-skel-name {
+  .skeleton-name {
     height: 14px;
     width: 120px;
     border-radius: 7px;
@@ -549,7 +561,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     animation: shimmer 1.5s infinite;
   }
 
-  .mm-skel-time {
+  .skeleton-time {
     height: 10px;
     width: 40px;
     border-radius: 5px;
@@ -557,7 +569,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     animation: shimmer 1.5s infinite 0.1s;
   }
 
-  .mm-skel-msg {
+  .skeleton-message {
     height: 12px;
     width: 180px;
     border-radius: 6px;
@@ -570,60 +582,76 @@ import AppLayout from '../layouts/AppLayout.astro';
     50% { opacity: 0.6; }
   }
 
-  /* Chat Modal - Same style as OnlineUsers */
-  .chat-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 1000;
+  /* Chat View */
+  .chat-view {
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 64px);
+    background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
+    animation: slideIn 0.25s ease;
   }
 
-  .chat-modal[hidden] {
-    display: none;
-  }
-
-  .chat-modal-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: linear-gradient(180deg, #0a0a0a 0%, #121212 100%);
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
   }
 
   .chat-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
+    padding: 0.875rem 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .chat-back {
+  .back-btn {
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
     background: rgba(255, 255, 255, 0.05);
     border: none;
     border-radius: 50%;
     color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
+    transition: all 0.2s;
   }
 
-  .chat-back svg {
+  .back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .back-btn svg {
     width: 20px;
     height: 20px;
   }
 
+  .chat-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
   .chat-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(34, 197, 94, 0.3);
+    border: 2px solid rgba(34, 197, 94, 0.25);
+  }
+
+  .chat-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #0a0a0a;
   }
 
   .chat-user-info {
@@ -636,6 +664,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     font-size: 1rem;
     font-weight: 600;
     color: white;
+    margin-bottom: 0.125rem;
   }
 
   .chat-status {
@@ -643,68 +672,69 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: #22c55e;
   }
 
-  .chat-profile-btn {
+  .chat-menu-btn {
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 50%;
     color: rgba(255, 255, 255, 0.7);
   }
 
-  .chat-profile-btn svg {
+  .chat-menu-btn svg {
     width: 18px;
     height: 18px;
   }
 
-  /* Messages */
-  .chat-messages {
+  /* Messages Container */
+  .messages-container {
     flex: 1;
     overflow-y: auto;
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.375rem;
   }
 
-  .chat-empty {
+  .messages-empty {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: rgba(255, 255, 255, 0.4);
     text-align: center;
+    color: rgba(255, 255, 255, 0.4);
   }
 
-  .chat-empty-icon {
+  .messages-empty-icon {
     margin-bottom: 1rem;
     color: rgba(34, 197, 94, 0.3);
   }
 
-  .chat-empty-icon svg {
+  .messages-empty-icon svg {
     width: 48px;
     height: 48px;
   }
 
-  .chat-empty p {
+  .messages-empty p {
     margin: 0 0 0.25rem 0;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.6);
   }
 
-  .chat-empty span {
+  .messages-empty span {
     font-size: 0.875rem;
   }
 
-  .date-separator {
+  /* Date Separator */
+  .date-sep {
     text-align: center;
     margin: 0.75rem 0;
   }
 
-  .date-separator span {
+  .date-sep span {
     font-size: 0.7rem;
     color: rgba(255, 255, 255, 0.35);
     background: rgba(255, 255, 255, 0.05);
@@ -712,12 +742,12 @@ import AppLayout from '../layouts/AppLayout.astro';
     border-radius: 1rem;
   }
 
-  /* Message with avatar */
-  .message {
+  /* Message */
+  .msg {
     display: flex;
     gap: 0.5rem;
     max-width: 85%;
-    animation: msgIn 0.2s ease-out;
+    animation: msgIn 0.2s ease;
   }
 
   @keyframes msgIn {
@@ -725,36 +755,36 @@ import AppLayout from '../layouts/AppLayout.astro';
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .message.sent {
+  .msg.sent {
     align-self: flex-end;
     flex-direction: row-reverse;
   }
 
-  .message.received {
+  .msg.received {
     align-self: flex-start;
   }
 
-  .message-avatar {
+  .msg-avatar {
     width: 28px;
     height: 28px;
     border-radius: 50%;
     object-fit: cover;
     border: 1.5px solid rgba(34, 197, 94, 0.2);
     flex-shrink: 0;
-    margin-top: auto;
+    align-self: flex-end;
   }
 
-  .message.sent .message-avatar {
+  .msg.sent .msg-avatar {
     display: none;
   }
 
-  .message-content {
+  .msg-body {
     display: flex;
     flex-direction: column;
     min-width: 0;
   }
 
-  .message-sender {
+  .msg-sender {
     font-size: 0.7rem;
     color: #22c55e;
     font-weight: 500;
@@ -762,58 +792,74 @@ import AppLayout from '../layouts/AppLayout.astro';
     padding-left: 0.25rem;
   }
 
-  .message.sent .message-sender {
+  .msg.sent .msg-sender {
     display: none;
   }
 
-  .message-bubble {
+  .msg-bubble {
     padding: 0.75rem 1rem;
-    border-radius: 1rem;
+    border-radius: 1.25rem;
     max-width: 100%;
     word-wrap: break-word;
   }
 
-  .message.sent .message-bubble {
+  .msg.sent .msg-bubble {
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     color: white;
     border-bottom-right-radius: 0.25rem;
   }
 
-  .message.received .message-bubble {
+  .msg.received .msg-bubble {
     background: rgba(255, 255, 255, 0.08);
     color: white;
     border-bottom-left-radius: 0.25rem;
   }
 
-  .message-bubble p {
+  .msg-bubble p {
     margin: 0;
     font-size: 0.95rem;
     line-height: 1.45;
-    word-wrap: break-word;
   }
 
-  .message-time {
-    display: block;
+  .msg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .msg.received .msg-footer {
+    justify-content: flex-start;
+  }
+
+  .msg-time {
     font-size: 0.65rem;
     color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.25rem;
-    text-align: right;
   }
 
-  .message.received .message-time {
-    text-align: left;
+  .msg-check {
+    width: 14px;
+    height: 14px;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  /* Input Area */
-  .chat-input-area {
+  .msg-check.read {
+    color: #22c55e;
+  }
+
+  /* Message Input */
+  .message-input-area {
     display: flex;
     gap: 0.75rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
+    padding: 0.875rem 1rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .chat-input-area input {
+  .message-input-area input {
     flex: 1;
     padding: 0.875rem 1rem;
     background: rgba(255, 255, 255, 0.05);
@@ -822,47 +868,48 @@ import AppLayout from '../layouts/AppLayout.astro';
     color: white;
     font-size: 1rem;
     outline: none;
+    transition: border-color 0.2s;
   }
 
-  .chat-input-area input::placeholder {
+  .message-input-area input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .chat-input-area input:focus {
+  .message-input-area input:focus {
     border-color: rgba(34, 197, 94, 0.3);
   }
 
-  .chat-input-area button {
+  .message-input-area button {
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     border: none;
     border-radius: 50%;
     color: white;
     cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
+    transition: all 0.2s;
     flex-shrink: 0;
   }
 
-  .chat-input-area button:disabled {
+  .message-input-area button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .chat-input-area button:not(:disabled):hover {
+  .message-input-area button:not(:disabled):hover {
     transform: scale(1.05);
   }
 
-  .chat-input-area button svg {
+  .message-input-area button svg {
     width: 20px;
     height: 20px;
   }
 
-  /* New Chat Modal */
-  .new-chat-modal {
+  /* Modal */
+  .modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.8);
@@ -870,60 +917,56 @@ import AppLayout from '../layouts/AppLayout.astro';
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    z-index: 1100;
+    z-index: 1000;
   }
 
-  .new-chat-modal[hidden] {
-    display: none;
-  }
-
-  .new-chat-content {
+  .modal-content {
     width: 100%;
     max-width: 500px;
     max-height: 85vh;
     display: flex;
     flex-direction: column;
     border-radius: 1.5rem 1.5rem 0 0;
-    padding: 1.5rem;
-    background: rgba(19, 25, 23, 0.95);
+    padding: 1.25rem;
+    background: rgba(19, 25, 23, 0.98);
     border: 1px solid rgba(34, 197, 94, 0.15);
-    animation: slideUp 0.3s ease-out;
+    animation: modalUp 0.3s ease;
   }
 
-  @keyframes slideUp {
+  @keyframes modalUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
 
-  .new-chat-header {
+  .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
   }
 
-  .new-chat-header h3 {
+  .modal-header h3 {
     font-size: 1.125rem;
     font-weight: 600;
     color: white;
     margin: 0;
   }
 
-  .close-modal-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    color: rgba(255, 255, 255, 0.6);
+  .modal-close {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
-    font-size: 1rem;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    cursor: pointer;
   }
 
-  .new-chat-search {
+  .modal-search {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -934,13 +977,13 @@ import AppLayout from '../layouts/AppLayout.astro';
     margin-bottom: 1rem;
   }
 
-  .new-chat-search svg {
+  .modal-search svg {
     width: 18px;
     height: 18px;
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .new-chat-search input {
+  .modal-search input {
     flex: 1;
     background: none;
     border: none;
@@ -949,11 +992,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     outline: none;
   }
 
-  .new-chat-search input::placeholder {
+  .modal-search input::placeholder {
     color: rgba(255, 255, 255, 0.4);
   }
 
-  .new-chat-list {
+  .modal-list {
     flex: 1;
     overflow-y: auto;
     display: flex;
@@ -961,7 +1004,7 @@ import AppLayout from '../layouts/AppLayout.astro';
     gap: 0.25rem;
   }
 
-  .new-chat-item {
+  .modal-item {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -971,11 +1014,11 @@ import AppLayout from '../layouts/AppLayout.astro';
     transition: background 0.15s;
   }
 
-  .new-chat-item:hover {
+  .modal-item:hover {
     background: rgba(34, 197, 94, 0.1);
   }
 
-  .new-chat-item img {
+  .modal-item img {
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -983,33 +1026,31 @@ import AppLayout from '../layouts/AppLayout.astro';
     border: 2px solid rgba(34, 197, 94, 0.15);
   }
 
-  .new-chat-item-info {
+  .modal-item-info {
     flex: 1;
   }
 
-  .new-chat-item-name {
+  .modal-item-name {
     font-size: 0.95rem;
     font-weight: 500;
     color: white;
   }
 
-  .new-chat-item-username {
+  .modal-item-username {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.5);
   }
 
-  /* Loading State */
-  .loading-state {
+  .modal-loading {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     padding: 2rem;
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.875rem;
   }
 
-  .spinner-small {
+  .spinner {
     width: 16px;
     height: 16px;
     border: 2px solid rgba(34, 197, 94, 0.2);
@@ -1023,13 +1064,15 @@ import AppLayout from '../layouts/AppLayout.astro';
   }
 
   /* Scrollbar */
-  .chat-messages::-webkit-scrollbar,
-  .new-chat-list::-webkit-scrollbar {
+  .conv-list::-webkit-scrollbar,
+  .messages-container::-webkit-scrollbar,
+  .modal-list::-webkit-scrollbar {
     width: 4px;
   }
 
-  .chat-messages::-webkit-scrollbar-thumb,
-  .new-chat-list::-webkit-scrollbar-thumb {
+  .conv-list::-webkit-scrollbar-thumb,
+  .messages-container::-webkit-scrollbar-thumb,
+  .modal-list::-webkit-scrollbar-thumb {
     background: rgba(34, 197, 94, 0.2);
     border-radius: 2px;
   }
@@ -1073,30 +1116,35 @@ import AppLayout from '../layouts/AppLayout.astro';
   let realtimeChannel: any = null;
 
   // Elements
-  const conversationsList = document.getElementById('conversations-list')!;
+  const conversationsView = document.getElementById('conversations-view')!;
+  const chatView = document.getElementById('chat-view')!;
+  const convList = document.getElementById('conv-list')!;
+  const convSkeleton = document.getElementById('conv-skeleton')!;
   const emptyState = document.getElementById('empty-state')!;
-  const chatModal = document.getElementById('chat-modal')!;
-  const chatMessages = document.getElementById('chat-messages')!;
-  const chatForm = document.getElementById('chat-form') as HTMLFormElement;
-  const chatInput = document.getElementById('chat-input') as HTMLInputElement;
-  const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
-  const chatName = document.getElementById('chat-name')!;
+  const searchBtn = document.getElementById('search-btn')!;
+  const searchContainer = document.getElementById('search-container')!;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchClear = document.getElementById('search-clear')!;
+  const newChatBtn = document.getElementById('new-chat-btn')!;
+  const startBtn = document.getElementById('start-btn')!;
+  const tabs = document.querySelectorAll('.conv-tab');
+  const unreadBadge = document.getElementById('unread-badge')!;
+
+  const backBtn = document.getElementById('back-btn')!;
   const chatAvatar = document.getElementById('chat-avatar') as HTMLImageElement;
+  const chatStatusDot = document.getElementById('chat-status-dot')!;
+  const chatName = document.getElementById('chat-name')!;
   const chatStatus = document.getElementById('chat-status')!;
   const chatProfile = document.getElementById('chat-profile') as HTMLAnchorElement;
-  const chatBack = document.getElementById('chat-back')!;
-  const tabs = document.querySelectorAll('.mm-tab');
-  const searchToggleBtn = document.getElementById('search-toggle-btn')!;
-  const searchBar = document.getElementById('search-bar')!;
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
-  const searchCloseBtn = document.getElementById('search-close-btn')!;
-  const newChatBtn = document.getElementById('new-chat-btn')!;
-  const startChatBtn = document.getElementById('start-chat-btn')!;
+  const messagesContainer = document.getElementById('messages-container')!;
+  const messageForm = document.getElementById('message-form') as HTMLFormElement;
+  const messageInput = document.getElementById('message-input') as HTMLInputElement;
+  const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+
   const newChatModal = document.getElementById('new-chat-modal')!;
-  const closeNewChat = document.getElementById('close-new-chat')!;
-  const newChatSearch = document.getElementById('new-chat-search') as HTMLInputElement;
-  const newChatList = document.getElementById('new-chat-list')!;
-  const unreadCount = document.getElementById('unread-count')!;
+  const modalClose = document.getElementById('modal-close')!;
+  const modalSearchInput = document.getElementById('modal-search-input') as HTMLInputElement;
+  const modalList = document.getElementById('modal-list')!;
 
   // Initialize
   init();
@@ -1162,8 +1210,10 @@ import AppLayout from '../layouts/AppLayout.astro';
         .select('conversation_id')
         .eq('user_id', userId);
 
+      convSkeleton.hidden = true;
+
       if (!participations || participations.length === 0) {
-        showEmpty();
+        emptyState.hidden = false;
         return;
       }
 
@@ -1197,9 +1247,8 @@ import AppLayout from '../layouts/AppLayout.astro';
           .limit(1)
           .single();
 
-        // Get friend status
         const friend = friends.find(f => f.user_id === otherUserId);
-        
+
         conversations.push({
           id: convId,
           other_user: {
@@ -1216,7 +1265,6 @@ import AppLayout from '../layouts/AppLayout.astro';
         });
       }
 
-      // Sort by most recent
       conversations.sort((a, b) => {
         if (!a.last_message_at) return 1;
         if (!b.last_message_at) return -1;
@@ -1226,22 +1274,18 @@ import AppLayout from '../layouts/AppLayout.astro';
       filterAndRender();
     } catch (e) {
       console.error('Error loading conversations:', e);
-      showEmpty();
+      convSkeleton.hidden = true;
+      emptyState.hidden = false;
     }
-  }
-
-  function showEmpty() {
-    conversationsList.innerHTML = '';
-    emptyState.hidden = false;
   }
 
   function filterAndRender() {
     const search = searchInput.value.toLowerCase();
-    
+
     filteredConversations = conversations.filter(conv => {
       const name = conv.other_user.display_name || conv.other_user.username;
       const matchesSearch = name.toLowerCase().includes(search);
-      
+
       if (currentTab === 'unread') {
         return matchesSearch && conv.unread_count > 0;
       } else if (currentTab === 'online') {
@@ -1256,10 +1300,11 @@ import AppLayout from '../layouts/AppLayout.astro';
   function renderConversations() {
     if (filteredConversations.length === 0) {
       if (conversations.length === 0) {
-        showEmpty();
+        emptyState.hidden = false;
+        convList.innerHTML = '';
       } else {
-        conversationsList.innerHTML = `
-          <div class="mm-empty-state">
+        convList.innerHTML = `
+          <div class="empty-state">
             <p style="color: rgba(255,255,255,0.5);">No hay conversaciones en esta categoría</p>
           </div>
         `;
@@ -1269,35 +1314,32 @@ import AppLayout from '../layouts/AppLayout.astro';
     }
 
     emptyState.hidden = true;
-    
-    conversationsList.innerHTML = filteredConversations.map(conv => {
+    convList.innerHTML = filteredConversations.map(conv => {
       const statusClass = conv.other_user.status === 'online' ? 'online' : conv.other_user.status === 'away' ? 'away' : 'offline';
       const time = formatTime(conv.last_message_at);
-      const lastMsg = conv.last_message.substring(0, 50) + (conv.last_message.length > 50 ? '...' : '');
-      const isOwnLast = false; // Could track this if needed
-      
+      const lastMsg = conv.last_message.substring(0, 45) + (conv.last_message.length > 45 ? '...' : '');
+
       return `
-        <div class="mm-conv-item" data-conv-id="${conv.id}" data-user-id="${conv.other_user.user_id}" data-name="${conv.other_user.display_name || conv.other_user.username}" data-avatar="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" data-status="${conv.other_user.status}">
-          <div class="mm-conv-avatar-wrap">
-            <img src="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" alt="" class="mm-conv-avatar" onerror="this.src='/images/default-avatar.svg'" />
-            <span class="mm-conv-status-dot ${statusClass}"></span>
+        <div class="conv-item" data-conv-id="${conv.id}" data-user-id="${conv.other_user.user_id}" data-name="${conv.other_user.display_name || conv.other_user.username}" data-avatar="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" data-status="${conv.other_user.status}">
+          <div class="conv-avatar-wrap">
+            <img src="${conv.other_user.avatar_url || '/images/default-avatar.svg'}" alt="" class="conv-avatar" onerror="this.src='/images/default-avatar.svg'" />
+            <span class="conv-status-dot ${statusClass}"></span>
           </div>
-          <div class="mm-conv-content">
-            <div class="mm-conv-row">
-              <span class="mm-conv-name">${conv.other_user.display_name || conv.other_user.username}</span>
-              <span class="mm-conv-time">${time}</span>
+          <div class="conv-content">
+            <div class="conv-row">
+              <span class="conv-name">${conv.other_user.display_name || conv.other_user.username}</span>
+              <span class="conv-time">${time}</span>
             </div>
-            <div class="mm-conv-preview">
-              <span class="mm-conv-last-msg">${lastMsg}</span>
-              ${conv.unread_count > 0 ? `<span class="mm-conv-unread">${conv.unread_count}</span>` : ''}
+            <div class="conv-preview">
+              <span class="conv-last-msg">${lastMsg}</span>
+              ${conv.unread_count > 0 ? `<span class="conv-unread">${conv.unread_count}</span>` : ''}
             </div>
           </div>
         </div>
       `;
     }).join('');
 
-    // Add click listeners
-    conversationsList.querySelectorAll('.mm-conv-item').forEach(item => {
+    convList.querySelectorAll('.conv-item').forEach(item => {
       item.addEventListener('click', () => {
         const id = item.getAttribute('data-user-id')!;
         const name = item.getAttribute('data-name')!;
@@ -1314,7 +1356,8 @@ import AppLayout from '../layouts/AppLayout.astro';
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return mins <= 1 ? 'Ahora' : `${mins}m`;
+    if (mins < 1) return 'Ahora';
+    if (mins < 60) return `${mins}m`;
     const hours = Math.floor(diff / 3600000);
     if (hours < 24) return `${hours}h`;
     const days = Math.floor(diff / 86400000);
@@ -1333,38 +1376,38 @@ import AppLayout from '../layouts/AppLayout.astro';
       });
     });
 
-    // Search toggle
-    searchToggleBtn.addEventListener('click', () => {
-      searchBar.hidden = !searchBar.hidden;
-      if (!searchBar.hidden) searchInput.focus();
+    // Search
+    searchBtn.addEventListener('click', () => {
+      searchContainer.hidden = !searchContainer.hidden;
+      if (!searchContainer.hidden) searchInput.focus();
     });
 
-    searchCloseBtn.addEventListener('click', () => {
-      searchBar.hidden = true;
+    searchClear.addEventListener('click', () => {
+      searchContainer.hidden = true;
       searchInput.value = '';
       filterAndRender();
     });
 
     searchInput.addEventListener('input', filterAndRender);
 
-    // Chat back
-    chatBack.addEventListener('click', closeChat);
+    // Back button
+    backBtn.addEventListener('click', closeChat);
 
-    // Chat form
-    chatForm.addEventListener('submit', sendMessage);
-    chatInput.addEventListener('input', () => {
-      sendBtn.disabled = chatInput.value.trim().length === 0;
+    // Message form
+    messageForm.addEventListener('submit', sendMessage);
+    messageInput.addEventListener('input', () => {
+      sendBtn.disabled = messageInput.value.trim().length === 0;
     });
 
-    // New chat modals
-    [newChatBtn, startChatBtn].forEach(btn => {
+    // New chat modal
+    [newChatBtn, startBtn].forEach(btn => {
       btn.addEventListener('click', () => {
         newChatModal.hidden = false;
-        loadFriendsForNewChat();
+        loadFriendsForModal();
       });
     });
 
-    closeNewChat.addEventListener('click', () => {
+    modalClose.addEventListener('click', () => {
       newChatModal.hidden = true;
     });
 
@@ -1374,37 +1417,37 @@ import AppLayout from '../layouts/AppLayout.astro';
       }
     });
 
-    newChatSearch.addEventListener('input', () => {
-      const query = newChatSearch.value.toLowerCase();
-      newChatList.querySelectorAll('.new-chat-item').forEach((item: any) => {
-        const name = item.querySelector('.new-chat-item-name')?.textContent?.toLowerCase() || '';
-        const username = item.querySelector('.new-chat-item-username')?.textContent?.toLowerCase() || '';
+    modalSearchInput.addEventListener('input', () => {
+      const query = modalSearchInput.value.toLowerCase();
+      modalList.querySelectorAll('.modal-item').forEach((item: any) => {
+        const name = item.querySelector('.modal-item-name')?.textContent?.toLowerCase() || '';
+        const username = item.querySelector('.modal-item-username')?.textContent?.toLowerCase() || '';
         item.style.display = name.includes(query) || username.includes(query) ? 'flex' : 'none';
       });
     });
   }
 
-  async function loadFriendsForNewChat() {
+  async function loadFriendsForModal() {
     if (friends.length === 0) {
-      newChatList.innerHTML = `
-        <div class="mm-empty-state">
-          <p style="color: rgba(255,255,255,0.5);">No tienes amigos aún</p>
+      modalList.innerHTML = `
+        <div class="modal-loading">
+          <span style="color: rgba(255,255,255,0.5);">No tienes amigos aún</span>
         </div>
       `;
       return;
     }
 
-    newChatList.innerHTML = friends.map(f => `
-      <div class="new-chat-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
+    modalList.innerHTML = friends.map(f => `
+      <div class="modal-item" data-id="${f.user_id}" data-name="${f.display_name || f.username}" data-avatar="${f.avatar_url || '/images/default-avatar.svg'}" data-status="${f.status}">
         <img src="${f.avatar_url || '/images/default-avatar.svg'}" alt="" onerror="this.src='/images/default-avatar.svg'" />
-        <div class="new-chat-item-info">
-          <div class="new-chat-item-name">${f.display_name || f.username}</div>
-          <div class="new-chat-item-username">@${f.username}</div>
+        <div class="modal-item-info">
+          <div class="modal-item-name">${f.display_name || f.username}</div>
+          <div class="modal-item-username">@${f.username}</div>
         </div>
       </div>
     `).join('');
 
-    newChatList.querySelectorAll('.new-chat-item').forEach(item => {
+    modalList.querySelectorAll('.modal-item').forEach(item => {
       item.addEventListener('click', () => {
         const id = item.getAttribute('data-id')!;
         const name = item.getAttribute('data-name')!;
@@ -1418,24 +1461,28 @@ import AppLayout from '../layouts/AppLayout.astro';
 
   async function openChat(id: string, name: string, avatar: string, status: string) {
     currentChat = { id, name, avatar, status };
+
     chatName.textContent = name;
     chatAvatar.src = avatar;
     chatProfile.href = `/profile/${id}`;
-    
-    const statusText = status === 'online' ? 'En línea' : status === 'away' ? 'Ausente' : 'Desconectado';
-    chatStatus.textContent = statusText;
+
+    chatStatusDot.className = 'chat-status-dot ' + (status === 'online' ? 'online' : status === 'away' ? 'away' : 'offline');
+    chatStatus.textContent = status === 'online' ? 'En línea' : status === 'away' ? 'Ausente' : 'Desconectado';
     chatStatus.style.color = status === 'online' ? '#22c55e' : status === 'away' ? '#f59e0b' : 'rgba(255,255,255,0.5)';
-    
-    chatModal.hidden = false;
+
+    conversationsView.hidden = true;
+    chatView.hidden = false;
     messages = [];
     renderMessages();
 
     await loadConversation(id);
-    chatInput.focus();
+    messageInput.focus();
   }
 
   function closeChat() {
-    chatModal.hidden = true;
+    chatView.hidden = true;
+    conversationsView.hidden = false;
+
     if (realtimeChannel) {
       supabase.removeChannel(realtimeChannel);
       realtimeChannel = null;
@@ -1537,14 +1584,14 @@ import AppLayout from '../layouts/AppLayout.astro';
 
   function renderMessages() {
     if (messages.length === 0) {
-      chatMessages.innerHTML = `
-        <div class="chat-empty">
-          <div class="chat-empty-icon">
+      messagesContainer.innerHTML = `
+        <div class="messages-empty">
+          <div class="messages-empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
             </svg>
           </div>
-          <p>No hay mensajes aún</p>
+          <p>No hay mensajes</p>
           <span>¡Envía el primer mensaje!</span>
         </div>
       `;
@@ -1552,42 +1599,45 @@ import AppLayout from '../layouts/AppLayout.astro';
     }
 
     let lastDate = '';
-    chatMessages.innerHTML = messages.map(msg => {
+    messagesContainer.innerHTML = messages.map(msg => {
       const msgDate = new Date(msg.created_at).toLocaleDateString('es');
       let dateSep = '';
       if (msgDate !== lastDate) {
         lastDate = msgDate;
-        dateSep = `<div class="date-separator"><span>${msgDate}</span></div>`;
+        dateSep = `<div class="date-sep"><span>${msgDate}</span></div>`;
       }
-      
+
       const isMine = msg.sender_id === userId;
       const time = new Date(msg.created_at).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
       const senderName = currentChat?.name || 'Usuario';
       const senderAvatar = currentChat?.avatar || '/images/default-avatar.svg';
-      
+
       return `${dateSep}
-        <div class="message ${isMine ? 'sent' : 'received'}">
-          ${!isMine ? `<img src="${senderAvatar}" alt="" class="message-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
-          <div class="message-content">
-            ${!isMine ? `<span class="message-sender">${senderName}</span>` : ''}
-            <div class="message-bubble">
+        <div class="msg ${isMine ? 'sent' : 'received'}">
+          ${!isMine ? `<img src="${senderAvatar}" alt="" class="msg-avatar" onerror="this.src='/images/default-avatar.svg'" />` : ''}
+          <div class="msg-body">
+            ${!isMine ? `<span class="msg-sender">${senderName}</span>` : ''}
+            <div class="msg-bubble">
               <p>${escapeHtml(msg.content)}</p>
-              <span class="message-time">${time}</span>
+              <div class="msg-footer">
+                <span class="msg-time">${time}</span>
+                ${isMine ? `<svg class="msg-check read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
+              </div>
             </div>
           </div>
         </div>
       `;
     }).join('');
 
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 
   async function sendMessage(e: Event) {
     e.preventDefault();
-    const content = chatInput.value.trim();
+    const content = messageInput.value.trim();
     if (!content || !conversationId || !userId) return;
 
-    chatInput.value = '';
+    messageInput.value = '';
     sendBtn.disabled = true;
 
     const { data: msg, error } = await (supabase as any)
@@ -1602,7 +1652,7 @@ import AppLayout from '../layouts/AppLayout.astro';
 
     if (error) {
       console.error('Send error:', error);
-      chatInput.value = content;
+      messageInput.value = content;
       return;
     }
 
